@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.u_study.ui.screens.HomeScreen
 import com.example.u_study.ui.theme.LightBlue
 import com.example.u_study.ui.theme.U_StudyTheme
 
@@ -48,52 +49,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             U_StudyTheme {
-
                 HomeScreen()
-
-            }
-        }
-    }
-}
-
-@Composable
-fun HomeScreen() {
-    Scaffold(
-        topBar = {
-            AppBar("Home")
-        },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)
-            .padding(horizontal = 16.dp)
-            .fillMaxSize()) {
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Hello Sofia 👋", //da cambiare con nome del profilo
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                FeatureButton(icon = Icons.Filled.Notifications, text = "Study Session")
-                FeatureButton(icon = Icons.Filled.Check, text = "TO-DO List")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                FeatureButton(icon = Icons.Filled.Star, text = "Libraries List")
-                FeatureButton(icon = Icons.Filled.LocationOn, text = "Libraries Map")
             }
         }
     }
