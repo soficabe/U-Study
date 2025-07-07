@@ -4,18 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,26 +48,52 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             U_StudyTheme {
-                //home
-                Scaffold(
-                    topBar = {
-                        AppBar("Home")
-                    },
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Column(modifier = Modifier.padding(innerPadding)
-                        .padding(horizontal = 16.dp)
-                        .fillMaxSize()) {
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                HomeScreen()
 
-                        Text(
-                            text = "Hello Sofia 👋", //da cambiare con nome del profilo
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeScreen() {
+    Scaffold(
+        topBar = {
+            AppBar("Home")
+        },
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)
+            .padding(horizontal = 16.dp)
+            .fillMaxSize()) {
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Hello Sofia 👋", //da cambiare con nome del profilo
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                FeatureButton(icon = Icons.Filled.Notifications, text = "Study Session")
+                FeatureButton(icon = Icons.Filled.Check, text = "TO-DO List")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                FeatureButton(icon = Icons.Filled.Star, text = "Libraries List")
+                FeatureButton(icon = Icons.Filled.LocationOn, text = "Libraries Map")
             }
         }
     }
