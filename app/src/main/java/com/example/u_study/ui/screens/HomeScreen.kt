@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CheckBox
+import androidx.compose.material.icons.outlined.HeartBroken
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FeatureButton
+import com.example.u_study.ui.composables.LongButton
 
 @Composable
 fun HomeScreen() {
@@ -68,6 +71,10 @@ fun HomeScreen() {
                 FeatureButton(icon = Icons.Outlined.Book, text = "Libraries List")
                 FeatureButton(icon = Icons.Outlined.LocationOn, text = "Libraries Map")
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            LongButton(icon = Icons.Filled.FavoriteBorder, text = "Favorite Libraries")
         }
     }
 }
