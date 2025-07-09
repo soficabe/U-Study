@@ -44,7 +44,7 @@ fun AppBar(title: String) {
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape),
-                    tint = Color.White
+                    tint = Color.Black
                 )
             }
         },
