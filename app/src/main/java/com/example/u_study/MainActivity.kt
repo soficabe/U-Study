@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.u_study.ui.screens.HomeScreen
-import com.example.u_study.ui.screens.LibrariesScreen
-import com.example.u_study.ui.screens.ToDoScreen
 import com.example.u_study.ui.theme.U_StudyTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,8 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             U_StudyTheme {
-                ToDoScreen()
-                //HomeScreen()
+                HomeScreen()
             }
         }
     }
