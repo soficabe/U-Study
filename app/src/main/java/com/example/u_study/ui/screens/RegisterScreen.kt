@@ -34,9 +34,7 @@ import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun RegisterScreen(
-    /*navController: NavController*/
-) {
+fun RegisterScreen() {
     val scrollState = rememberScrollState()
 
     //stato campi
@@ -132,7 +130,7 @@ fun RegisterScreen(
             SaveButton(text = "Sign Up")
         }
 
-        TextButton(onClick = { /*navController.navigate("login") */}) {
+        TextButton(onClick = { }) {
             Text("Have an account? Sign In")
         }
     }

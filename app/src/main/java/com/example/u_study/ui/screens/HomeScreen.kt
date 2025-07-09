@@ -16,19 +16,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CheckBox
-import androidx.compose.material.icons.outlined.HeartBroken
 import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.ShowChart
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -77,8 +68,8 @@ fun HomeScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Timer, text = "Study Session")
-                FeatureButton(icon = Icons.Outlined.CheckBox, text = "TO-DO List")
+                FeatureButton(icon = Icons.Outlined.Timer, text = "Study Session", onClick = {})
+                FeatureButton(icon = Icons.Outlined.CheckBox, text = "TO-DO List", onClick = {})
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -87,15 +78,15 @@ fun HomeScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Book, text = "Libraries List")
-                FeatureButton(icon = Icons.Outlined.LocationOn, text = "Libraries Map")
+                FeatureButton(icon = Icons.Outlined.Book, text = "Libraries List", onClick = {})
+                FeatureButton(icon = Icons.Outlined.LocationOn, text = "Libraries Map", onClick = {})
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LongButton(icon = Icons.Filled.FavoriteBorder, text = "Favorite Libraries")
+            LongButton(icon = Icons.Filled.FavoriteBorder, text = "Favorite Libraries", {})
             Spacer(modifier = Modifier.height(16.dp))
-            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats")
+            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", {})
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -103,12 +94,12 @@ fun HomeScreen() {
 }
 
 @Composable
-fun FeatureButton(icon: ImageVector, text: String) {
+fun FeatureButton(icon: ImageVector, text: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier.size(150.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Yellow),
-        onClick = { /* TODO (andare nella schermata corrispondente) */ }
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -123,11 +114,11 @@ fun FeatureButton(icon: ImageVector, text: String) {
 }
 
 @Composable
-fun LongButton(icon: ImageVector, text: String) {
+fun LongButton(icon: ImageVector, text: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = LightBlue),
-        onClick = { /* TODO */ }
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

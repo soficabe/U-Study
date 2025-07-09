@@ -38,9 +38,7 @@ import com.example.u_study.ui.composables.SaveButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    /*navController: NavController*/
-) {
+fun LoginScreen() {
     val scrollState = rememberScrollState()
 
     var email by remember { mutableStateOf("") }
@@ -92,8 +90,12 @@ fun LoginScreen(
 
         SaveButton("Sign in")
 
-        TextButton(onClick = { /*navController.navigate("register")*/ }) {
+        TextButton(onClick = { } ) {
             Text("Don't have an account? Sign Up")
+        }
+
+        TextButton(onClick = { } ) {
+            Text("Continue without logging in")
         }
     }
 }
