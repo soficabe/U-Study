@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,7 +33,7 @@ fun AppBar(title: String) {
         },
         navigationIcon = {
             IconButton(onClick = {}) {
-                Icon(Icons.Filled.Settings, "Settings", tint = Color.Black)
+                Icon(Icons.Outlined.Settings, "Settings", tint = Color.Black)
             }
         },
         actions = {
