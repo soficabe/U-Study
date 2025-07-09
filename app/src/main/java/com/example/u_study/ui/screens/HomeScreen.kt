@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -114,9 +115,9 @@ fun FeatureButton(icon: ImageVector, text: String) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(imageVector = icon, contentDescription = text, modifier = Modifier.size(48.dp))
+            Icon(imageVector = icon, contentDescription = text, modifier = Modifier.size(48.dp), tint = Color.Black)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = text, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(text = text, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
         }
     }
 }
@@ -134,8 +135,8 @@ fun LongButton(icon: ImageVector, text: String) {
         ) {
             Icon(imageVector = icon, contentDescription = text, tint = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.width(16.dp))
-            Text(text = text, modifier = Modifier.weight(1f), fontWeight = FontWeight.SemiBold)
-            Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Open")
+            Text(text = text, modifier = Modifier.weight(1f), fontWeight = FontWeight.SemiBold, color = Color.Black)
+            Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Open", tint = Color.Black)
         }
     }
 }
