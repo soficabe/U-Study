@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.u_study.R
 
+
+/* Logo usato in RegisterScreen.kt e LoginScreen.kt.
+ * è l'unione di immagine + testo blu.
+ */
 @Composable
 fun Logo () {
     Row(

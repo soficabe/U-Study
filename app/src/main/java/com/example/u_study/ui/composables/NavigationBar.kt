@@ -14,6 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+/* è la NavigationBar (nella parte bassa dello schermo)
+ * ancora non munita di nessuna azione. Presenta solo le
+ * 4 icone. Tutti i selected sono a false. Gli onclick
+ * sono vuoti
+ */
 @Composable
 fun NavigationBar(modifier: Modifier = Modifier) {
     NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
