@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.u_study.R
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
@@ -33,16 +34,16 @@ import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
 
 @Composable
-fun LibrariesScreen() {
+fun LibrariesScreen(navController: NavHostController) {
     val chipLabels = listOf("Bologna", "Cesena", "Cesenatico", "Faenza", "Forlì", "Imola", "Ozzano d'Emilia", "Ravenna", "Rimini")
     val elems = (0..50).map { "Library $it" }
 
     Scaffold (
         topBar = {
-            AppBar("Libraries")
+            AppBar("Libraries", navController)
         },
         bottomBar = {
-            NavigationBar()
+            NavigationBar(navController = navController)
         }
     ) { contentPadding ->
         LazyColumn (

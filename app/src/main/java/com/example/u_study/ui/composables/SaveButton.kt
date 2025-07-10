@@ -18,9 +18,9 @@ import com.example.u_study.ui.theme.Orange
  *
  */
 @Composable
-fun SaveButton(text: String) {
+fun SaveButton(text: String, onClick: () -> Unit ) {
     Button(
-        onClick = {},
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(

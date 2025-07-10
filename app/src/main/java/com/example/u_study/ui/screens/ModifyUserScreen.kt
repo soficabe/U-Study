@@ -21,21 +21,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun ModifyUserScreen() {
+fun ModifyUserScreen(navController: NavHostController) {
     var firstName by rememberSaveable { mutableStateOf("Sofia") }
     var lastName by rememberSaveable { mutableStateOf("Bianchi") }
     var email by rememberSaveable { mutableStateOf("sofiabianchi@gmail.com") }
 
     val scrollState = rememberScrollState()
     Scaffold(
-        topBar = { AppBar(title = "Edit Profile") },
-        bottomBar = { NavigationBar() }
+        topBar = { AppBar(title = "Edit Profile", navController) },
+        bottomBar = { NavigationBar(navController = navController) }
     ) {
         innerPadding ->
         Column(
@@ -107,7 +109,7 @@ fun ModifyUserScreen() {
 
             Spacer(Modifier.height(32.dp))
 
-            SaveButton("Save changes")
+            SaveButton("Save changes", onClick = { navController.navigate(UStudyRoute.ProfileScreen)})
 
 
         }

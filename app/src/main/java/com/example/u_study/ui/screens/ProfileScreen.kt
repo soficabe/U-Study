@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -32,18 +31,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
     Scaffold(
-        topBar = { AppBar(title = "Profile") },
-        bottomBar = { NavigationBar() }
+        topBar = { AppBar(title = "Profile", navController) },
+        bottomBar = { NavigationBar(navController = navController) }
     ) {
         innerPadding ->
         Column(
@@ -73,8 +73,8 @@ fun ProfileScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
-                ProfileButton(icon = Icons.Outlined.Favorite, text = "Favorite Libraries", onClick = { /* ci penseremo poi */ })
-                ProfileButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", onClick = { /* ci penseremo poi */ })
+                ProfileButton(icon = Icons.Outlined.Favorite, text = "Favorite Libraries", onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) })
+                ProfileButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", onClick = { navController.navigate(UStudyRoute.StatsScreen) })
             }
 
             Spacer(Modifier.height(32.dp))
@@ -103,7 +103,7 @@ fun ProfileScreen() {
 
             Spacer(Modifier.height(32.dp))
 
-            SaveButton(text = "Edit profile")
+            SaveButton(text = "Edit profile", onClick = {navController.navigate(UStudyRoute.ModifyUserScreen)})
 
             Spacer(Modifier.height(16.dp))
 

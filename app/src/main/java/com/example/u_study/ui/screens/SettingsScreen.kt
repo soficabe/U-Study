@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 
@@ -49,14 +50,14 @@ import com.example.u_study.ui.composables.NavigationBar
  * FINEEEEEEEE poi quando sceglieremo bene cosa mettere, avremo i composable pronti
  */
 @Composable
-fun SettingsScreen () {
+fun SettingsScreen (navController: NavHostController) {
     val scrollState = rememberScrollState()
 
     var pushNotifications by rememberSaveable { mutableStateOf(true) }
 
     Scaffold (
-        topBar = { AppBar("Settings") },
-        bottomBar = { NavigationBar() }
+        topBar = { AppBar("Settings", navController) },
+        bottomBar = { NavigationBar(navController = navController) }
     ) {
         innerPadding -> Column(
         modifier = Modifier

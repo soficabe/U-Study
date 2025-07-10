@@ -30,11 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
 
     //stato campi
@@ -127,10 +129,10 @@ fun RegisterScreen() {
                 Text("I have accepted the terms and conditions")
             }
             Spacer(Modifier.height(16.dp))
-            SaveButton(text = "Sign Up")
+            SaveButton(text = "Sign Up", onClick = {navController.navigate(UStudyRoute.HomeScreen)})
         }
 
-        TextButton(onClick = { }) {
+        TextButton(onClick = { navController.navigate(UStudyRoute.LoginScreen) }) {
             Text("Have an account? Sign In")
         }
     }

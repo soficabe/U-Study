@@ -18,11 +18,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.theme.LightBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(title: String) {
+fun AppBar(title: String, navController: NavHostController) {
     CenterAlignedTopAppBar(
         title = { Text(
             text = title,
@@ -32,12 +34,12 @@ fun AppBar(title: String) {
         )
         },
         navigationIcon = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navController.navigate(UStudyRoute.SettingsScreen) }) {
                 Icon(Icons.Outlined.Settings, "Settings", tint = Color.Black)
             }
         },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navController.navigate(UStudyRoute.ProfileScreen) }) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "User Profile",

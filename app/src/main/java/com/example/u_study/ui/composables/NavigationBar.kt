@@ -13,6 +13,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 
 /* è la NavigationBar (nella parte bassa dello schermo)
  * ancora non munita di nessuna azione. Presenta solo le
@@ -20,31 +22,31 @@ import androidx.compose.ui.Modifier
  * sono vuoti
  */
 @Composable
-fun NavigationBar(modifier: Modifier = Modifier) {
+fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostController) {
     NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.Timer, contentDescription = "Study Session") },
             label = { Text("Sessions") },
             selected = false,
-            onClick = {}
+            onClick = { navController.navigate(UStudyRoute.HomeScreen) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.CheckBox, contentDescription = "TO-DO List") },
             label = { Text("TO-DO List") },
             selected = false,
-            onClick = {}
+            onClick = { navController.navigate(UStudyRoute.ToDoScreen) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.Book, contentDescription = "Libraries List") },
             label = { Text("Lib List") },
             selected = false,
-            onClick = {}
+            onClick = { navController.navigate(UStudyRoute.LibrariesScreen) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.LocationOn, contentDescription = "Libraries Map") },
             label = { Text("Lib Map") },
             selected = false,
-            onClick = {}
+            onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) }
         )
 
     }

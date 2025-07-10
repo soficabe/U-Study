@@ -25,23 +25,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.NavigationBar
 
 @Composable
-fun ToDoScreen() {
+fun ToDoScreen(navController: NavHostController) {
     val chipLabels = listOf("On Going", "Completed")
 
     Scaffold (
         topBar = {
-            AppBar("To-Do List")
+            AppBar("To-Do List", navController)
         },
         bottomBar = {
-            NavigationBar()
+            NavigationBar(navController = navController)
         }
     ) { contentPadding ->
         LazyColumn(

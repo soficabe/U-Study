@@ -38,20 +38,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.theme.ElectricBlue
 import com.example.u_study.ui.theme.Orange
-import com.example.u_study.ui.theme.Yellow
 
 @Composable
-fun StatsScreen() {
+fun StatsScreen(navController: NavHostController) {
     Scaffold (
         topBar = {
-            AppBar("Stats")
+            AppBar("Stats", navController)
         },
         bottomBar = {
-            NavigationBar()
+            NavigationBar(navController = navController)
         }
     ) { contentPadding ->
         Column (

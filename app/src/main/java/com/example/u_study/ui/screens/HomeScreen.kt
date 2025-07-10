@@ -35,17 +35,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.theme.LightBlue
 import com.example.u_study.ui.theme.Yellow
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
-            AppBar("Home")
+            AppBar("Home", navController)
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -68,8 +70,8 @@ fun HomeScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Timer, text = "Study Session", onClick = {})
-                FeatureButton(icon = Icons.Outlined.CheckBox, text = "TO-DO List", onClick = {})
+                FeatureButton(icon = Icons.Outlined.Timer, text = "Study Session", onClick = { navController.navigate(UStudyRoute.LoginScreen) })
+                FeatureButton(icon = Icons.Outlined.CheckBox, text = "TO-DO List", onClick = { navController.navigate(UStudyRoute.ToDoScreen) })
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -78,15 +80,15 @@ fun HomeScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Book, text = "Libraries List", onClick = {})
+                FeatureButton(icon = Icons.Outlined.Book, text = "Libraries List", onClick = { navController.navigate(UStudyRoute.LibrariesScreen)})
                 FeatureButton(icon = Icons.Outlined.LocationOn, text = "Libraries Map", onClick = {})
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LongButton(icon = Icons.Filled.FavoriteBorder, text = "Favorite Libraries", {})
+            LongButton(icon = Icons.Filled.FavoriteBorder, text = "Favorite Libraries", { navController.navigate(UStudyRoute.FavLibrariesScreen) })
             Spacer(modifier = Modifier.height(16.dp))
-            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", {})
+            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", { navController.navigate(UStudyRoute.StatsScreen) })
 
             Spacer(modifier = Modifier.height(24.dp))
         }

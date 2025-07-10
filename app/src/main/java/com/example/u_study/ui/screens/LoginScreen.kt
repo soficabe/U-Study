@@ -32,13 +32,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
 
     var email by remember { mutableStateOf("") }
@@ -88,13 +89,13 @@ fun LoginScreen() {
 
         Spacer(Modifier.height(24.dp))
 
-        SaveButton("Sign in")
+        SaveButton("Sign in", onClick = {navController.navigate(UStudyRoute.HomeScreen)})
 
-        TextButton(onClick = { } ) {
+        TextButton(onClick = {  navController.navigate(UStudyRoute.RegisterScreen) } ) {
             Text("Don't have an account? Sign Up")
         }
 
-        TextButton(onClick = { } ) {
+        TextButton(onClick = { navController.navigate(UStudyRoute.HomeScreen) } ) {
             Text("Continue without logging in")
         }
     }
