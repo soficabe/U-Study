@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.register
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,20 +34,16 @@ import androidx.navigation.NavHostController
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
+import com.example.u_study.ui.screens.Login.LoginActions
+import com.example.u_study.ui.screens.Login.LoginState
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController: NavHostController) {
     val scrollState = rememberScrollState()
 
     //stato campi
-    var firstName by rememberSaveable { mutableStateOf("") }
-    var lastName by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
-    var termsAccepted by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -63,32 +59,32 @@ fun RegisterScreen(navController: NavHostController) {
 
         Column(modifier = Modifier.padding(16.dp)) {
             OutlinedTextField(
-                value = firstName,
-                onValueChange = { firstName = it },
+                value = state.firstName,
+                onValueChange = actions::setFirstName,
                 label = { Text("First Name") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = lastName,
-                onValueChange = { lastName = it },
+                value = state.lastName,
+                onValueChange = actions::setLastName,
                 label = { Text("Last Name") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
+                value = state.email,
+                onValueChange = actions::setEmail,
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = state.password,
+                onValueChange = actions::setPassword,
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -104,8 +100,8 @@ fun RegisterScreen(navController: NavHostController) {
             )
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
+                value = state.confirmPassword,
+                onValueChange = actions::setConfirmPassword,
                 label = { Text("Confirm Password") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -122,8 +118,8 @@ fun RegisterScreen(navController: NavHostController) {
             Spacer(Modifier.height(16.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
-                    checked = termsAccepted,
-                    onCheckedChange = { termsAccepted = it }
+                    checked = state.termsAccepted,
+                    onCheckedChange = actions::changeTerms
                 )
                 Spacer(Modifier.width(8.dp))
                 Text("I have accepted the terms and conditions")

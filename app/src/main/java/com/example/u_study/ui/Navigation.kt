@@ -15,7 +15,7 @@ import com.example.u_study.ui.screens.Login.LoginScreen
 import com.example.u_study.ui.screens.Login.LoginViewModel
 import com.example.u_study.ui.screens.ModifyUserScreen
 import com.example.u_study.ui.screens.ProfileScreen
-import com.example.u_study.ui.screens.RegisterScreen
+import com.example.u_study.ui.screens.register.RegisterScreen
 import com.example.u_study.ui.screens.SettingsScreen
 import com.example.u_study.ui.screens.stats.StatsScreen
 import com.example.u_study.ui.screens.ToDoScreen

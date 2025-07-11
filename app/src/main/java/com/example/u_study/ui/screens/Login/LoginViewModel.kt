@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.update
 
 data class LoginState(
     val email: String = "",
-    val password: String = "",
-    val passwordVisible: Boolean = false
+    val password: String = ""
 )
 
 interface LoginActions {
