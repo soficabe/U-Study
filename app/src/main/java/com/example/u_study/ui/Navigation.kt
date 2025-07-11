@@ -17,7 +17,7 @@ import com.example.u_study.ui.screens.ModifyUserScreen
 import com.example.u_study.ui.screens.ProfileScreen
 import com.example.u_study.ui.screens.RegisterScreen
 import com.example.u_study.ui.screens.SettingsScreen
-import com.example.u_study.ui.screens.StatsScreen
+import com.example.u_study.ui.screens.stats.StatsScreen
 import com.example.u_study.ui.screens.ToDoScreen
 import kotlinx.serialization.Serializable
 
