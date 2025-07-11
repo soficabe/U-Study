@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +39,7 @@ import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(state: ProfileState, navController: NavHostController) {
     val scrollState = rememberScrollState()
     Scaffold(
         topBar = { AppBar(title = "Profile", navController) },
@@ -62,7 +62,7 @@ fun ProfileScreen(navController: NavHostController) {
             Spacer(Modifier.height(16.dp))
 
             //nome cognome
-            Text(text = "Sofia Bianchi",
+            Text(text = "${state.firstName} ${state.lastName}",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold)
 
@@ -89,7 +89,7 @@ fun ProfileScreen(navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = "sofiabianchi@gmail.com",
+                    value = state.email,
                     onValueChange = {},
                     modifier = Modifier.fillMaxWidth(),
                     enabled = false,

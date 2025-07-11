@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.modifyUser
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,10 +29,7 @@ import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun ModifyUserScreen(navController: NavHostController) {
-    var firstName by rememberSaveable { mutableStateOf("Sofia") }
-    var lastName by rememberSaveable { mutableStateOf("Bianchi") }
-    var email by rememberSaveable { mutableStateOf("sofiabianchi@gmail.com") }
+fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navController: NavHostController) {
 
     val scrollState = rememberScrollState()
     Scaffold(
@@ -68,8 +65,8 @@ fun ModifyUserScreen(navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = firstName,
-                    onValueChange = { firstName = it },
+                    value = state.firstName,
+                    onValueChange = actions::setFirstName,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true,
                     singleLine = true
@@ -83,8 +80,8 @@ fun ModifyUserScreen(navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = lastName,
-                    onValueChange = { lastName = it },
+                    value = state.lastName,
+                    onValueChange = actions::setLastName,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true,
                     singleLine = true
@@ -98,8 +95,8 @@ fun ModifyUserScreen(navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = state.email,
+                    onValueChange = actions::setEmail,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = true,
                     singleLine = true

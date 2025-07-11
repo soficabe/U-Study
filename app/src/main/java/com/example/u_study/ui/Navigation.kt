@@ -13,12 +13,14 @@ import com.example.u_study.ui.screens.HomeScreen
 import com.example.u_study.ui.screens.LibrariesScreen
 import com.example.u_study.ui.screens.Login.LoginScreen
 import com.example.u_study.ui.screens.Login.LoginViewModel
-import com.example.u_study.ui.screens.ModifyUserScreen
-import com.example.u_study.ui.screens.ProfileScreen
+import com.example.u_study.ui.screens.modifyUser.ModifyUserScreen
 import com.example.u_study.ui.screens.register.RegisterScreen
 import com.example.u_study.ui.screens.SettingsScreen
 import com.example.u_study.ui.screens.stats.StatsScreen
 import com.example.u_study.ui.screens.ToDoScreen
+import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
+import com.example.u_study.ui.screens.profile.ProfileScreen
+import com.example.u_study.ui.screens.profile.ProfileViewModel
 import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.stats.StatsViewModel
 import kotlinx.serialization.Serializable
@@ -73,11 +75,15 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.ProfileScreen> {
-            ProfileScreen(navController)
+            val profileViewModel = viewModel<ProfileViewModel>()
+            val profileState by profileViewModel.state.collectAsStateWithLifecycle()
+            ProfileScreen(profileState, navController)
         }
 
         composable<UStudyRoute.ModifyUserScreen> {
-            ModifyUserScreen(navController)
+            val modifyUserViewModel = viewModel<ModifyUserViewModel>()
+            val modifyUserState by modifyUserViewModel.state.collectAsStateWithLifecycle()
+            ModifyUserScreen(modifyUserState, modifyUserViewModel.actions, navController)
         }
 
         composable<UStudyRoute.StatsScreen> {

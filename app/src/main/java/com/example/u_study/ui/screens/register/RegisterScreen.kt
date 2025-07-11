@@ -34,8 +34,6 @@ import androidx.navigation.NavHostController
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
-import com.example.u_study.ui.screens.Login.LoginActions
-import com.example.u_study.ui.screens.Login.LoginState
 
 @Composable
 fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController: NavHostController) {
