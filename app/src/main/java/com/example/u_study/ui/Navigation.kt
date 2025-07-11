@@ -19,6 +19,8 @@ import com.example.u_study.ui.screens.register.RegisterScreen
 import com.example.u_study.ui.screens.SettingsScreen
 import com.example.u_study.ui.screens.stats.StatsScreen
 import com.example.u_study.ui.screens.ToDoScreen
+import com.example.u_study.ui.screens.register.RegisterViewModel
+import com.example.u_study.ui.screens.stats.StatsViewModel
 import kotlinx.serialization.Serializable
 
 sealed interface UStudyRoute {
@@ -61,7 +63,9 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.RegisterScreen> {
-            RegisterScreen(navController)
+            val registerViewModel = viewModel<RegisterViewModel>()
+            val registerState by registerViewModel.state.collectAsStateWithLifecycle()
+            RegisterScreen(registerState, registerViewModel.actions, navController)
         }
 
         composable<UStudyRoute.HomeScreen> {
@@ -77,7 +81,9 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.StatsScreen> {
-            StatsScreen(navController)
+            val statsViewModel = viewModel<StatsViewModel>()
+            val statsState by statsViewModel.state.collectAsStateWithLifecycle()
+            StatsScreen(statsState, navController)
         }
 
         composable<UStudyRoute.SettingsScreen> {

@@ -24,7 +24,7 @@ interface RegisterActions {
     //fun register()
 }
 
-class LoginViewModel : ViewModel() {
+class RegisterViewModel : ViewModel() {
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
 
@@ -46,9 +46,6 @@ class LoginViewModel : ViewModel() {
 
         override fun changeTerms(termsAccepted: Boolean) =
             _state.update { it.copy(termsAccepted = termsAccepted) }
-
-
-
 
         //override fun register() = {}
 
