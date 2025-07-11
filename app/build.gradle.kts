@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.ktor.serialization.kotlinx.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

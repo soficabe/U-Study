@@ -1,14 +1,18 @@
 package com.example.u_study.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.u_study.ui.screens.FavLibrariesScreen
 import com.example.u_study.ui.screens.HomeScreen
 import com.example.u_study.ui.screens.LibrariesScreen
-import com.example.u_study.ui.screens.LoginScreen
+import com.example.u_study.ui.screens.Login.LoginScreen
+import com.example.u_study.ui.screens.Login.LoginViewModel
 import com.example.u_study.ui.screens.ModifyUserScreen
 import com.example.u_study.ui.screens.ProfileScreen
 import com.example.u_study.ui.screens.RegisterScreen
@@ -51,7 +55,9 @@ fun UStudyNavGraph(
         modifier = modifier
     ) {
         composable<UStudyRoute.LoginScreen> {
-            LoginScreen(navController)
+            val loginViewModel = viewModel<LoginViewModel>()
+            val loginState by loginViewModel.state.collectAsStateWithLifecycle()
+            LoginScreen(loginState, loginViewModel.actions, navController)
         }
 
         composable<UStudyRoute.RegisterScreen> {

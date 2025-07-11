@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.Login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,11 +38,11 @@ import com.example.u_study.ui.composables.SaveButton
 
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHostController) {
     val scrollState = rememberScrollState()
 
-    var email by remember { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    //var email by remember { mutableStateOf("") }
+    //var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     Column(
@@ -63,8 +62,8 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(Modifier.height(32.dp))
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = state.email,
+            onValueChange = actions::setEmail,
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -72,8 +71,8 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = state.password,
+            onValueChange = actions::setPassword,
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
