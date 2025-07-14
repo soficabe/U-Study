@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,9 +32,10 @@ import androidx.navigation.NavHostController
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.NavigationBar
+import com.example.u_study.ui.screens.todo.TodoState
 
 @Composable
-fun ToDoScreen(navController: NavHostController) {
+fun ToDoScreen(state: TodoState, navController: NavHostController) {
     val chipLabels = listOf("On Going", "Completed")
 
     Scaffold (
@@ -53,25 +55,17 @@ fun ToDoScreen(navController: NavHostController) {
             }
             item {
                 AddTodoField(
-                    onSubmit = { /*TODO*/},
+                    onSubmit = { /*TODO*/ },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
-            item {
+            items(state.todos) {
                 TodoItem(
-                    onToggle = { /*TODO*/},
-                    onDelete = { /*TODO*/}
+                    it,
+                    onToggle = { /*TODO*/ },
+                    onDelete = { /*TODO*/ }
                 )
             }
-            item {
-                TodoItem(
-                    onToggle = { /*TODO*/},
-                    onDelete = { /*TODO*/}
-                )
-            }
-            /*items() {
-
-            }*/
         }
     }
 }
@@ -102,6 +96,7 @@ fun AddTodoField(
 
 @Composable
 fun TodoItem(
+    text: String,
     onToggle: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -127,7 +122,7 @@ fun TodoItem(
         ) {
             Checkbox(checked = /*item.isComplete*/false, onCheckedChange = null)
             Text(
-                /*item.content*/"ToDo1",
+                /*item.content*/text,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 16.dp).weight(1F)
             )

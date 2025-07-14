@@ -29,11 +29,12 @@ import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
+import com.example.u_study.ui.screens.favLibraries.FavLibrariesState
 
 @Composable
-fun FavLibrariesScreen(navController: NavHostController) {
-    val chipLabels = listOf("Bologna", "Cesena", "Cesenatico", "Faenza", "Forlì", "Imola", "Ozzano d'Emilia", "Ravenna", "Rimini")
-    val elems = (0..10).map { "Library $it" }
+fun FavLibrariesScreen(state: FavLibrariesState, navController: NavHostController) {
+    //val chipLabels = listOf("Bologna", "Cesena", "Cesenatico", "Faenza", "Forlì", "Imola", "Ozzano d'Emilia", "Ravenna", "Rimini")
+    //val elems = (0..10).map { "Library $it" }
     Scaffold (
         topBar = {
             AppBar("Favorite Libraries", navController)
@@ -48,9 +49,9 @@ fun FavLibrariesScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             item{
-                FilterChipsRow(items = chipLabels)
+                FilterChipsRow(items = state.cities)
             }
-            items(elems) {
+            items(state.favLibs) {
                 ListLibraryItem(it)
             }
         }

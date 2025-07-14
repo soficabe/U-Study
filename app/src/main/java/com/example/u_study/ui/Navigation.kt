@@ -18,11 +18,15 @@ import com.example.u_study.ui.screens.register.RegisterScreen
 import com.example.u_study.ui.screens.SettingsScreen
 import com.example.u_study.ui.screens.stats.StatsScreen
 import com.example.u_study.ui.screens.ToDoScreen
+import com.example.u_study.ui.screens.favLibraries.FavLibrariesState
+import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
+import com.example.u_study.ui.screens.libraries.LibrariesViewModel
 import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
 import com.example.u_study.ui.screens.profile.ProfileScreen
 import com.example.u_study.ui.screens.profile.ProfileViewModel
 import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.stats.StatsViewModel
+import com.example.u_study.ui.screens.todo.TodoViewModel
 import kotlinx.serialization.Serializable
 
 sealed interface UStudyRoute {
@@ -97,14 +101,20 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.ToDoScreen> {
-            ToDoScreen(navController)
+            val todoViewModel = viewModel<TodoViewModel>()
+            val todoState by todoViewModel.state.collectAsStateWithLifecycle()
+            ToDoScreen(todoState, navController)
         }
 
         composable<UStudyRoute.LibrariesScreen> {
-            LibrariesScreen(navController)
+            val librariesViewModel = viewModel<LibrariesViewModel>()
+            val librariesState by librariesViewModel.state.collectAsStateWithLifecycle()
+            LibrariesScreen(librariesState, navController)
         }
         composable<UStudyRoute.FavLibrariesScreen> {
-            FavLibrariesScreen(navController)
+            val favLibrariesViewModel = viewModel<FavLibrariesViewModel>()
+            val favLibrariesState by favLibrariesViewModel.state.collectAsStateWithLifecycle()
+            FavLibrariesScreen(favLibrariesState, navController)
         }
     }
 }
