@@ -1,13 +1,8 @@
 package com.example.u_study.ui.screens.favLibraries
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.u_study.ui.screens.Login.LoginState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 data class FavLibrariesState(
     val cities: List<String>,

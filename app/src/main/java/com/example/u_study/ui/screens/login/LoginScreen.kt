@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens.Login
+package com.example.u_study.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

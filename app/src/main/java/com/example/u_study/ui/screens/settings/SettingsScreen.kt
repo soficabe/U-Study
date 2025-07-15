@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,15 +16,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,8 +36,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.u_study.data.models.Theme
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 
@@ -50,21 +56,25 @@ import com.example.u_study.ui.composables.NavigationBar
  * FINEEEEEEEE poi quando sceglieremo bene cosa mettere, avremo i composable pronti
  */
 @Composable
-fun SettingsScreen (navController: NavHostController) {
+fun SettingsScreen (state: SettingsState, actions: SettingsActions, navController: NavHostController) {
     val scrollState = rememberScrollState()
 
     var pushNotifications by rememberSaveable { mutableStateOf(true) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+    var selectedTheme by remember { mutableStateOf(state.theme) }
+    val themeOptions = Theme.entries
 
     Scaffold (
         topBar = { AppBar("Settings", navController) },
         bottomBar = { NavigationBar(navController = navController) }
     ) {
-        innerPadding -> Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .padding(horizontal = 24.dp, vertical = 24.dp)
-            .verticalScroll(scrollState)
+        innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .verticalScroll(scrollState)
         ) {
 
             TextTitle("Login Alerts")
@@ -72,8 +82,30 @@ fun SettingsScreen (navController: NavHostController) {
             SettingsWithSwitch("Send push notifications", Icons.Filled.Notifications,
                 pushNotifications, onCheckedChange = { pushNotifications = it } )
             HorizontalDivider()
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .clickable { showThemeDialog = true }
+                .padding(16.dp)) {
+                Text(
+                    text = "Change theme",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = Bold
+                )
+            }
+            HorizontalDivider()
             SettingsClickable("Logout", Icons.AutoMirrored.Filled.Logout, Color.Red, onClick = {})
-
+        }
+        if(showThemeDialog) {
+            ThemeRadioOptionsDialog(
+                title = "Choose theme",
+                options = themeOptions,
+                selectedOption = selectedTheme,
+                onOptionSelected = {
+                    selectedTheme = it
+                    showThemeDialog = false
+                    actions.changeTheme(it)
+                },
+                onDismiss = { showThemeDialog = false })
         }
     }
 }
@@ -124,4 +156,34 @@ fun SettingsClickable(title: String, icon: ImageVector, color: Color = MaterialT
         Spacer(Modifier.width(16.dp))
         Text(title, color = color, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
     }
+}
+
+@Composable
+fun ThemeRadioOptionsDialog(
+    title: String,
+    options: List<Theme>,
+    selectedOption: Theme,
+    onOptionSelected: (Theme) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(onDismissRequest = onDismiss, title = { Text(text = title) }, text = {
+        Column {
+            options.forEach { option ->
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .clickable { onOptionSelected(option) }) {
+                    RadioButton(
+                        selected = option == selectedOption,
+                        onClick = { onOptionSelected(option) })
+                    Text(text = option.toString())
+                }
+            }
+        }
+    }, confirmButton = {
+        TextButton(onClick = onDismiss) {
+            Text("Close")
+        }
+    })
 }
