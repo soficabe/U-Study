@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,58 +42,63 @@ fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHost
     val scrollState = rememberScrollState()
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    Surface (modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            //logo
+            Logo()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 32.dp)
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        //logo
-        Logo()
+            Spacer(Modifier.height(32.dp))
 
-        Spacer(Modifier.height(32.dp))
+            Text("Sign in to continue", style = MaterialTheme.typography.headlineLarge)
+            Spacer(Modifier.height(32.dp))
 
-        Text("Sign in to continue", style = MaterialTheme.typography.headlineLarge)
-        Spacer(Modifier.height(32.dp))
+            OutlinedTextField(
+                value = state.email,
+                onValueChange = actions::setEmail,
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            Spacer(Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = state.email,
-            onValueChange = actions::setEmail,
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = state.password,
-            onValueChange = actions::setPassword,
-            label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            trailingIcon = {
-                val image = if (passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
-                IconButton (onClick = { passwordVisible = !passwordVisible}) {
-                    Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+            OutlinedTextField(
+                value = state.password,
+                onValueChange = actions::setPassword,
+                label = { Text("Password") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    val image =
+                        if (passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = image,
+                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                        )
+                    }
                 }
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            SaveButton("Sign in", onClick = { navController.navigate(UStudyRoute.HomeScreen) })
+
+            TextButton(onClick = { navController.navigate(UStudyRoute.RegisterScreen) }) {
+                Text("Don't have an account? Sign Up")
             }
-        )
 
-        Spacer(Modifier.height(24.dp))
-
-        SaveButton("Sign in", onClick = {navController.navigate(UStudyRoute.HomeScreen)})
-
-        TextButton(onClick = {  navController.navigate(UStudyRoute.RegisterScreen) } ) {
-            Text("Don't have an account? Sign Up")
-        }
-
-        TextButton(onClick = { navController.navigate(UStudyRoute.HomeScreen) } ) {
-            Text("Continue without logging in")
+            TextButton(onClick = { navController.navigate(UStudyRoute.HomeScreen) }) {
+                Text("Continue without logging in")
+            }
         }
     }
 }

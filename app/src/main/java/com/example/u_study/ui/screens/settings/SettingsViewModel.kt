@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class SettingsState(val theme: Theme)
+data class SettingsState(
+    val theme: Theme = Theme.System
+)
 
 interface SettingsActions {
     fun changeTheme(theme: Theme) : Job
@@ -25,7 +27,7 @@ class SettingsViewModel(
     val state = repository.theme.map { SettingsState(it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = SettingsState(Theme.System)
+        initialValue = SettingsState()
     )
 
     val actions = object : SettingsActions {
@@ -34,3 +36,25 @@ class SettingsViewModel(
         }
     }
 }
+
+/* nota per quando aggiungeremo altri dati, per esempio le notifiche push
+ * - Considera che a questo punto avremo già aggiornato SettingsRepository
+ * (con valori semplici tipo booleani non è necessario creare ulteriori file
+ * in models. Infatti per theme è stato creato perché dato particolare (enum class con 3 valori))
+ * - in Screen ci andrà la chiamata alla funzione fatta qui in ViewModel per aggiornare lo stato
+ * - qui in ViewModel va aggiunta la variabile nello state, chiamare la funzione nella actions e
+ * definirla nella funzione principale. Inoltre, "val state" va cambiata come segue:
+
+// lo stato viene creato combinando i due flussi dal repository
+    val state: StateFlow<SettingsState> =
+        repository.theme.combine(repository.notificationsEnabled) { theme, notificationsEnabled ->
+            SettingsState(theme, notificationsEnabled)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = SettingsState()
+        )
+
+ * Quel 5000 è un timeout di 5000 millisecondi (5 secondi). Non è strettamente necessario,
+ * ma è una buona pratica per ottimizzare le risorse dell'app.
+ */
