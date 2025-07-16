@@ -179,7 +179,7 @@ fun ThemeRadioOptionsDialog(
                     RadioButton(
                         selected = option == selectedOption,
                         onClick = { onOptionSelected(option) })
-                    Text(text = option.toString())
+                    Text(text = stringResource(id = option.themeName))
                 }
             }
         }

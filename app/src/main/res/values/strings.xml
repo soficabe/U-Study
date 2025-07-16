@@ -39,7 +39,7 @@
     <string name="checkboxRegisterText">I have accepted the terms and conditions</string>
     <string name="signIn_button">Sign In</string>
     <string name="signUp_button">Sign Up</string>
-    <string name="dontHaveAccount_text">Don't have an account? Sign Up</string>
+    <string name="dontHaveAccount_text">Don\'t have an account? Sign Up</string>
     <string name="withoutLogging_text">Continue without logging in</string>
     <string name="haveAnAccount_text">Have an account? Sign in</string>
 
