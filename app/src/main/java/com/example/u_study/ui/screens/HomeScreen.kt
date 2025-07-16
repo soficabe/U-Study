@@ -61,7 +61,7 @@ fun HomeScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Hello Sofia 👋", //da cambiare con nome del profilo
+                text = stringResource(R.string.greeting) + "Sofia 👋", //da cambiare con nome del profilo
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -72,8 +72,8 @@ fun HomeScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Timer, text = "Study Session", onClick = { navController.navigate(UStudyRoute.LoginScreen) })
-                FeatureButton(icon = Icons.Outlined.CheckBox, text = "TO-DO List", onClick = { navController.navigate(UStudyRoute.ToDoScreen) })
+                FeatureButton(icon = Icons.Outlined.Timer, text = stringResource(R.string.studySession_button), onClick = { navController.navigate(UStudyRoute.LoginScreen) })
+                FeatureButton(icon = Icons.Outlined.CheckBox, text = stringResource(R.string.toDo_button), onClick = { navController.navigate(UStudyRoute.ToDoScreen) })
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -82,15 +82,15 @@ fun HomeScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Book, text = "Libraries List", onClick = { navController.navigate(UStudyRoute.LibrariesScreen)})
-                FeatureButton(icon = Icons.Outlined.LocationOn, text = "Libraries Map", onClick = {})
+                FeatureButton(icon = Icons.Outlined.Book, text = stringResource(R.string.librariesList_button), onClick = { navController.navigate(UStudyRoute.LibrariesScreen)})
+                FeatureButton(icon = Icons.Outlined.LocationOn, text = stringResource(R.string.librariesMap_button), onClick = {})
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LongButton(icon = Icons.Filled.FavoriteBorder, text = "Favorite Libraries", { navController.navigate(UStudyRoute.FavLibrariesScreen) })
+            LongButton(icon = Icons.Filled.FavoriteBorder, text = stringResource(R.string.favoriteLibraries_button), { navController.navigate(UStudyRoute.FavLibrariesScreen) })
             Spacer(modifier = Modifier.height(16.dp))
-            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", { navController.navigate(UStudyRoute.StatsScreen) })
+            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = stringResource(R.string.stats_button), { navController.navigate(UStudyRoute.StatsScreen) })
 
             Spacer(modifier = Modifier.height(24.dp))
         }

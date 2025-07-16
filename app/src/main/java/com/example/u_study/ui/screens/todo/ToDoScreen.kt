@@ -26,9 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.u_study.R
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.NavigationBar
@@ -36,11 +38,11 @@ import com.example.u_study.ui.screens.todo.TodoState
 
 @Composable
 fun ToDoScreen(state: TodoState, navController: NavHostController) {
-    val chipLabels = listOf("On Going", "Completed")
+    val chipLabels = listOf(stringResource(R.string.onGoing_chip), stringResource(R.string.completed_chip))
 
     Scaffold (
         topBar = {
-            AppBar("To-Do List", navController)
+            AppBar(stringResource(R.string.toDoScreen_name), navController)
         },
         bottomBar = {
             NavigationBar(navController = navController)

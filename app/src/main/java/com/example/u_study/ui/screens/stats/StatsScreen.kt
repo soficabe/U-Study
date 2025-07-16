@@ -27,11 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.u_study.R
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.theme.ElectricBlue
@@ -41,7 +43,7 @@ import com.example.u_study.ui.theme.Orange
 fun StatsScreen(state: StatsState, navController: NavHostController) {
     Scaffold (
         topBar = {
-            AppBar("Stats", navController)
+            AppBar(stringResource(R.string.statsScreen_name), navController)
         },
         bottomBar = {
             NavigationBar(navController = navController)
@@ -54,7 +56,7 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            Text(text= "Your Achievements!", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
+            Text(text= stringResource(R.string.statsText), style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = Modifier.height(106.dp))
 
@@ -62,8 +64,8 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatsCard(icon = Icons.Outlined.Checklist, color = ElectricBlue, text = "Tasks Done", statistic = state.numTasksDone)
-                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = "Completed Study Sessions", statistic = state.numStudySessions)
+                StatsCard(icon = Icons.Outlined.Checklist, color = ElectricBlue, text = stringResource(R.string.tasksDone_text), statistic = state.numTasksDone)
+                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = stringResource(R.string.completedStudySessions_text), statistic = state.numStudySessions)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -72,8 +74,8 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatsCard(icon = Icons.Outlined.CollectionsBookmark, color = Orange, text = "Visited Libraries", statistic = state.numStudySessions)
-                StatsCard(icon = Icons.Outlined.Schedule, color = ElectricBlue, text = "Study Hours", statistic = state.numStudyHours)
+                StatsCard(icon = Icons.Outlined.CollectionsBookmark, color = Orange, text = stringResource(R.string.visitedLibraries_text), statistic = state.numStudySessions)
+                StatsCard(icon = Icons.Outlined.Schedule, color = ElectricBlue, text = stringResource(R.string.studyHours_text), statistic = state.numStudyHours)
             }
         }
     }
