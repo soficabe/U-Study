@@ -13,15 +13,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.u_study.R
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
@@ -33,7 +31,7 @@ fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navCont
 
     val scrollState = rememberScrollState()
     Scaffold(
-        topBar = { AppBar(title = "Edit Profile", navController) },
+        topBar = { AppBar(title = stringResource(R.string.editProfileScreen_name), navController) },
         bottomBar = { NavigationBar(navController = navController) }
     ) {
         innerPadding ->
@@ -60,7 +58,7 @@ fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navCont
             ) {
                 //first name
 
-                Text("First Name",
+                Text(stringResource(R.string.firstName),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
@@ -75,7 +73,7 @@ fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navCont
                 Spacer(Modifier.height(16.dp))
                 //last name
 
-                Text("Last Name",
+                Text(stringResource(R.string.lastName),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
@@ -90,7 +88,7 @@ fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navCont
                 Spacer(Modifier.height(16.dp))
                 //email
 
-                Text("Email",
+                Text(stringResource(R.string.email),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
@@ -106,7 +104,7 @@ fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navCont
 
             Spacer(Modifier.height(32.dp))
 
-            SaveButton("Save changes", onClick = { navController.navigate(UStudyRoute.ProfileScreen)})
+            SaveButton(stringResource(R.string.saveChanges_button), onClick = { navController.navigate(UStudyRoute.ProfileScreen)})
 
 
         }

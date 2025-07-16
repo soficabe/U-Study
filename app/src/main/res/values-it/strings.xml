@@ -13,6 +13,7 @@
     <string name="librariesListScreen_name">Biblioteche</string>
     <string name="favoriteLibrariesScreen_name">Biblioteche Preferite</string>
     <string name="librariesMapScreen_name">Mappa Biblioteche</string>
+    <string name="settingsScreen_name">Impostazioni</string>
 
     <!-- buttons -->
     <string name="greeting">Ciao Sofia 👋</string>
@@ -30,7 +31,7 @@
     <string name="librariesMap_nav">Mappa</string>
 
     <!-- sign in and sign up -->
-    <string name="LoginText">Accedi per continuare</string>
+    <string name="loginText">Accedi per continuare</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="firstName">Nome</string>

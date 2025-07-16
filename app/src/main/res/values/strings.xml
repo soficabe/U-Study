@@ -12,6 +12,7 @@
     <string name="librariesListScreen_name">Libraries</string>
     <string name="favoriteLibrariesScreen_name">Favorite Libraries</string>
     <string name="librariesMapScreen_name">Libraries Map</string>
+    <string name="settingsScreen_name">Settings</string>
 
     <!-- home buttons -->
     <string name="greeting">Hello</string>
@@ -29,7 +30,7 @@
     <string name="librariesMap_nav">Lib Map</string>
 
     <!-- sign in and sign up -->
-    <string name="LoginText">Sign in to continue</string>
+    <string name="loginText">Sign in to continue</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="firstName">First Name</string>

@@ -27,11 +27,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.u_study.R
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
@@ -56,13 +58,13 @@ fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHost
 
             Spacer(Modifier.height(32.dp))
 
-            Text("Sign in to continue", style = MaterialTheme.typography.headlineLarge)
+            Text(stringResource(R.string.loginText), style = MaterialTheme.typography.headlineLarge)
             Spacer(Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = state.email,
                 onValueChange = actions::setEmail,
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.email)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -71,7 +73,7 @@ fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHost
             OutlinedTextField(
                 value = state.password,
                 onValueChange = actions::setPassword,
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.password)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -90,14 +92,14 @@ fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHost
 
             Spacer(Modifier.height(24.dp))
 
-            SaveButton("Sign in", onClick = { navController.navigate(UStudyRoute.HomeScreen) })
+            SaveButton(stringResource(R.string.signIn_button), onClick = { navController.navigate(UStudyRoute.HomeScreen) })
 
             TextButton(onClick = { navController.navigate(UStudyRoute.RegisterScreen) }) {
-                Text("Don't have an account? Sign Up")
+                Text(stringResource(R.string.dontHaveAccount_text))
             }
 
             TextButton(onClick = { navController.navigate(UStudyRoute.HomeScreen) }) {
-                Text("Continue without logging in")
+                Text(stringResource(R.string.withoutLogging_text))
             }
         }
     }

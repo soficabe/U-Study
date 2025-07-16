@@ -35,10 +35,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.u_study.R
 import com.example.u_study.data.models.Theme
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
@@ -65,7 +67,7 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
     val themeOptions = Theme.entries
 
     Scaffold (
-        topBar = { AppBar("Settings", navController) },
+        topBar = { AppBar(stringResource(R.string.settingsScreen_name), navController) },
         bottomBar = { NavigationBar(navController = navController) }
     ) {
         innerPadding ->
@@ -77,9 +79,9 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                 .verticalScroll(scrollState)
         ) {
 
-            TextTitle("Login Alerts")
+            TextTitle(stringResource(R.string.loginAlerts))
             HorizontalDivider()
-            SettingsWithSwitch("Send push notifications", Icons.Filled.Notifications,
+            SettingsWithSwitch(stringResource(R.string.sendPushNotifications), Icons.Filled.Notifications,
                 pushNotifications, onCheckedChange = { pushNotifications = it } )
             HorizontalDivider()
             Row(modifier = Modifier
@@ -87,17 +89,17 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                 .clickable { showThemeDialog = true }
                 .padding(16.dp)) {
                 Text(
-                    text = "Change theme",
+                    text = stringResource(R.string.changeTheme),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = Bold
                 )
             }
             HorizontalDivider()
-            SettingsClickable("Logout", Icons.AutoMirrored.Filled.Logout, Color.Red, onClick = {})
+            SettingsClickable(stringResource(R.string.logout), Icons.AutoMirrored.Filled.Logout, Color.Red, onClick = {})
         }
         if(showThemeDialog) {
             ThemeRadioOptionsDialog(
-                title = "Choose theme",
+                title = stringResource(R.string.chooseTheme),
                 options = themeOptions,
                 selectedOption = selectedTheme,
                 onOptionSelected = {
@@ -112,7 +114,7 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
 
 
 @Composable
-fun TextTitle (text : String) {
+fun TextTitle (text: String) {
     Text(text = text,
         modifier = Modifier.padding(vertical = 8.dp),
         fontWeight = FontWeight.Bold)
@@ -183,7 +185,7 @@ fun ThemeRadioOptionsDialog(
         }
     }, confirmButton = {
         TextButton(onClick = onDismiss) {
-            Text("Close")
+            Text(stringResource(R.string.closeButton))
         }
     })
 }

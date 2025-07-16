@@ -75,8 +75,8 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
-                ProfileButton(icon = Icons.Outlined.Favorite, text = "Favorite Libraries", onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) })
-                ProfileButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = "Stats", onClick = { navController.navigate(UStudyRoute.StatsScreen) })
+                ProfileButton(icon = Icons.Outlined.Favorite, text = stringResource(R.string.favoriteLibraries_button), onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) })
+                ProfileButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = stringResource(R.string.stats_button), onClick = { navController.navigate(UStudyRoute.StatsScreen) })
             }
 
             Spacer(Modifier.height(32.dp))
@@ -86,7 +86,7 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text("Email",
+                Text(stringResource(R.string.email),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
@@ -105,7 +105,7 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
 
             Spacer(Modifier.height(32.dp))
 
-            SaveButton(text = "Edit profile", onClick = {navController.navigate(UStudyRoute.ModifyUserScreen)})
+            SaveButton(text = stringResource(R.string.editProfile_button), onClick = {navController.navigate(UStudyRoute.ModifyUserScreen)})
 
             Spacer(Modifier.height(16.dp))
 

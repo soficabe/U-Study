@@ -28,10 +28,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.u_study.R
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
@@ -61,7 +63,7 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                 OutlinedTextField(
                     value = state.firstName,
                     onValueChange = actions::setFirstName,
-                    label = { Text("First Name") },
+                    label = { Text(stringResource(R.string.firstName)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -69,7 +71,7 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                 OutlinedTextField(
                     value = state.lastName,
                     onValueChange = actions::setLastName,
-                    label = { Text("Last Name") },
+                    label = { Text(stringResource(R.string.lastName)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -77,7 +79,7 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                 OutlinedTextField(
                     value = state.email,
                     onValueChange = actions::setEmail,
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.email)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -85,7 +87,7 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                 OutlinedTextField(
                     value = state.password,
                     onValueChange = actions::setPassword,
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.password)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -102,7 +104,7 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                 OutlinedTextField(
                     value = state.confirmPassword,
                     onValueChange = actions::setConfirmPassword,
-                    label = { Text("Confirm Password") },
+                    label = { Text(stringResource(R.string.confirmPassword)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -122,16 +124,16 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                         onCheckedChange = actions::changeTerms
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text("I have accepted the terms and conditions")
+                    Text(stringResource(R.string.checkboxRegisterText))
                 }
                 Spacer(Modifier.height(16.dp))
                 SaveButton(
-                    text = "Sign Up",
+                    text = stringResource(R.string.signUp_button),
                     onClick = { navController.navigate(UStudyRoute.HomeScreen) })
             }
 
             TextButton(onClick = { navController.navigate(UStudyRoute.LoginScreen) }) {
-                Text("Have an account? Sign In")
+                Text(stringResource(R.string.haveAnAccount_text))
             }
         }
     }
