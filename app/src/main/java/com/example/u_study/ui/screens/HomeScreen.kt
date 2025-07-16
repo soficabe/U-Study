@@ -61,7 +61,7 @@ fun HomeScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.greeting) + "Sofia 👋", //da cambiare con nome del profilo
+                text = stringResource(R.string.greeting) + " Sofia 👋", //da cambiare con nome del profilo
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )

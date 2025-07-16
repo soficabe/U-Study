@@ -8,9 +8,12 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val Context.dataStore by preferencesDataStore("theme")
+val Context.dataStoreLang by preferencesDataStore("language")
 
 val appModule = module {
     single { get<Context>().dataStore }
+
+    single { get<Context>().dataStoreLang }
 
     single { SettingsRepository(get()) }
 

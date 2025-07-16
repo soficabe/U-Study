@@ -1,5 +1,6 @@
 package com.example.u_study.ui.screens.settings
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -35,12 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
+import com.example.u_study.data.models.Language
 import com.example.u_study.data.models.Theme
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
@@ -66,6 +71,11 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
     var selectedTheme by remember { mutableStateOf(state.theme) }
     val themeOptions = Theme.entries
 
+    var showLangDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    //var selectedLang by remember { mutableStateOf(state.lang) }
+    //val langOptions = Language.entries
+
     Scaffold (
         topBar = { AppBar(stringResource(R.string.settingsScreen_name), navController) },
         bottomBar = { NavigationBar(navController = navController) }
@@ -81,19 +91,17 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
 
             TextTitle(stringResource(R.string.loginAlerts))
             HorizontalDivider()
+
             SettingsWithSwitch(stringResource(R.string.sendPushNotifications), Icons.Filled.Notifications,
                 pushNotifications, onCheckedChange = { pushNotifications = it } )
             HorizontalDivider()
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showThemeDialog = true }
-                .padding(16.dp)) {
-                Text(
-                    text = stringResource(R.string.changeTheme),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = Bold
-                )
-            }
+
+            SettingsClickable(stringResource(R.string.changeTheme), Icons.Filled.WbSunny, onClick = {showThemeDialog = true})
+
+            HorizontalDivider()
+
+            SettingsClickable(stringResource(R.string.changeLang), Icons.Filled.Language, onClick = {showLangDialog = true})
+
             HorizontalDivider()
             SettingsClickable(stringResource(R.string.logout), Icons.AutoMirrored.Filled.Logout, Color.Red, onClick = {})
         }
@@ -108,6 +116,19 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                     actions.changeTheme(it)
                 },
                 onDismiss = { showThemeDialog = false })
+        }
+
+        if (showLangDialog) {
+            LangRadioOptionsDialog(
+                title = stringResource(R.string.chooseLang),
+                options = Language.entries,
+                selectedOption = state.lang,
+                onOptionSelected = {
+                    showLangDialog = false
+                    actions.changeLang(it)
+                    (context as? Activity)?.recreate()
+                },
+                onDismiss = { showLangDialog = false })
         }
     }
 }
@@ -180,6 +201,36 @@ fun ThemeRadioOptionsDialog(
                         selected = option == selectedOption,
                         onClick = { onOptionSelected(option) })
                     Text(text = stringResource(id = option.themeName))
+                }
+            }
+        }
+    }, confirmButton = {
+        TextButton(onClick = onDismiss) {
+            Text(stringResource(R.string.closeButton))
+        }
+    })
+}
+
+@Composable
+fun LangRadioOptionsDialog(
+    title: String,
+    options: List<Language>,
+    selectedOption: Language,
+    onOptionSelected: (Language) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(onDismissRequest = onDismiss, title = { Text(text = title) }, text = {
+        Column {
+            options.forEach { option ->
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .clickable { onOptionSelected(option) }) {
+                    RadioButton(
+                        selected = option == selectedOption,
+                        onClick = { onOptionSelected(option) })
+                    Text(text = stringResource(id = option.langName))
                 }
             }
         }

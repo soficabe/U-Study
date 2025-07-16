@@ -72,5 +72,9 @@
     <string name="system">Sistema</string>
     <string name="closeButton">Chiudi</string>
     <string name="logout">Esci</string>
+    <string name="changeLang">Cambia Lingua</string>
+    <string name="chooseLang">Scegli Lingua</string>
+    <string name="language_italian">Italiano</string>
+    <string name="language_english">Inglese</string>
 
 </resources>
