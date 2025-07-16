@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">U_Study</string>
+    <string name="app_name">U Study</string>
+    <string name="HomeScreen_name">Home</string>
+    <string name="RegisterScreen_name">Register</string>
+    <string name="LoginScreen_name">Login</string>
+    <string name="ProfileScreen_name">Profile</string>
+    <string name="EditProfileScreen_name">Edit Profile</string>
+    <string name="StatsScreen_name">Stats</string>
+    <string name="StudySessionScreen_name">Study Session</string>
+    <string name="ToDoScreen_name">To-Do List</string>
+    <string name="LibrariesListScreen_name">Libraries</string>
+    <string name="FavoriteLibrariesScreen_name">Favorite Libraries</string>
+    <string name="LibrariesMapScreen_name">Libraries Map</string>
+
 </resources>
