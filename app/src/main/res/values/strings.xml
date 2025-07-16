@@ -1,15 +1,74 @@
 <resources>
+    <!--screens-->
     <string name="app_name">U Study</string>
-    <string name="HomeScreen_name">Home</string>
-    <string name="RegisterScreen_name">Register</string>
-    <string name="LoginScreen_name">Login</string>
-    <string name="ProfileScreen_name">Profile</string>
-    <string name="EditProfileScreen_name">Edit Profile</string>
-    <string name="StatsScreen_name">Stats</string>
-    <string name="StudySessionScreen_name">Study Session</string>
-    <string name="ToDoScreen_name">To-Do List</string>
-    <string name="LibrariesListScreen_name">Libraries</string>
-    <string name="FavoriteLibrariesScreen_name">Favorite Libraries</string>
-    <string name="LibrariesMapScreen_name">Libraries Map</string>
+    <string name="homeScreen_name">Home</string>
+    <string name="registerScreen_name">Register</string>
+    <string name="loginScreen_name">Login</string>
+    <string name="profileScreen_name">Profile</string>
+    <string name="editProfileScreen_name">Edit Profile</string>
+    <string name="statsScreen_name">Stats</string>
+    <string name="studySessionScreen_name">Study Session</string>
+    <string name="toDoScreen_name">To-Do List</string>
+    <string name="librariesListScreen_name">Libraries</string>
+    <string name="favoriteLibrariesScreen_name">Favorite Libraries</string>
+    <string name="librariesMapScreen_name">Libraries Map</string>
+
+    <!-- home buttons -->
+    <string name="greeting">Hello</string>
+    <string name="studySession_button">Study Session</string>
+    <string name="toDo_button">TO-DO List</string>
+    <string name="librariesList_button">Libraries List</string>
+    <string name="librariesMap_button">Libraries Map</string>
+    <string name="favoriteLibraries_button">Favorite Libraries</string>
+    <string name="stats_button">Stats</string>
+
+    <!-- Navigation buttons -->
+    <string name="sessions_nav">Sessions</string>
+    <string name="toDo_nav">TO-DO List</string>
+    <string name="librariesList_nav">Lib List</string>
+    <string name="librariesMap_nav">Lib Map</string>
+
+    <!-- sign in and sign up -->
+    <string name="LoginText">Sign in to continue</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="checkboxRegisterText">I have accepted the terms and conditions</string>
+    <string name="signIn_button">Sign In</string>
+    <string name="signUp_button">Sign Up</string>
+    <string name="dontHaveAccount_text">Don't have an account? Sign Up</string>
+    <string name="withoutLogging_text">Continue without logging in</string>
+    <string name="haveAnAccount_text">Have an account? Sign in</string>
+
+    <!-- profile and edit profile -->
+    <string name="nameUser">Sofia</string>
+    <string name="lastNameUser">Bianchi</string>
+    <string name="emailuser">sofiabianchi@gmail.com</string>
+    <string name="editProfile_button">Edit Profile</string>
+    <string name="saveChanges_button">Save Changes</string>
+
+    <!-- stats -->
+    <string name="statsText">Your Achievements</string>
+    <string name="tasksDone_text">Tasks Done</string>
+    <string name="completedStudySessions_text">Completed Study Sessions</string>
+    <string name="visitedLibraries_text">Visited Libraries</string>
+    <string name="studyHours_text">Study Hours</string>
+
+    <!-- To-Do chips -->
+    <string name="onGoing_chip">On Going</string>
+    <string name="completed_chip">Completed</string>
+
+    <!-- Settings -->
+    <string name="loginAlerts">Login Alerts</string>
+    <string name="sendPushNotifications">Send push notifications</string>
+    <string name="changeTheme">Change theme</string>
+    <string name="chooseTheme">Choose theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+    <string name="closeButton">Close</string>
+    <string name="logout">Logout</string>
 
 </resources>

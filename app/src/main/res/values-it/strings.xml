@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- screens -->
+    <string name="app_name">U Study</string>
+    <string name="homeScreen_name">Home</string>
+    <string name="registerScreen_name">Registrati</string>
+    <string name="loginScreen_name">Accedi</string>
+    <string name="profileScreen_name">Profilo</string>
+    <string name="editProfileScreen_name">Modifica Profilo</string>
+    <string name="statsScreen_name">Statistiche</string>
+    <string name="studySessionScreen_name">Sessione Studio</string>
+    <string name="toDoScreen_name">Lista To-Do</string>
+    <string name="librariesListScreen_name">Biblioteche</string>
+    <string name="favoriteLibrariesScreen_name">Biblioteche Preferite</string>
+    <string name="librariesMapScreen_name">Mappa Biblioteche</string>
+
+    <!-- buttons -->
+    <string name="greeting">Ciao Sofia 👋</string>
+    <string name="studySession_button">Sessione Studio</string>
+    <string name="toDo_button">Lista TO-DO</string>
+    <string name="librariesList_button">Lista Biblioteche</string>
+    <string name="librariesMap_button">Mappa Biblioteche</string>
+    <string name="favoriteLibraries_button">Biblioteche Preferite</string>
+    <string name="stats_button">Statistiche</string>
+
+    <!-- Navigation buttons -->
+    <string name="sessions_nav">Sessioni</string>
+    <string name="toDo_nav">Lista TO-DO</string>
+    <string name="librariesList_nav">Biblioteche</string>
+    <string name="librariesMap_nav">Mappa</string>
+
+    <!-- sign in and sign up -->
+    <string name="LoginText">Accedi per continuare</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="firstName">Nome</string>
+    <string name="lastName">Cognome</string>
+    <string name="confirmPassword">Conferma Password</string>
+    <string name="checkboxRegisterText">Ho accettato i termini e le condizioni</string>
+    <string name="signIn_button">Accedi</string>
+    <string name="signUp_button">Registrati</string>
+    <string name="dontHaveAccount_text">Non hai un account? Registrati</string>
+    <string name="withoutLogging_text">Continua senza accedere</string>
+    <string name="haveAnAccount_text">Hai un account? Accedi</string>
+
+    <!-- profile and edit profile -->
+    <string name="nameUser">Sofia</string>
+    <string name="lastNameUser">Bianchi</string>
+    <string name="emailuser">sofiabianchi@gmail.com</string>
+    <string name="editProfile_button">Modifica Profilo</string>
+    <string name="saveChanges_button">Salva Modifiche</string>
+
+    <!-- stats -->
+    <string name="statsText">I tuoi traguardi</string>
+    <string name="tasksDone_text">Tasks completate</string>
+    <string name="completedStudySessions_text">Sessioni studio completate</string>
+    <string name="visitedLibraries_text">Biblioteche visitate</string>
+    <string name="studyHours_text">Ore di studio</string>
+
+    <!-- To-Do chips -->
+    <string name="onGoing_chip">In corso</string>
+    <string name="completed_chip">Completate</string>
+
+    <!-- Settings -->
+    <string name="loginAlerts">Avvisi di accesso</string>
+    <string name="sendPushNotifications">Manda notifiche push</string>
+    <string name="changeTheme">Cambia tema</string>
+    <string name="chooseTheme">Scegli tema</string>
+    <string name="light">Chiaro</string>
+    <string name="dark">Scuro</string>
+    <string name="system">Sistema</string>
+    <string name="closeButton">Chiudi</string>
+    <string name="logout">Esci</string>
+
+</resources>
