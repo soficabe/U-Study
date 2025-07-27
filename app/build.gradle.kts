@@ -68,4 +68,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.supabase.kt)
+    implementation(libs.postgrest.kt)
+    implementation(libs.auth.kt)
+
+    implementation(libs.ktor.client.android)
 }

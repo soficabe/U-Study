@@ -8,19 +8,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.example.u_study.data.models.Language
 import com.example.u_study.data.models.Theme
 import com.example.u_study.ui.UStudyNavGraph
 import com.example.u_study.ui.screens.settings.SettingsViewModel
 import com.example.u_study.ui.theme.U_StudyTheme
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.getKoin
-import kotlin.coroutines.EmptyCoroutineContext.get
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +28,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val settingsViewModel = koinViewModel<SettingsViewModel>()
             val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
+
+
 
             /*LaunchedEffect(settingsState.lang) {
                 val appLocale = LocaleListCompat.forLanguageTags(settingsState.lang.code)
@@ -45,6 +45,9 @@ class MainActivity : ComponentActivity() {
             ) {
                 val navController = rememberNavController()
                 UStudyNavGraph(settingsViewModel, settingsState, navController)
+
+
+
             }
         }
     }
