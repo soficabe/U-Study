@@ -69,7 +69,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.supabase.kt)
+    implementation(platform(libs.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.auth.kt)
 
