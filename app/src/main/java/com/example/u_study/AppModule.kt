@@ -2,9 +2,13 @@ package com.example.u_study
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.SettingsRepository
+import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.settings.SettingsViewModel
+import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import org.koin.core.module.dsl.viewModel
@@ -28,7 +32,12 @@ val appModule = module {
         }
     }
 
+    single { get<SupabaseClient>().auth }
+
+
+    single { AuthRepository(get()) }
     single { SettingsRepository(get()) }
 
     viewModel { SettingsViewModel(get()) }
+    viewModel { RegisterViewModel(get()) }
 }

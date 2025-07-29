@@ -39,7 +39,11 @@ import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController: NavHostController) {
+fun RegisterScreen(
+    state: RegisterState,
+    actions: RegisterActions,
+    navController: NavHostController
+) {
     val scrollState = rememberScrollState()
 
     //stato campi
@@ -129,7 +133,7 @@ fun RegisterScreen(state: RegisterState, actions: RegisterActions, navController
                 Spacer(Modifier.height(16.dp))
                 SaveButton(
                     text = stringResource(R.string.signUp_button),
-                    onClick = { navController.navigate(UStudyRoute.HomeScreen) })
+                    onClick = { /*navController.navigate(UStudyRoute.HomeScreen)*/ actions.register() })
             }
 
             TextButton(onClick = { navController.navigate(UStudyRoute.LoginScreen) }) {

@@ -1,9 +1,13 @@
 package com.example.u_study.ui.screens.register
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.u_study.data.repositories.AuthRepository
+import com.example.u_study.data.repositories.RegisterResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class RegisterState(
     val firstName: String = "",
@@ -11,7 +15,8 @@ data class RegisterState(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val termsAccepted: Boolean = false
+    val termsAccepted: Boolean = false,
+    val registerResult: RegisterResult = RegisterResult.Success
 )
 
 interface RegisterActions {
@@ -21,10 +26,12 @@ interface RegisterActions {
     fun setPassword(password: String)
     fun setConfirmPassword(confirmPassword: String)
     fun changeTerms(termsAccepted: Boolean)
-    //fun register()
+    fun register()
 }
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel (
+    private val authRepository: AuthRepository
+) : ViewModel() {
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
 
@@ -47,7 +54,18 @@ class RegisterViewModel : ViewModel() {
         override fun changeTerms(termsAccepted: Boolean) =
             _state.update { it.copy(termsAccepted = termsAccepted) }
 
-        //override fun register() = {}
+        override fun register() {
+            if(_state.value.password == _state.value.confirmPassword) {
+                viewModelScope.launch {
+                    val email = _state.value.email
+                    val password = _state.value.password
+                    val result = authRepository.signUp(email, password)
+                    _state.update { it.copy(registerResult = result) }
+                }
+            } else {
+                /*TODO*/
+            }
+        }
 
     }
 }
