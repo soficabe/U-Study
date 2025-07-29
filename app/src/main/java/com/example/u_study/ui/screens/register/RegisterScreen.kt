@@ -17,11 +17,13 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,9 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
+import com.example.u_study.data.repositories.RegisterResult
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
@@ -49,6 +53,24 @@ fun RegisterScreen(
     //stato campi
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(state.registerResult) {
+        when (state.registerResult) {
+            RegisterResult.Success -> {
+                navController.navigate(UStudyRoute.HomeScreen) {
+                        popUpTo(UStudyRoute.RegisterScreen) { inclusive = true }
+                    }
+                }
+
+            RegisterResult.UserExisting -> {
+                //faremo messaggio
+            }
+            RegisterResult.Error -> {
+                //faremo messaggio errore
+            }
+
+        }
+    }
 
     Surface (modifier = Modifier.fillMaxSize()) {
         Column(
@@ -130,10 +152,21 @@ fun RegisterScreen(
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.checkboxRegisterText))
                 }
+
+                Spacer(Modifier.height(16.dp))
+                if (state.errorMessage != null) {
+                    Text(
+                        text = state.errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
                 Spacer(Modifier.height(16.dp))
                 SaveButton(
                     text = stringResource(R.string.signUp_button),
-                    onClick = { /*navController.navigate(UStudyRoute.HomeScreen)*/ actions.register() })
+                    onClick = { actions.register() })
             }
 
             TextButton(onClick = { navController.navigate(UStudyRoute.LoginScreen) }) {

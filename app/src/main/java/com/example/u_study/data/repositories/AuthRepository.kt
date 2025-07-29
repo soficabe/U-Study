@@ -1,5 +1,6 @@
 package com.example.u_study.data.repositories
 
+import android.util.Log
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -26,8 +27,9 @@ class AuthRepository (
         } catch (_: AuthRestException) {
             RegisterResult.UserExisting
         } catch (e: Exception) {
-            throw e
+            Log.e("AuthRepository", "Sign up failed", e)
             RegisterResult.Error
         }
     }
+
 }

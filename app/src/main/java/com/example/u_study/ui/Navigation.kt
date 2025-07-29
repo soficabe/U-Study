@@ -70,13 +70,13 @@ fun UStudyNavGraph(
         modifier = modifier
     ) {
         composable<UStudyRoute.LoginScreen> {
-            val loginViewModel = viewModel<LoginViewModel>()
+            val loginViewModel = koinViewModel<LoginViewModel>()
             val loginState by loginViewModel.state.collectAsStateWithLifecycle()
             LoginScreen(loginState, loginViewModel.actions, navController)
         }
 
         composable<UStudyRoute.RegisterScreen> {
-            val registerViewModel = viewModel<RegisterViewModel>()
+            val registerViewModel = koinViewModel<RegisterViewModel>()
             val registerState by registerViewModel.state.collectAsStateWithLifecycle()
             RegisterScreen(registerState, registerViewModel.actions, navController)
         }
@@ -86,19 +86,19 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.ProfileScreen> {
-            val profileViewModel = viewModel<ProfileViewModel>()
+            val profileViewModel = koinViewModel<ProfileViewModel>()
             val profileState by profileViewModel.state.collectAsStateWithLifecycle()
             ProfileScreen(profileState, navController)
         }
 
         composable<UStudyRoute.ModifyUserScreen> {
-            val modifyUserViewModel = viewModel<ModifyUserViewModel>()
+            val modifyUserViewModel = koinViewModel<ModifyUserViewModel>()
             val modifyUserState by modifyUserViewModel.state.collectAsStateWithLifecycle()
             ModifyUserScreen(modifyUserState, modifyUserViewModel.actions, navController)
         }
 
         composable<UStudyRoute.StatsScreen> {
-            val statsViewModel = viewModel<StatsViewModel>()
+            val statsViewModel = koinViewModel<StatsViewModel>()
             val statsState by statsViewModel.state.collectAsStateWithLifecycle()
             StatsScreen(statsState, navController)
         }
@@ -108,18 +108,18 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.ToDoScreen> {
-            val todoViewModel = viewModel<TodoViewModel>()
+            val todoViewModel = koinViewModel<TodoViewModel>()
             val todoState by todoViewModel.state.collectAsStateWithLifecycle()
             ToDoScreen(todoState, navController)
         }
 
         composable<UStudyRoute.LibrariesScreen> {
-            val librariesViewModel = viewModel<LibrariesViewModel>()
+            val librariesViewModel = koinViewModel<LibrariesViewModel>()
             val librariesState by librariesViewModel.state.collectAsStateWithLifecycle()
             LibrariesScreen(librariesState, navController)
         }
         composable<UStudyRoute.FavLibrariesScreen> {
-            val favLibrariesViewModel = viewModel<FavLibrariesViewModel>()
+            val favLibrariesViewModel = koinViewModel<FavLibrariesViewModel>()
             val favLibrariesState by favLibrariesViewModel.state.collectAsStateWithLifecycle()
             FavLibrariesScreen(favLibrariesState, navController)
         }
