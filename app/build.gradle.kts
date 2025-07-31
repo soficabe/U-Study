@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +11,15 @@ android {
     namespace = "com.example.u_study"
     compileSdk = 35
 
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
+
+    val key = localProperties.getProperty("SUPABASE_ANON_KEY") ?: ""
+    val url = localProperties.getProperty("SUPABASE_URL") ?: ""
+
     defaultConfig {
         applicationId = "com.example.u_study"
         minSdk = 26
@@ -17,6 +28,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String","SUPABASE_ANON_KEY","\"$key\"")
+        buildConfigField("String","SUPABASE_URL","\"$url\"")
     }
 
     buildTypes {
@@ -37,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

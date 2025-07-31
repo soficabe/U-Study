@@ -31,8 +31,8 @@ val appModule = module {
 
     single {
         createSupabaseClient(
-            supabaseUrl = "https://bvtcaudkknuxsfkmaqtm.supabase.co/",
-            supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2dGNhdWRra251eHNma21hcXRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1MDExMjAsImV4cCI6MjA2ODA3NzEyMH0.tbcWeir-yj6m0MxMlJ4cPTU6mfDJfgB_PazwFelzjQ8"
+            supabaseUrl = BuildConfig.SUPABASE_URL,
+            supabaseKey = BuildConfig.SUPABASE_ANON_KEY
         ) {
             install(Auth)
             install(Postgrest)
