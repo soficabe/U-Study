@@ -1,7 +1,10 @@
 package com.example.u_study.ui.screens.register
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.u_study.R
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.RegisterResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +21,7 @@ data class RegisterState(
     val termsAccepted: Boolean = false,
     val registerResult: RegisterResult = RegisterResult.Error,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null //se settata viene mostrata nella LoginScreen
+    val errorMessage: Int? = null //se settata viene mostrata nella RegisterScreen
 )
 
 interface RegisterActions {
@@ -68,17 +71,17 @@ class RegisterViewModel (
             if (currentState.firstName.isBlank() || currentState.lastName.isBlank() ||
                 currentState.email.isBlank() || currentState.password.isBlank()
             ) {
-                _state.update { it.copy(errorMessage = "Tutti i campi sono obbligatori.") }
+                _state.update { it.copy(errorMessage = R.string.requiredFields_error) }
                 return
             }
 
             if (!currentState.termsAccepted) {
-                _state.update { it.copy(errorMessage = "Devi accettare i termini e le condizioni.") }
+                _state.update { it.copy(errorMessage = R.string.acceptTerms_error) }
                 return
             }
 
             if (currentState.password != currentState.confirmPassword) {
-                _state.update { it.copy(errorMessage = "Le password non coincidono.") }
+                _state.update { it.copy(errorMessage = R.string.passwordNotMatch_error) }
                 return
             }
 
@@ -88,17 +91,17 @@ class RegisterViewModel (
                 _state.update { it.copy(registerResult = result, isLoading = false) }
 
                 when(result) {
+                    RegisterResult.Start -> {
+
+                    }
                     RegisterResult.UserExisting -> {
-                        _state.update { it.copy(errorMessage = "Questo utente esiste già.") }
+                        _state.update { it.copy(errorMessage = R.string.userExisting_error) }
                     }
                     RegisterResult.Error -> {
-                        _state.update { it.copy(errorMessage = "Si è verificato un errore imprevisto.") }
+                        _state.update { it.copy(errorMessage = R.string.classicError_error) }
                     }
                     RegisterResult.Success -> {
-                        //preso da supabase (documentazione). è qui che va aggiunto il codice per l'inserimento
-                        //dei dati in supabase?
-                        /*val addUser = City(name = "The Shire", countryId = 554)
-                        supabase.from("cities").insert(city)*/
+                        //teoricamente non va scritto niente qui
                     }
                 }
             }

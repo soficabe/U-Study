@@ -44,6 +44,13 @@
     <string name="withoutLogging_text">Continua senza accedere</string>
     <string name="haveAnAccount_text">Hai un account? Accedi</string>
 
+    <!-- register and login error messages -->
+    <string name="requiredFields_error">Tutti i campi sono obbligatori.</string>
+    <string name="acceptTerms_error">Devi accettare i termini e le condizioni.</string>
+    <string name="passwordNotMatch_error">Le password non coincidono.</string>
+    <string name="userExisting_error">Questo utente esiste già.</string>
+    <string name="classicError_error">Si è verificato un errore</string>
+
     <!-- profile and edit profile -->
     <string name="nameUser">Sofia</string>
     <string name="lastNameUser">Bianchi</string>

@@ -43,6 +43,14 @@
     <string name="withoutLogging_text">Continue without logging in</string>
     <string name="haveAnAccount_text">Have an account? Sign in</string>
 
+    <!-- register and login error messages -->
+    <string name="requiredFields_error">All fields are required.</string>
+    <string name="acceptTerms_error">You must accept the terms and conditions.</string>
+    <string name="passwordNotMatch_error">The passwords do not match.</string>
+    <string name="userExisting_error">This user already exists.</string>
+    <string name="classicError_error">An error occurred.</string>
+
+
     <!-- profile and edit profile -->
     <string name="nameUser">Sofia</string>
     <string name="lastNameUser">Bianchi</string>

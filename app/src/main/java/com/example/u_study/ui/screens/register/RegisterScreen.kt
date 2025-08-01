@@ -63,10 +63,13 @@ fun RegisterScreen(
                 }
 
             RegisterResult.UserExisting -> {
-                //faremo messaggio
+
             }
             RegisterResult.Error -> {
-                //faremo messaggio errore
+
+            }
+            RegisterResult.Start -> {
+
             }
 
         }
@@ -156,7 +159,7 @@ fun RegisterScreen(
                 Spacer(Modifier.height(16.dp))
                 if (state.errorMessage != null) {
                     Text(
-                        text = state.errorMessage,
+                        text = stringResource(id = state.errorMessage),
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 8.dp)

@@ -8,6 +8,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
 sealed interface RegisterResult {
+    data object Start : RegisterResult
     data object Success : RegisterResult
     data object UserExisting : RegisterResult
     data object Error : RegisterResult
