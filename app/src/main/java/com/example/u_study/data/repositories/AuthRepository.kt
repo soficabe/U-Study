@@ -14,6 +14,14 @@ sealed interface RegisterResult {
     data object Error : RegisterResult
 }
 
+sealed interface LoginResult {
+    data object Success : LoginResult
+    data object InvalidCredentials : LoginResult
+    data object Error : LoginResult
+    data object Start : LoginResult
+
+}
+
 class AuthRepository (
     private val auth: Auth
 ) {
@@ -41,4 +49,16 @@ class AuthRepository (
         }
     }
 
-}
+    suspend fun signIn(email: String, password: String): LoginResult {
+        return try {
+            auth.signInWith(Email) {
+                this.email = email
+                this.password = password
+            }
+            LoginResult.Success
+        } catch (_: AuthRestException) {
+            LoginResult.InvalidCredentials
+        } catch (_: Exception) {
+            LoginResult.Error
+        }
+    }}

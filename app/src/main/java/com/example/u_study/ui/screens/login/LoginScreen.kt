@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,16 +35,45 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
+import com.example.u_study.data.repositories.LoginResult
+import com.example.u_study.data.repositories.RegisterResult
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
 
 @Composable
-fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHostController) {
+fun LoginScreen(
+    state: LoginState,
+    actions: LoginActions,
+    navController: NavHostController
+) {
     val scrollState = rememberScrollState()
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(state.loginResult) {
+        when (state.loginResult) {
+            LoginResult.Success -> {
+                navController.navigate(UStudyRoute.HomeScreen) {
+                    popUpTo(UStudyRoute.LoginScreen) { inclusive = true }
+                }
+            }
+
+            LoginResult.InvalidCredentials -> {
+
+            }
+
+            LoginResult.Error -> {
+
+            }
+
+            LoginResult.Start -> {
+
+            }
+        }
+    }
+
     Surface (modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -92,7 +122,7 @@ fun LoginScreen(state: LoginState, actions: LoginActions, navController: NavHost
 
             Spacer(Modifier.height(24.dp))
 
-            SaveButton(stringResource(R.string.signIn_button), onClick = { navController.navigate(UStudyRoute.HomeScreen) })
+            SaveButton(stringResource(R.string.signIn_button), onClick = { actions.login() })
 
             TextButton(onClick = { navController.navigate(UStudyRoute.RegisterScreen) }) {
                 Text(stringResource(R.string.dontHaveAccount_text))

@@ -47,7 +47,7 @@ val appModule = module {
 
     viewModel { SettingsViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
-    viewModel { LoginViewModel() }
+    viewModel { LoginViewModel(get()) }
     viewModel { FavLibrariesViewModel() }
     viewModel { LibrariesViewModel() }
     viewModel { ModifyUserViewModel() }
