@@ -13,14 +13,14 @@ class UserRepository(
     suspend fun getUser(id: String): User? {
         return withContext(Dispatchers.IO) {
             try {
-                supabase.from("user")
+                supabase.from("User")
                     .select {
                         filter {
                             eq("id", id)
                         }
                     }.decodeSingleOrNull<User>()
             } catch (e: Exception) {
-                Log.i("TAG", "Error fetching user: ${e.message}")
+                Log.e("UserRepository", "Error fetching user: ${e.message}", e)
                 null
             }
         }
