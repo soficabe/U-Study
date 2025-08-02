@@ -64,7 +64,7 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
             Spacer(Modifier.height(16.dp))
 
             //nome cognome
-            Text(text = "${state.firstName} ${state.lastName}",
+            Text(text = "${state.user?.name} ${state.user?.surname}",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold)
 
@@ -91,7 +91,7 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = state.email,
+                    value = state.user?.email.toString(),
                     onValueChange = {},
                     modifier = Modifier.fillMaxWidth(),
                     enabled = false,

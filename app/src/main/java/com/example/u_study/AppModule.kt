@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.SettingsRepository
+import com.example.u_study.data.repositories.UserRepository
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
 import com.example.u_study.ui.screens.libraries.LibrariesViewModel
 import com.example.u_study.ui.screens.login.LoginViewModel
@@ -43,6 +44,7 @@ val appModule = module {
 
 
     single { AuthRepository(get()) }
+    single { UserRepository(get()) }
     single { SettingsRepository(get()) }
 
     viewModel { SettingsViewModel(get()) }
@@ -51,7 +53,7 @@ val appModule = module {
     viewModel { FavLibrariesViewModel() }
     viewModel { LibrariesViewModel() }
     viewModel { ModifyUserViewModel() }
-    viewModel { ProfileViewModel() }
+    viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { StatsViewModel() }
     viewModel { TodoViewModel() }
 

@@ -40,7 +40,6 @@ class LoginViewModel(
         override fun login() {
             _state.update { it.copy(errorMessageLog = null) }
 
-
             viewModelScope.launch {
                 _state.update { it.copy(isLoggingIn = true) }
                 val email = _state.value.email
@@ -55,8 +54,11 @@ class LoginViewModel(
                     LoginResult.Error -> {
                         _state.update { it.copy(errorMessageLog = R.string.classicError_error) }
                     }
-                    else -> {
-                        /* niente ciao */
+                    LoginResult.Start -> {
+
+                    }
+                    LoginResult.Success -> {
+
                     }
                 }
             }
