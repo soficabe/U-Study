@@ -120,6 +120,15 @@ fun LoginScreen(
                 }
             )
 
+            Spacer(Modifier.height(16.dp))
+            if (state.errorMessageLog != null) {
+                Text(
+                    text = stringResource(id = state.errorMessageLog),
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
             Spacer(Modifier.height(24.dp))
 
             SaveButton(stringResource(R.string.signIn_button), onClick = { actions.login() })

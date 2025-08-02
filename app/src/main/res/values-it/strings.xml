@@ -49,7 +49,10 @@
     <string name="acceptTerms_error">Devi accettare i termini e le condizioni.</string>
     <string name="passwordNotMatch_error">Le password non coincidono.</string>
     <string name="userExisting_error">Questo utente esiste già.</string>
-    <string name="classicError_error">Si è verificato un errore</string>
+    <string name="classicError_error">Si è verificato un errore.</string>
+    <string name="invalidCredentials_error">Le credenziali non sono corrette.</string>
+
+
 
     <!-- profile and edit profile -->
     <string name="nameUser">Sofia</string>
