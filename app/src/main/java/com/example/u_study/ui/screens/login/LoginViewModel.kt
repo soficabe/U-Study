@@ -55,7 +55,9 @@ class LoginViewModel(
                     LoginResult.Error -> {
                         _state.update { it.copy(errorMessageLog = R.string.classicError_error) }
                     }
-                    else -> { /* Non fare nulla per Success e Start */ }
+                    else -> {
+                        /* niente ciao */
+                    }
                 }
             }
         }
