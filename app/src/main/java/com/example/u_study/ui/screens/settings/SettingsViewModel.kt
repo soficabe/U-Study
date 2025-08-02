@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.models.Language
 import com.example.u_study.data.models.Theme
+import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.ui.screens.login.LoginState
 import kotlinx.coroutines.Job
@@ -27,10 +28,12 @@ data class SettingsState(
 interface SettingsActions {
     fun changeTheme(theme: Theme) : Job
     fun changeLang(lang: Language) : Job
+    fun logout()
 }
 
 class SettingsViewModel(
-    private val repository: SettingsRepository
+    private val repository: SettingsRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     val state: StateFlow<SettingsState> =
         repository.theme.combine(repository.language) { theme, language ->
@@ -56,6 +59,12 @@ class SettingsViewModel(
             repository.setLanguage(lang)
             val appLocale = LocaleListCompat.forLanguageTags(lang.toString())
             AppCompatDelegate.setApplicationLocales(appLocale)
+        }
+
+        override fun logout() {
+            viewModelScope.launch {
+                authRepository.signOut()
+            }
         }
     }
 }

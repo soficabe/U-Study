@@ -91,7 +91,7 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
-                    value =  state.user?.email ?: "",
+                    value = state.user?.email ?: "",
                     onValueChange = {},
                     modifier = Modifier.fillMaxWidth(),
                     enabled = false,

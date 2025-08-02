@@ -71,4 +71,9 @@ class AuthRepository (
         } catch (_: Exception) {
             LoginResult.Error
         }
-    }}
+    }
+
+    suspend fun signOut() {
+        auth.signOut()
+    }
+}
