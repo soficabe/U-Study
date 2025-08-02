@@ -4,6 +4,8 @@ import android.util.Log
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -25,6 +27,14 @@ sealed interface LoginResult {
 class AuthRepository (
     private val auth: Auth
 ) {
+    val user: UserInfo?
+        get() = (auth.sessionStatus.value as? SessionStatus.Authenticated)?.session?.user
+
+    suspend fun getUser(): UserInfo {
+        return auth.retrieveUserForCurrentSession(true)
+    }
+
+
     suspend fun signUp(
         email: String,
         password: String,

@@ -1,17 +1,14 @@
 package com.example.u_study.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.u_study.data.models.Theme
 import com.example.u_study.ui.screens.FavLibrariesScreen
-import com.example.u_study.ui.screens.HomeScreen
+import com.example.u_study.ui.screens.home.HomeScreen
 import com.example.u_study.ui.screens.LibrariesScreen
 import com.example.u_study.ui.screens.login.LoginScreen
 import com.example.u_study.ui.screens.login.LoginViewModel
@@ -30,7 +27,6 @@ import com.example.u_study.ui.screens.settings.SettingsState
 import com.example.u_study.ui.screens.settings.SettingsViewModel
 import com.example.u_study.ui.screens.stats.StatsViewModel
 import com.example.u_study.ui.screens.todo.TodoViewModel
-import com.example.u_study.ui.theme.U_StudyTheme
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
