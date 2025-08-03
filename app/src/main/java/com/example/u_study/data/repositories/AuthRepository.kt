@@ -25,6 +25,11 @@ sealed interface LoginResult {
 
 }
 
+sealed interface UpdatePasswordResult {
+    data object Success : UpdatePasswordResult
+    data class Error(val message: String?) : UpdatePasswordResult
+}
+
 class AuthRepository (
     private val auth: Auth
 ) {
@@ -78,5 +83,17 @@ class AuthRepository (
 
     suspend fun signOut() {
         auth.signOut()
+    }
+
+    suspend fun updatePassword(newPassword: String): UpdatePasswordResult {
+        return try {
+            auth.updateUser {
+                password = newPassword
+            }
+            UpdatePasswordResult.Success
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "Update password failed", e)
+            UpdatePasswordResult.Error(e.message)
+        }
     }
 }
