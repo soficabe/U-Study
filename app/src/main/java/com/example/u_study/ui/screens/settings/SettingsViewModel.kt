@@ -1,25 +1,24 @@
 package com.example.u_study.ui.screens.settings
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.u_study.R
 import com.example.u_study.data.models.Language
 import com.example.u_study.data.models.Theme
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.SettingsRepository
-import com.example.u_study.ui.screens.login.LoginState
+import com.example.u_study.data.repositories.UpdatePasswordResult
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class SettingsState(
@@ -32,6 +31,9 @@ interface SettingsActions {
     fun changeTheme(theme: Theme) : Job
     fun changeLang(lang: Language) : Job
     fun logout()
+    fun updatePassword(password: String, confirm: String)
+
+    val updatePasswordEvent: SharedFlow<UpdatePasswordResult>
 }
 
 class SettingsViewModel(
@@ -56,35 +58,8 @@ class SettingsViewModel(
             initialValue = SettingsState()
         )
 
-    /*val state: StateFlow<SettingsState> =
-        settingsRepository.theme.combine(settingsRepository.language) { theme, language ->
-            SettingsState(theme, language)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = SettingsState()
-        )
-
-    private val _state = MutableStateFlow(SettingsState())
-
-    init {
-        checkAuthenticationStatus()
-    }
-
-    private fun checkAuthenticationStatus() {
-        val isAuthenticated = authRepository.user != null
-        _state.update { it.copy(isAuthenticated = isAuthenticated) }
-    }*/
-
-
-
-
-    /*val state = repository.theme.map { SettingsState(it) }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = SettingsState()
-        //questo codice serviva quando c'era solo Tema, senza Linguaggio
-    )*/
+    //uso sharedFlow per eventi che accadono una volta
+    private val _updatePasswordEvent = MutableSharedFlow<UpdatePasswordResult>()
 
     val actions = object : SettingsActions {
         override fun changeTheme(theme: Theme) = viewModelScope.launch {
@@ -102,6 +77,29 @@ class SettingsViewModel(
                 authRepository.signOut()
             }
         }
+
+        override fun updatePassword(password: String, confirm: String) {
+            if (password != confirm) {
+                viewModelScope.launch {
+                    _updatePasswordEvent.emit(UpdatePasswordResult.Error(R.string.passwordNotMatch_error))
+                }
+                return
+            }
+
+            if (password.length < 6) {
+                viewModelScope.launch {
+                    _updatePasswordEvent.emit(UpdatePasswordResult.Error(R.string.weakPassword))
+                }
+                return
+            }
+
+            viewModelScope.launch {
+                val result = authRepository.updatePassword(password)
+                _updatePasswordEvent.emit(result)
+            }
+        }
+
+        override val updatePasswordEvent = _updatePasswordEvent.asSharedFlow()
     }
 }
 

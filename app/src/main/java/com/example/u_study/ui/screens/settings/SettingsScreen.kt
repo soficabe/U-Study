@@ -1,6 +1,7 @@
 package com.example.u_study.ui.screens.settings
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,18 +19,25 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,12 +50,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
 import com.example.u_study.data.models.Language
 import com.example.u_study.data.models.Theme
+import com.example.u_study.data.repositories.UpdatePasswordResult
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
@@ -67,15 +78,40 @@ import com.example.u_study.ui.composables.NavigationBar
 fun SettingsScreen (state: SettingsState, actions: SettingsActions, navController: NavHostController) {
     val scrollState = rememberScrollState()
 
+    //notifiche push
     var pushNotifications by rememberSaveable { mutableStateOf(true) }
+
+    //cambio tema (scuro, chiaro, default)
     var showThemeDialog by remember { mutableStateOf(false) }
     var selectedTheme by remember { mutableStateOf(state.theme) }
     val themeOptions = Theme.entries
 
+    //cambio lingua: da verificare
     var showLangDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    //var selectedLang by remember { mutableStateOf(state.lang) }
-    //val langOptions = Language.entries
+
+    //cambio password
+    var showPasswordDialog by remember { mutableStateOf(false) }
+    var newPassword by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
+
+
+    LaunchedEffect(Unit) {
+        actions.updatePasswordEvent.collect { result ->
+            when (result) {
+                is UpdatePasswordResult.Success -> {
+                    Toast.makeText(context, R.string.updatePasswordSuccess, Toast.LENGTH_SHORT).show()
+                    showPasswordDialog = false
+                }
+                is UpdatePasswordResult.Error -> {
+                    val errorMessage = context.getString(result.messageResId)
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     Scaffold (
         topBar = { AppBar(stringResource(R.string.settingsScreen_name), navController) },
@@ -104,6 +140,12 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
             SettingsClickable(stringResource(R.string.changeLang), Icons.Filled.Language, onClick = {showLangDialog = true})
 
             if (state.isAuthenticated) {
+                //fatti: cambio password e logout
+                //da fare: azzerare statistiche
+
+                HorizontalDivider()
+                SettingsClickable(stringResource(R.string.changePassword), Icons.Filled.Lock, onClick = { showPasswordDialog = true })
+
                 HorizontalDivider()
                 SettingsClickable(
                     stringResource(R.string.logout),
@@ -145,6 +187,58 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                     (context as? Activity)?.recreate()
                 },
                 onDismiss = { showLangDialog = false })
+        }
+
+        if (showPasswordDialog) {
+            AlertDialog(
+                onDismissRequest = { showPasswordDialog = false },
+                title = { Text(stringResource(R.string.changePassword)) },
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = newPassword,
+                            onValueChange = { newPassword = it },
+                            label = { Text(stringResource(R.string.newPassword)) },
+                            singleLine = true,
+                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            trailingIcon = {
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Icon(
+                                        if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                        "Change password visibility"
+                                    )
+                                }
+                            }
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = confirmPassword,
+                            onValueChange = { confirmPassword = it },
+                            label = { Text(stringResource(R.string.confirmNewPassword)) },
+                            singleLine = true,
+                            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            trailingIcon = {
+                                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                    Icon(
+                                        if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                        "Change confirm password visibility"
+                                    )
+                                }
+                            }
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = { actions.updatePassword(newPassword, confirmPassword) }) {
+                        Text(stringResource(R.string.saveString))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showPasswordDialog = false }) {
+                        Text(stringResource(R.string.closeButton))
+                    }
+                }
+            )
         }
     }
 }

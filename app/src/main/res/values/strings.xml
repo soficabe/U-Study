@@ -51,9 +51,6 @@
     <string name="classicError_error">An error occurred.</string>
     <string name="invalidCredentials_error">The credentials are incorrect.</string>
 
-
-
-
     <!-- profile and edit profile -->
     <string name="nameUser">Sofia</string>
     <string name="lastNameUser">Bianchi</string>
@@ -86,5 +83,12 @@
     <string name="chooseLang">Choose Language</string>
     <string name="language_italian">Italian</string>
     <string name="language_english">English</string>
+    <string name="changePassword">Change Password</string>
+    <string name="newPassword">New Password</string>
+    <string name="confirmNewPassword">Confirm Password</string>
+    <string name="saveString">Save</string>
+    <string name="updatePasswordSuccess">Password Updated!</string>
+    <string name="errorString">Error:</string>
+    <string name="weakPassword">The password is weak.</string>
 
 </resources>
