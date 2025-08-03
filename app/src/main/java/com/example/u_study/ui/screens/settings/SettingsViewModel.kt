@@ -10,6 +10,7 @@ import com.example.u_study.data.models.Theme
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.ui.screens.login.LoginState
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,11 +19,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class SettingsState(
     val theme: Theme = Theme.System,
-    val lang: Language = Language.ENGLISH
+    val lang: Language = Language.ENGLISH,
+    val isAuthenticated: Boolean = false
 )
 
 interface SettingsActions {
@@ -32,17 +35,50 @@ interface SettingsActions {
 }
 
 class SettingsViewModel(
-    private val repository: SettingsRepository,
+    private val settingsRepository: SettingsRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
+
     val state: StateFlow<SettingsState> =
-        repository.theme.combine(repository.language) { theme, language ->
+        combine(
+            settingsRepository.theme,
+            settingsRepository.language,
+            authRepository.sessionStatus
+        ) { theme, language, sessionStatus ->
+            SettingsState(
+                theme = theme,
+                lang = language,
+                isAuthenticated = sessionStatus is SessionStatus.Authenticated
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = SettingsState()
+        )
+
+    /*val state: StateFlow<SettingsState> =
+        settingsRepository.theme.combine(settingsRepository.language) { theme, language ->
             SettingsState(theme, language)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = SettingsState()
         )
+
+    private val _state = MutableStateFlow(SettingsState())
+
+    init {
+        checkAuthenticationStatus()
+    }
+
+    private fun checkAuthenticationStatus() {
+        val isAuthenticated = authRepository.user != null
+        _state.update { it.copy(isAuthenticated = isAuthenticated) }
+    }*/
+
+
+
+
     /*val state = repository.theme.map { SettingsState(it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -52,11 +88,11 @@ class SettingsViewModel(
 
     val actions = object : SettingsActions {
         override fun changeTheme(theme: Theme) = viewModelScope.launch {
-            repository.setTheme(theme)
+            settingsRepository.setTheme(theme)
         }
 
         override fun changeLang(lang: Language) = viewModelScope.launch {
-            repository.setLanguage(lang)
+            settingsRepository.setLanguage(lang)
             val appLocale = LocaleListCompat.forLanguageTags(lang.toString())
             AppCompatDelegate.setApplicationLocales(appLocale)
         }

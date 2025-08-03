@@ -6,6 +6,7 @@ import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -29,6 +30,8 @@ class AuthRepository (
 ) {
     val user: UserInfo?
         get() = (auth.sessionStatus.value as? SessionStatus.Authenticated)?.session?.user
+
+    val sessionStatus: StateFlow<SessionStatus> = auth.sessionStatus //mi serve per il logout
 
     suspend fun getUser(): UserInfo {
         return auth.retrieveUserForCurrentSession(true)

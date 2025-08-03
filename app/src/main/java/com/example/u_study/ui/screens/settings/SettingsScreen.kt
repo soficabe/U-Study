@@ -103,16 +103,23 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
 
             SettingsClickable(stringResource(R.string.changeLang), Icons.Filled.Language, onClick = {showLangDialog = true})
 
-            HorizontalDivider()
-            SettingsClickable(stringResource(R.string.logout), Icons.AutoMirrored.Filled.Logout, Color.Red, onClick = {
-                actions.logout()
+            if (state.isAuthenticated) {
+                HorizontalDivider()
+                SettingsClickable(
+                    stringResource(R.string.logout),
+                    Icons.AutoMirrored.Filled.Logout,
+                    Color.Red,
+                    onClick = {
+                        actions.logout()
 
-                navController.navigate(UStudyRoute.HomeScreen) {
-                    popUpTo(navController.graph.id) {
-                        inclusive = true
-                    }
-                }
-            })
+                        navController.navigate(UStudyRoute.HomeScreen) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                        }
+                    })
+            }
+
         }
         if(showThemeDialog) {
             ThemeRadioOptionsDialog(
