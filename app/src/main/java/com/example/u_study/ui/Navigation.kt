@@ -18,6 +18,7 @@ import com.example.u_study.ui.screens.settings.SettingsScreen
 import com.example.u_study.ui.screens.stats.StatsScreen
 import com.example.u_study.ui.screens.ToDoScreen
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
+import com.example.u_study.ui.screens.home.HomeViewModel
 import com.example.u_study.ui.screens.libraries.LibrariesViewModel
 import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
 import com.example.u_study.ui.screens.profile.ProfileScreen
@@ -78,7 +79,9 @@ fun UStudyNavGraph(
         }
 
         composable<UStudyRoute.HomeScreen> {
-            HomeScreen(navController)
+            val homeViewModel = koinViewModel<HomeViewModel>()
+            val homeState by homeViewModel.state.collectAsStateWithLifecycle()
+            HomeScreen(homeState, homeViewModel.actions, navController)
         }
 
         composable<UStudyRoute.ProfileScreen> {

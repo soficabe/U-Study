@@ -16,12 +16,15 @@
 
     <!-- home buttons -->
     <string name="greeting">Hello</string>
+    <string name="guest_greeting">Welcome!</string>
     <string name="studySession_button">Study Session</string>
     <string name="toDo_button">TO-DO List</string>
     <string name="librariesList_button">Libraries List</string>
     <string name="librariesMap_button">Libraries Map</string>
     <string name="favoriteLibraries_button">Favorite Libraries</string>
     <string name="stats_button">Stats</string>
+
+
 
     <!-- Navigation buttons -->
     <string name="sessions_nav">Sessions</string>

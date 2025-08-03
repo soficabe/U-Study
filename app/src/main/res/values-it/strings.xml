@@ -17,6 +17,7 @@
 
     <!-- buttons -->
     <string name="greeting">Ciao</string>
+    <string name="guest_greeting">Benvenuto!</string>
     <string name="studySession_button">Sessione Studio</string>
     <string name="toDo_button">Lista TO-DO</string>
     <string name="librariesList_button">Lista Biblioteche</string>
