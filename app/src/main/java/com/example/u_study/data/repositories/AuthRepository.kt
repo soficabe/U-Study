@@ -1,6 +1,8 @@
 package com.example.u_study.data.repositories
 
 import android.util.Log
+import androidx.annotation.StringRes
+import com.example.u_study.R
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.auth.providers.Google
@@ -28,7 +30,7 @@ sealed interface LoginResult {
 
 sealed interface UpdatePasswordResult {
     data object Success : UpdatePasswordResult
-    data class Error(val message: String?) : UpdatePasswordResult
+    data class Error(@StringRes val messageResId: Int) : UpdatePasswordResult
 }
 
 class AuthRepository (
@@ -103,7 +105,7 @@ class AuthRepository (
             UpdatePasswordResult.Success
         } catch (e: Exception) {
             Log.e("AuthRepository", "Update password failed", e)
-            UpdatePasswordResult.Error(e.message)
+            UpdatePasswordResult.Error(R.string.errorString)
         }
     }
 }

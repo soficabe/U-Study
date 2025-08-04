@@ -44,8 +44,17 @@ import com.example.u_study.ui.theme.LightBlue
 import com.example.u_study.ui.theme.Yellow
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(
+    state: HomeState,
+    actions: HomeActions,
+    navController: NavHostController) {
     val scrollState = rememberScrollState()
+
+    val greetingText = if (state.isAuthenticated) {
+        stringResource(R.string.greeting) + " ${state.user?.name ?: ""} 👋"
+    } else {
+        stringResource(R.string.guest_greeting)
+    }
 
     Scaffold(
         topBar = {
@@ -61,7 +70,7 @@ fun HomeScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.greeting) + " Sofia 👋", //da cambiare con nome del profilo
+                text = greetingText,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )

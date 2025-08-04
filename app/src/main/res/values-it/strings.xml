@@ -17,6 +17,7 @@
 
     <!-- buttons -->
     <string name="greeting">Ciao</string>
+    <string name="guest_greeting">Benvenuto!</string>
     <string name="studySession_button">Sessione Studio</string>
     <string name="toDo_button">Lista TO-DO</string>
     <string name="librariesList_button">Lista Biblioteche</string>
@@ -86,5 +87,12 @@
     <string name="chooseLang">Scegli Lingua</string>
     <string name="language_italian">Italiano</string>
     <string name="language_english">Inglese</string>
+    <string name="changePassword">Cambia Password</string>
+    <string name="newPassword">Nuova Password</string>
+    <string name="confirmNewPassword">Conferma Password</string>
+    <string name="saveString">Salva</string>
+    <string name="updatePasswordSuccess">Password Aggiornata!</string>
+    <string name="errorString">Errore:</string>
+    <string name="weakPassword">Password troppo debole.</string>
 
 </resources>

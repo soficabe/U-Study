@@ -6,6 +6,7 @@ import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.data.repositories.UserRepository
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
+import com.example.u_study.ui.screens.home.HomeViewModel
 import com.example.u_study.ui.screens.libraries.LibrariesViewModel
 import com.example.u_study.ui.screens.login.LoginViewModel
 import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
@@ -72,5 +73,6 @@ val appModule = module {
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { StatsViewModel() }
     viewModel { TodoViewModel() }
+    viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
 
 }
