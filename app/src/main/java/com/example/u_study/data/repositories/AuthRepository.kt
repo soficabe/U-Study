@@ -3,6 +3,7 @@ package com.example.u_study.data.repositories
 import android.util.Log
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.exception.AuthRestException
+import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
@@ -78,6 +79,15 @@ class AuthRepository (
             LoginResult.InvalidCredentials
         } catch (_: Exception) {
             LoginResult.Error
+        }
+    }
+
+    suspend fun signInWithGoogle(): Boolean {
+        return try {
+            auth.signInWith(Google)
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 

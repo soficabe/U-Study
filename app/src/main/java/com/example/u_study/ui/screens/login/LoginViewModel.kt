@@ -22,6 +22,7 @@ interface LoginActions {
     fun setEmail(email: String)
     fun setPassword(password: String)
     fun login()
+    fun loginWithGoogle()
 }
 
 class LoginViewModel(
@@ -61,6 +62,15 @@ class LoginViewModel(
 
                     }
                 }
+            }
+        }
+
+        override fun loginWithGoogle() {
+            viewModelScope.launch {
+                _state.update { it.copy(isLoggingIn = true) }
+                val success = authRepository.signInWithGoogle()
+                val result = if (success) LoginResult.Success else LoginResult.Error
+                _state.update { it.copy(loginResult = result, isLoggingIn = false) }
             }
         }
 

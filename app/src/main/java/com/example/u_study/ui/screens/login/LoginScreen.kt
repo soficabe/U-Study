@@ -1,13 +1,20 @@
 package com.example.u_study.ui.screens.login
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,6 +23,7 @@ import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,6 +36,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -133,13 +143,70 @@ fun LoginScreen(
 
             SaveButton(stringResource(R.string.signIn_button), onClick = { actions.login() })
 
-            TextButton(onClick = { navController.navigate(UStudyRoute.RegisterScreen) }) {
+            TextButton(
+                onClick = { navController.navigate(UStudyRoute.RegisterScreen) }) {
                 Text(stringResource(R.string.dontHaveAccount_text))
             }
 
-            TextButton(onClick = { navController.navigate(UStudyRoute.HomeScreen) }) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 12.dp, bottom = 24.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline)
+                )
+
+                Text(
+                    text = "Or",
+                    color = Color.DarkGray,
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline)
+                )
+            }
+
+            GoogleSignInButton (
+                onClick = { actions.loginWithGoogle() }
+            )
+
+            TextButton(
+                onClick = { navController.navigate(UStudyRoute.HomeScreen) },
+                modifier = Modifier.padding(vertical = 8.dp)
+                ) {
                 Text(stringResource(R.string.withoutLogging_text))
             }
+
         }
+    }
+}
+
+@Composable
+fun GoogleSignInButton(onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_google),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp)
+        )
+
+        Spacer(modifier = Modifier.width(10.dp))
+
+        Text(
+            text = "Sign In With Google",
+            color = Color.DarkGray,
+            modifier = Modifier.padding(vertical = 4.dp)
+        )
     }
 }
