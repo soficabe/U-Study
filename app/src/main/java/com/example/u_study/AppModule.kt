@@ -29,13 +29,11 @@ import io.github.jan.supabase.storage.storage
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-//val Context.dataStore by preferencesDataStore("theme")
-val Context.dataStoreLang by preferencesDataStore("language")
+val Context.dataStore by preferencesDataStore("preferences")
 
 val appModule = module {
-    //single { get<Context>().dataStore }
+    single { get<Context>().dataStore }
 
-    single { get<Context>().dataStoreLang }
 
     single {
         createSupabaseClient(
