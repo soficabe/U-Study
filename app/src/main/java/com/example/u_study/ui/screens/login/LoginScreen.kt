@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
 import com.example.u_study.data.repositories.LoginResult
-import com.example.u_study.data.repositories.RegisterResult
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
