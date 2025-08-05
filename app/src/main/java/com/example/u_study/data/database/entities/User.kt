@@ -9,10 +9,10 @@ data class User(
     val id: String,
 
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
 
     @SerialName("surname")
-    val surname: String,
+    val surname: String? = null,
 
     @SerialName("email")
     val email: String,

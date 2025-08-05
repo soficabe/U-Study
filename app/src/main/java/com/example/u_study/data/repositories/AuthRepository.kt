@@ -84,12 +84,12 @@ class AuthRepository (
         }
     }
 
-    suspend fun signInWithGoogle(): Boolean {
+    suspend fun signInWithGoogle(): LoginResult {
         return try {
             auth.signInWith(Google)
-            true
+            LoginResult.Success
         } catch (e: Exception) {
-            false
+            LoginResult.Error
         }
     }
 

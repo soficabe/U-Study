@@ -1,5 +1,6 @@
 package com.example.u_study.ui.screens.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.R
@@ -68,8 +69,7 @@ class LoginViewModel(
         override fun loginWithGoogle() {
             viewModelScope.launch {
                 _state.update { it.copy(isLoggingIn = true) }
-                val success = authRepository.signInWithGoogle()
-                val result = if (success) LoginResult.Success else LoginResult.Error
+                val result = authRepository.signInWithGoogle()
                 _state.update { it.copy(loginResult = result, isLoggingIn = false) }
             }
         }
