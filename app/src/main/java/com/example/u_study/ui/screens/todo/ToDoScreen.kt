@@ -1,5 +1,6 @@
 package com.example.u_study.ui.screens
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -114,9 +115,10 @@ fun TodoItem(
         Row(
             Modifier
                 .fillMaxWidth()
-                .height(64.dp)
+                .defaultMinSize(64.dp)
+                //.height(64.dp)
                 .toggleable(
-                    value = /*item.isComplete*/false,
+                    value = todo.completed,
                     onValueChange = { onToggle() },
                     role = Role.Checkbox
                 )
