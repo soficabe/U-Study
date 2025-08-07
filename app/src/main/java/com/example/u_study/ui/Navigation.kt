@@ -109,7 +109,7 @@ fun UStudyNavGraph(
         composable<UStudyRoute.ToDoScreen> {
             val todoViewModel = koinViewModel<TodoViewModel>()
             val todoState by todoViewModel.state.collectAsStateWithLifecycle()
-            ToDoScreen(todoState, navController)
+            ToDoScreen(todoState, todoViewModel.actions, navController)
         }
 
         composable<UStudyRoute.LibrariesScreen> {

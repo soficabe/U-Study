@@ -31,13 +31,15 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
+import com.example.u_study.data.database.entities.ToDo
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.NavigationBar
+import com.example.u_study.ui.screens.todo.TodoActions
 import com.example.u_study.ui.screens.todo.TodoState
 
 @Composable
-fun ToDoScreen(state: TodoState, navController: NavHostController) {
+fun ToDoScreen(state: TodoState, actions: TodoActions, navController: NavHostController) {
     val chipLabels = listOf(stringResource(R.string.onGoing_chip), stringResource(R.string.completed_chip))
 
     Scaffold (
@@ -57,15 +59,15 @@ fun ToDoScreen(state: TodoState, navController: NavHostController) {
             }
             item {
                 AddTodoField(
-                    onSubmit = { /*TODO*/ },
+                    onSubmit = { content -> actions.addTodo(content) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
-            items(state.todos) {
+            items(state.todos, key = { it.id }) { todo ->
                 TodoItem(
-                    it,
-                    onToggle = { /*TODO*/ },
-                    onDelete = { /*TODO*/ }
+                    todo = todo,
+                    onToggle = { actions.toggleComplete(todo.id, !todo.completed) },
+                    onDelete = { actions.removeTodo(todo.id) }
                 )
             }
         }
@@ -98,7 +100,7 @@ fun AddTodoField(
 
 @Composable
 fun TodoItem(
-    text: String,
+    todo: ToDo,
     onToggle: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -122,9 +124,9 @@ fun TodoItem(
                 .padding(vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = /*item.isComplete*/false, onCheckedChange = null)
+            Checkbox(checked = todo.completed, onCheckedChange = null)
             Text(
-                /*item.content*/text,
+                todo.content,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 16.dp).weight(1F)
             )
