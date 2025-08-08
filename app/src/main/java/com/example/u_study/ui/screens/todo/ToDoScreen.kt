@@ -37,11 +37,15 @@ import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.screens.todo.TodoActions
+import com.example.u_study.ui.screens.todo.TodoFilter
 import com.example.u_study.ui.screens.todo.TodoState
 
 @Composable
 fun ToDoScreen(state: TodoState, actions: TodoActions, navController: NavHostController) {
-    val chipLabels = listOf(stringResource(R.string.onGoing_chip), stringResource(R.string.completed_chip))
+    //val chipLabels = listOf(stringResource(R.string.onGoing_chip), stringResource(R.string.completed_chip))
+
+    val onGoingLabel = stringResource(R.string.onGoing_chip)
+    val completedLabel = stringResource(R.string.completed_chip)
 
     Scaffold (
         topBar = {
@@ -56,7 +60,17 @@ fun ToDoScreen(state: TodoState, actions: TodoActions, navController: NavHostCon
                 .padding(contentPadding)
         ) {
             item {
-                FilterChipsRow(items = chipLabels)
+                FilterChipsRow(
+                    items = TodoFilter.entries.toList(), //lista di ogg. da mostrare
+                    itemLabel = { filter ->
+                        when(filter) {
+                            TodoFilter.ONGOING -> onGoingLabel
+                            TodoFilter.COMPLETED -> completedLabel
+                        }
+                    },
+                    selectedItems = state.activeFilters, //insieme degli oggetti selezionati
+                    onItemSelected = actions::toggleFilter //azione da chiamare al click
+                )
             }
             item {
                 AddTodoField(

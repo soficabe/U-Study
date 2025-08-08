@@ -19,12 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FilterChipsRow(
-    items: List<String>,
+fun <T> FilterChipsRow(
+    items: List<T>,
+    itemLabel: (T) -> String, //funzione per sapere come "leggere" ogni item
+    selectedItems: Set<T> = emptySet(), //insieme degli item selezionati
+    onItemSelected: (T) -> Unit = {}, //azione da fare quando un item viene cliccato
     modifier: Modifier = Modifier
 ) {
-    // Stato per ogni chip
-    val selectedStates = remember { mutableStateMapOf<String, Boolean>() }
 
     LazyRow(
         modifier = modifier.padding(8.dp),
@@ -32,12 +33,12 @@ fun FilterChipsRow(
         contentPadding = PaddingValues(horizontal = 8.dp)
     ) {
         items(items) { item ->
-            val selected = selectedStates[item] ?: false
+            val label = itemLabel(item)
+            val selected = item in selectedItems
+
             FilterChip(
-                onClick = {
-                    selectedStates[item] = !selected
-                },
-                label = { Text(item) },
+                onClick = { onItemSelected(item) },
+                label = { Text(label) },
                 selected = selected,
                 leadingIcon = if (selected) {
                     {

@@ -6,6 +6,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,6 +26,8 @@ fun LibrariesScreen(state: LibrariesState, navController: NavHostController) {
     //val chipLabels = listOf("Bologna", "Cesena", "Cesenatico", "Faenza", "Forlì", "Imola", "Ozzano d'Emilia", "Ravenna", "Rimini")
     //val elems = (0..50).map { "Library $it" }
 
+    var selectedCities by remember { mutableStateOf(emptySet<String>()) }
+
     Scaffold (
         topBar = {
             AppBar(stringResource(R.string.librariesListScreen_name), navController)
@@ -36,7 +42,19 @@ fun LibrariesScreen(state: LibrariesState, navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             item{
-                FilterChipsRow(items = state.cities)
+                FilterChipsRow(items = state.cities,
+                    itemLabel = { city -> city }, //items è già una lista di string quindi la label è l'item stesso
+                    selectedItems = selectedCities,
+                    onItemSelected = { city ->
+                        //fatto pre aggiungere/rimuovere un chip dalla selezione.
+                        val newSelection = selectedCities.toMutableSet()
+                        if (city in newSelection) {
+                            newSelection.remove(city)
+                        } else {
+                            newSelection.add(city)
+                        }
+                        selectedCities = newSelection
+                    })
             }
             items(state.libs) {
                 ListLibraryItem(it)
