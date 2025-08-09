@@ -77,6 +77,6 @@ val appModule = module {
     viewModel { StatsViewModel() }
     viewModel { TodoViewModel(get()) }
     viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
-    viewModel { LibraryDetailViewModel() }
+    viewModel { LibraryDetailViewModel(get(), get()) }
 
 }
