@@ -20,8 +20,10 @@ import com.example.u_study.ui.screens.ToDoScreen
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
 import com.example.u_study.ui.screens.home.HomeViewModel
 import com.example.u_study.ui.screens.libraries.LibrariesViewModel
+import com.example.u_study.ui.screens.libraryDetail.LibraryDetailViewModel
 import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
 import com.example.u_study.ui.screens.profile.ProfileScreen
+import com.example.u_study.ui.screens.libraryDetail.LibraryDetailScreen
 import com.example.u_study.ui.screens.profile.ProfileViewModel
 import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.settings.SettingsState
@@ -52,6 +54,8 @@ sealed interface UStudyRoute {
     data object LibrariesScreen : UStudyRoute
     @Serializable
     data object FavLibrariesScreen : UStudyRoute
+    @Serializable
+    data class LibraryDetailScreen(val libraryId: String) : UStudyRoute
 }
 
 @Composable
@@ -115,12 +119,18 @@ fun UStudyNavGraph(
         composable<UStudyRoute.LibrariesScreen> {
             val librariesViewModel = koinViewModel<LibrariesViewModel>()
             val librariesState by librariesViewModel.state.collectAsStateWithLifecycle()
-            LibrariesScreen(librariesState, navController)
+            LibrariesScreen(librariesState, librariesViewModel.actions, navController)
         }
         composable<UStudyRoute.FavLibrariesScreen> {
             val favLibrariesViewModel = koinViewModel<FavLibrariesViewModel>()
             val favLibrariesState by favLibrariesViewModel.state.collectAsStateWithLifecycle()
             FavLibrariesScreen(favLibrariesState, navController)
+        }
+
+        composable<UStudyRoute.LibraryDetailScreen> {
+            val libraryDetailViewModel = koinViewModel<LibraryDetailViewModel>()
+            val libraryDetailState by libraryDetailViewModel.state.collectAsStateWithLifecycle()
+            LibraryDetailScreen(libraryDetailState, libraryDetailViewModel.actions, navController)
         }
     }
 }

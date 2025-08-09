@@ -15,16 +15,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
+import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
+import com.example.u_study.ui.screens.libraries.LibrariesActions
 import com.example.u_study.ui.screens.libraries.LibrariesState
 
 @Composable
-fun LibrariesScreen(state: LibrariesState, navController: NavHostController) {
-    //val chipLabels = listOf("Bologna", "Cesena", "Cesenatico", "Faenza", "Forlì", "Imola", "Ozzano d'Emilia", "Ravenna", "Rimini")
-    //val elems = (0..50).map { "Library $it" }
+fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navController: NavHostController) {
 
     var selectedCities by remember { mutableStateOf(emptySet<String>()) }
 
@@ -56,8 +56,13 @@ fun LibrariesScreen(state: LibrariesState, navController: NavHostController) {
                         selectedCities = newSelection
                     })
             }
-            items(state.libs) {
-                ListLibraryItem(it)
+            items(state.libs, key = { it.id }) { library ->
+                ListLibraryItem(
+                    library = library,
+                    onClick = {
+                        navController.navigate(UStudyRoute.LibraryDetailScreen(libraryId = library.id.toString()))
+                    }
+                )
             }
         }
     }

@@ -1,12 +1,17 @@
 package com.example.u_study.ui.screens.libraries
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.u_study.data.database.entities.Library
+import com.example.u_study.data.repositories.LibraryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class LibrariesState(
-    val cities: List<String>,
-    var libs: List<String>
+    val libs: List<Library> = emptyList(),
+    val cities: List<String> = emptyList()
 )
 
 interface LibrariesActions {
@@ -14,16 +19,36 @@ interface LibrariesActions {
     fun removeFavLib(favLib: String)
 }
 
-class LibrariesViewModel : ViewModel() {
-    private val _state = MutableStateFlow(
-        LibrariesState(
-            listOf("Bologna", "Cesena", "Cesenatico", "Faenza", "Forlì", "Imola", "Ozzano d'Emilia", "Ravenna", "Rimini"),
-            listOf("1","2","3","4")
-        )
-    )
+class LibrariesViewModel (private val libraryRepository: LibraryRepository): ViewModel() {
+
+    private val _state = MutableStateFlow(LibrariesState())
     val state = _state.asStateFlow()
 
+    init {
+        loadLibraries()
+    }
+
+    private fun loadLibraries() {
+        viewModelScope.launch {
+            //_state.update { it.copy(isLoading = true) }
+            val loadedLibs = libraryRepository.getLibraries()
+
+            //se vogliamo le città da supabase già ordinate (ci potrebbero servire magari per la barra di ricerca?):
+            val uniqueCities = loadedLibs.map { it.city }.distinct().sorted()
+
+            _state.update {
+                it.copy(
+                    libs = loadedLibs,
+                    cities = uniqueCities,
+                    //isLoading = false
+                )
+            }
+        }
+    }
+
+
     val actions = object : LibrariesActions {
+
         override fun addFavLib(lib: String) {
             TODO()
         }

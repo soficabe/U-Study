@@ -3,12 +3,14 @@ package com.example.u_study
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.u_study.data.repositories.AuthRepository
+import com.example.u_study.data.repositories.LibraryRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.data.repositories.ToDoRepository
 import com.example.u_study.data.repositories.UserRepository
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
 import com.example.u_study.ui.screens.home.HomeViewModel
 import com.example.u_study.ui.screens.libraries.LibrariesViewModel
+import com.example.u_study.ui.screens.libraryDetail.LibraryDetailViewModel
 import com.example.u_study.ui.screens.login.LoginViewModel
 import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
 import com.example.u_study.ui.screens.profile.ProfileViewModel
@@ -63,16 +65,18 @@ val appModule = module {
     single { UserRepository(get()) }
     single { SettingsRepository(get()) }
     single { ToDoRepository(get()) }
+    single { LibraryRepository(get()) }
 
     viewModel { SettingsViewModel(get<SettingsRepository>(), get<AuthRepository>()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { FavLibrariesViewModel() }
-    viewModel { LibrariesViewModel() }
+    viewModel { LibrariesViewModel(get()) }
     viewModel { ModifyUserViewModel() }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { StatsViewModel() }
     viewModel { TodoViewModel(get()) }
     viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
+    viewModel { LibraryDetailViewModel() }
 
 }
