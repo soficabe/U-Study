@@ -23,9 +23,12 @@ data class Library(
     @SerialName("longitude")
     val longitude: Float,
 
-    @SerialName("timetable")
-    val timetable: String? = null,
+    @SerialName("phone_number")
+    val phoneNumber: String? = null,
 
-    @SerialName("image")
-    val image: String? = null
+    @SerialName("email")
+    val email: String? = null,
+
+    @SerialName("url")
+    val url: String? = null
 )
