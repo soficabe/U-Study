@@ -1,6 +1,5 @@
 package com.example.u_study.ui.screens.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.R

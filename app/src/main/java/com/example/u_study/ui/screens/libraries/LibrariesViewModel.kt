@@ -30,7 +30,6 @@ class LibrariesViewModel (private val libraryRepository: LibraryRepository): Vie
 
     private fun loadLibraries() {
         viewModelScope.launch {
-            //_state.update { it.copy(isLoading = true) }
             val loadedLibs = libraryRepository.getLibraries()
 
             //se vogliamo le città da supabase già ordinate (ci potrebbero servire magari per la barra di ricerca?):
@@ -39,8 +38,7 @@ class LibrariesViewModel (private val libraryRepository: LibraryRepository): Vie
             _state.update {
                 it.copy(
                     libs = loadedLibs,
-                    cities = uniqueCities,
-                    //isLoading = false
+                    cities = uniqueCities
                 )
             }
         }
