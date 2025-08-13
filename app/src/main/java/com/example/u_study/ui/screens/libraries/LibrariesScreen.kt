@@ -23,7 +23,6 @@ import androidx.navigation.NavHostController
 import com.example.u_study.R
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
-import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.screens.libraries.LibrariesActions
@@ -31,8 +30,6 @@ import com.example.u_study.ui.screens.libraries.LibrariesState
 
 @Composable
 fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navController: NavHostController) {
-
-    var selectedCities by remember { mutableStateOf(emptySet<String>()) }
 
     Scaffold (
         topBar = {
@@ -60,7 +57,7 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                 )
             }
 
-            items(state.libs, key = { it.id }) { library ->
+            items(state.libs, key = { it.id }) { library -> //per ogni ciclo, library contiene la var. corrente
                 ListLibraryItem(
                     library = library,
                     onClick = {
@@ -68,6 +65,10 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                     }
                 )
             }
+            /* note: uso key in modo tale che compose sappia sempre cosa è aggiunto e cosa tolto, in modo
+            da non dover rigenerare la lista ogni volta da capo. In pratica a ogni riga della lista viene
+            assegnata un'etichetta
+            */
         }
     }
 }

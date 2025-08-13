@@ -70,7 +70,7 @@ val appModule = module {
     viewModel { SettingsViewModel(get<SettingsRepository>(), get<AuthRepository>()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { LoginViewModel(get()) }
-    viewModel { FavLibrariesViewModel() }
+    viewModel { FavLibrariesViewModel(get()) }
     viewModel { LibrariesViewModel(get()) }
     viewModel { ModifyUserViewModel() }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }

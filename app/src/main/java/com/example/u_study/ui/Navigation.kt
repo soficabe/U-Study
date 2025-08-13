@@ -121,10 +121,11 @@ fun UStudyNavGraph(
             val librariesState by librariesViewModel.state.collectAsStateWithLifecycle()
             LibrariesScreen(librariesState, librariesViewModel.actions, navController)
         }
+
         composable<UStudyRoute.FavLibrariesScreen> {
             val favLibrariesViewModel = koinViewModel<FavLibrariesViewModel>()
             val favLibrariesState by favLibrariesViewModel.state.collectAsStateWithLifecycle()
-            FavLibrariesScreen(favLibrariesState, navController)
+            FavLibrariesScreen(favLibrariesState, favLibrariesViewModel.actions, navController)
         }
 
         composable<UStudyRoute.LibraryDetailScreen> {
