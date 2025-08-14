@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.u_study.R
@@ -27,86 +33,157 @@ import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
 
 @Composable
-fun ModifyUserScreen(state: ModifyUserState, actions: ModifyUserActions, navController: NavHostController) {
-
+fun ModifyUserScreen(
+    state: ModifyUserState,
+    actions: ModifyUserActions,
+    navController: NavHostController
+) {
     val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Gestione dei messaggi di errore e successo
+    LaunchedEffect(state.errorMessage) {
+        state.errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            actions.clearMessages()
+        }
+    }
+
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            snackbarHostState.showSnackbar("Profilo aggiornato con successo!")
+            actions.clearMessages()
+            // Torna indietro dopo il successo
+            //navController.popBackStack() --> con questo non ti aggiorna subito le cose
+            navController.navigate(UStudyRoute.ProfileScreen) {
+                popUpTo(UStudyRoute.ModifyUserScreen) { inclusive = true }
+            }
+        }
+    }
+
     Scaffold(
         topBar = { AppBar(title = stringResource(R.string.editProfileScreen_name), navController) },
-        bottomBar = { NavigationBar(navController = navController) }
-    ) {
-        innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 24.dp)
-                .verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        bottomBar = { NavigationBar(navController = navController) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { innerPadding ->
 
-            Spacer(Modifier.height(24.dp))
-
-            //immagine
-            ProfileIcon()
-
-            Spacer(Modifier.height(32.dp))
-
-            //column creata solo per allineare a sinistra
+        if (state.isLoading) {
+            // Stato di caricamento
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                //first name
-
-                Text(stringResource(R.string.firstName),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(4.dp))
-                OutlinedTextField(
-                    value = state.firstName,
-                    onValueChange = actions::setFirstName,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = true,
-                    singleLine = true
-                )
-
+                Spacer(Modifier.height(100.dp))
+                CircularProgressIndicator()
                 Spacer(Modifier.height(16.dp))
-                //last name
-
-                Text(stringResource(R.string.lastName),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(4.dp))
-                OutlinedTextField(
-                    value = state.lastName,
-                    onValueChange = actions::setLastName,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = true,
-                    singleLine = true
-                )
-
-                Spacer(Modifier.height(16.dp))
-                //email
-
-                Text(stringResource(R.string.email),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(4.dp))
-                OutlinedTextField(
-                    value = state.email,
-                    onValueChange = actions::setEmail,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = true,
-                    singleLine = true
-                )
-
+                Text("Caricamento profilo...", style = MaterialTheme.typography.bodyMedium)
             }
+        } else {
+            // Contenuto principale
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 24.dp)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(24.dp))
 
-            SaveButton(stringResource(R.string.saveChanges_button), onClick = { navController.navigate(UStudyRoute.ProfileScreen)})
+                // Immagine profilo
+                ProfileIcon()
 
+                Spacer(Modifier.height(32.dp))
 
+                // Column per allineare a sinistra
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    // Nome
+                    Text(
+                        stringResource(R.string.firstName),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    OutlinedTextField(
+                        value = state.firstName,
+                        onValueChange = actions::setFirstName,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isSaving,
+                        singleLine = true
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Cognome
+                    Text(
+                        stringResource(R.string.lastName),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    OutlinedTextField(
+                        value = state.lastName,
+                        onValueChange = actions::setLastName,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isSaving,
+                        singleLine = true
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Email
+                    Text(
+                        stringResource(R.string.email),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    OutlinedTextField(
+                        value = state.email,
+                        onValueChange = actions::setEmail,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isSaving,
+                        singleLine = true
+                    )
+                }
+
+                Spacer(Modifier.height(32.dp))
+
+                // Pulsante salva
+                if (state.isSaving) {
+                    CircularProgressIndicator()
+                    Spacer(Modifier.height(16.dp))
+                    Text(
+                        "Salvando...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                } else {
+                    SaveButton(
+                        text = stringResource(R.string.saveChanges_button),
+                        enabled = state.hasChanges && !state.isSaving,
+                        onClick = actions::saveChanges
+                    )
+
+                    if (!state.hasChanges) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            "Nessuna modifica da salvare",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+            }
         }
     }
 }

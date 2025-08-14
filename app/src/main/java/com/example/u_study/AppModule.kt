@@ -72,7 +72,7 @@ val appModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { FavLibrariesViewModel(get()) }
     viewModel { LibrariesViewModel(get()) }
-    viewModel { ModifyUserViewModel() }
+    viewModel { ModifyUserViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { StatsViewModel() }
     viewModel { TodoViewModel(get()) }

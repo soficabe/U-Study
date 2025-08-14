@@ -18,14 +18,15 @@ import com.example.u_study.ui.theme.Orange
  *
  */
 @Composable
-fun SaveButton(text: String, onClick: () -> Unit ) {
+fun SaveButton(text: String, enabled: Boolean = true, onClick: () -> Unit ) {
     Button(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Orange
-        )
+        ),
+        enabled = enabled
     ) {
         Text(text)
     }

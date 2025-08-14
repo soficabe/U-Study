@@ -25,12 +25,17 @@ sealed interface LoginResult {
     data object InvalidCredentials : LoginResult
     data object Error : LoginResult
     data object Start : LoginResult
-
 }
 
 sealed interface UpdatePasswordResult {
     data object Success : UpdatePasswordResult
     data class Error(@StringRes val messageResId: Int) : UpdatePasswordResult
+}
+
+sealed interface UpdateUserResult {
+    data object Success : UpdateUserResult
+    data object EmailAlreadyExists : UpdateUserResult
+    data class Error(@StringRes val messageResId: Int) : UpdateUserResult
 }
 
 class AuthRepository (
@@ -39,12 +44,11 @@ class AuthRepository (
     val user: UserInfo?
         get() = (auth.sessionStatus.value as? SessionStatus.Authenticated)?.session?.user
 
-    val sessionStatus: StateFlow<SessionStatus> = auth.sessionStatus //mi serve per il logout
+    val sessionStatus: StateFlow<SessionStatus> = auth.sessionStatus
 
     suspend fun getUser(): UserInfo {
         return auth.retrieveUserForCurrentSession(true)
     }
-
 
     suspend fun signUp(
         email: String,
@@ -106,6 +110,27 @@ class AuthRepository (
         } catch (e: Exception) {
             Log.e("AuthRepository", "Update password failed", e)
             UpdatePasswordResult.Error(R.string.errorString)
+        }
+    }
+
+    suspend fun updateUserEmail(email: String): UpdateUserResult {
+        return try {
+            // Aggiorna solo l'email nell'auth di Supabase
+            auth.updateUser {
+                this.email = email
+            }
+            UpdateUserResult.Success
+        } catch (e: AuthRestException) {
+            Log.e("AuthRepository", "Update user email failed - Auth exception", e)
+            if (e.message?.contains("email", ignoreCase = true) == true &&
+                e.message?.contains("already", ignoreCase = true) == true) {
+                UpdateUserResult.EmailAlreadyExists
+            } else {
+                UpdateUserResult.Error(R.string.errorString)
+            }
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "Update user email failed", e)
+            UpdateUserResult.Error(R.string.errorString)
         }
     }
 }
