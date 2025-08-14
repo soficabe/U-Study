@@ -1,7 +1,5 @@
 package com.example.u_study.ui.screens.settings
 
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.R
@@ -29,7 +27,7 @@ data class SettingsState(
 
 interface SettingsActions {
     fun changeTheme(theme: Theme) : Job
-    fun changeLang(lang: Language) : Job
+    suspend fun changeLang(lang: Language) : Job
     fun logout()
     fun updatePassword(password: String, confirm: String)
 
@@ -66,10 +64,8 @@ class SettingsViewModel(
             settingsRepository.setTheme(theme)
         }
 
-        override fun changeLang(lang: Language) = viewModelScope.launch {
+        override suspend fun changeLang(lang: Language) = viewModelScope.launch {
             settingsRepository.setLanguage(lang)
-            val appLocale = LocaleListCompat.forLanguageTags(lang.toString())
-            AppCompatDelegate.setApplicationLocales(appLocale)
         }
 
         override fun logout() {

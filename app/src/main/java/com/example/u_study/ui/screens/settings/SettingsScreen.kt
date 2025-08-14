@@ -1,6 +1,7 @@
 package com.example.u_study.ui.screens.settings
 
 import android.app.Activity
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,6 +63,7 @@ import com.example.u_study.data.repositories.UpdatePasswordResult
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
+import kotlinx.coroutines.launch
 
 
 /* Da migliorare e completare. Ci sono due tipi di "voci" disponibili:
@@ -89,6 +92,7 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
     //cambio lingua: da verificare
     var showLangDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     //cambio password
     var showPasswordDialog by remember { mutableStateOf(false) }
@@ -181,10 +185,17 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                 title = stringResource(R.string.chooseLang),
                 options = Language.entries,
                 selectedOption = state.lang,
-                onOptionSelected = {
+                onOptionSelected = { selectedLanguage ->
                     showLangDialog = false
-                    actions.changeLang(it)
-                    (context as? Activity)?.recreate()
+                    scope.launch {
+                        //aspetta che il salvataggio sia completo
+                        actions.changeLang(selectedLanguage)
+
+                        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        //riavvio app
+                        context.startActivity(intent)
+                    }
                 },
                 onDismiss = { showLangDialog = false })
         }
