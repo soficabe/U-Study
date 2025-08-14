@@ -3,6 +3,7 @@ package com.example.u_study.ui.screens.libraries
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.database.entities.Library
+import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.LibraryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.launch
 
 data class LibrariesState(
     val libs: List<Library> = emptyList(),
-    val searchQuery: String = "" //la barra della ricerca per ora sta cercando:
+    val searchQuery: String = "", //la barra della ricerca per ora sta cercando:
+    val isAuthenticated: Boolean = false
 )
 
 interface LibrariesActions {
@@ -20,7 +22,7 @@ interface LibrariesActions {
     fun onSearchQueryChanged(query: String)
 }
 
-class LibrariesViewModel (private val libraryRepository: LibraryRepository): ViewModel() {
+class LibrariesViewModel (private val libraryRepository: LibraryRepository, private val authRepository: AuthRepository): ViewModel() {
 
     private val _state = MutableStateFlow(LibrariesState())
     val state = _state.asStateFlow()

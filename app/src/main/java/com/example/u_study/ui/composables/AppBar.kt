@@ -24,7 +24,7 @@ import com.example.u_study.ui.theme.LightBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(title: String, navController: NavHostController) {
+fun AppBar(title: String, navController: NavHostController, isAuthenticated: Boolean = true) {
     CenterAlignedTopAppBar(
         title = { Text(
             text = title,
@@ -39,7 +39,14 @@ fun AppBar(title: String, navController: NavHostController) {
             }
         },
         actions = {
-            IconButton(onClick = { navController.navigate(UStudyRoute.ProfileScreen) }) {
+            IconButton(
+                onClick = {
+                    if(isAuthenticated)
+                        navController.navigate(UStudyRoute.ProfileScreen)
+                    else
+                        navController.navigate(UStudyRoute.LoginScreen)
+                }
+            ) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "User Profile",

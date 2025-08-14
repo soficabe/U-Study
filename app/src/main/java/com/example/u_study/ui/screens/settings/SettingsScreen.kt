@@ -114,8 +114,8 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
     }
 
     Scaffold (
-        topBar = { AppBar(stringResource(R.string.settingsScreen_name), navController) },
-        bottomBar = { NavigationBar(navController = navController) }
+        topBar = { AppBar(stringResource(R.string.settingsScreen_name), navController, state.isAuthenticated) },
+        bottomBar = { NavigationBar(navController = navController, isAutheticated = state.isAuthenticated) }
     ) {
         innerPadding ->
         Column(

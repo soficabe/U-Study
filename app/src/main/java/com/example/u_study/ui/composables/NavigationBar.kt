@@ -23,7 +23,7 @@ import com.example.u_study.ui.UStudyRoute
  * sono vuoti
  */
 @Composable
-fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostController) {
+fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostController, isAutheticated: Boolean = true) {
     NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.Timer, contentDescription = "Study Session") },
@@ -35,7 +35,12 @@ fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostControlle
             icon = { Icon(Icons.Outlined.CheckBox, contentDescription = "TO-DO List") },
             label = { Text(stringResource(R.string.toDo_nav)) },
             selected = false,
-            onClick = { navController.navigate(UStudyRoute.ToDoScreen) }
+            onClick = {
+                if(isAutheticated)
+                    navController.navigate(UStudyRoute.ToDoScreen)
+                else
+                    navController.navigate(UStudyRoute.LoginScreen)
+            }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.Book, contentDescription = "Libraries List") },

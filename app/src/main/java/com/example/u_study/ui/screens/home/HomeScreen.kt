@@ -58,7 +58,7 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            AppBar(stringResource(R.string.homeScreen_name), navController)
+            AppBar(stringResource(R.string.homeScreen_name), navController, state.isAuthenticated)
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -82,7 +82,14 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 FeatureButton(icon = Icons.Outlined.Timer, text = stringResource(R.string.studySession_button), onClick = { navController.navigate(UStudyRoute.LoginScreen) })
-                FeatureButton(icon = Icons.Outlined.CheckBox, text = stringResource(R.string.toDo_button), onClick = { navController.navigate(UStudyRoute.ToDoScreen) })
+                FeatureButton(icon = Icons.Outlined.CheckBox, text = stringResource(R.string.toDo_button),
+                    onClick = {
+                        if(state.isAuthenticated)
+                            navController.navigate(UStudyRoute.ToDoScreen)
+                        else
+                            navController.navigate(UStudyRoute.LoginScreen)
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -97,9 +104,23 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LongButton(icon = Icons.Filled.FavoriteBorder, text = stringResource(R.string.favoriteLibraries_button), { navController.navigate(UStudyRoute.FavLibrariesScreen) })
+            LongButton(icon = Icons.Filled.FavoriteBorder, text = stringResource(R.string.favoriteLibraries_button),
+                onClick = {
+                    if(state.isAuthenticated)
+                        navController.navigate(UStudyRoute.FavLibrariesScreen)
+                    else
+                        navController.navigate(UStudyRoute.LoginScreen)
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = stringResource(R.string.stats_button), { navController.navigate(UStudyRoute.StatsScreen) })
+            LongButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = stringResource(R.string.stats_button),
+                onClick = {
+                    if(state.isAuthenticated)
+                        navController.navigate(UStudyRoute.StatsScreen)
+                    else
+                        navController.navigate(UStudyRoute.LoginScreen)
+                }
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }
