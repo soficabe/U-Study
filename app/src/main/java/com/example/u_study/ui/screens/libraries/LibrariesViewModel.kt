@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.database.entities.Library
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.LibraryRepository
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -29,6 +30,26 @@ class LibrariesViewModel (private val libraryRepository: LibraryRepository, priv
 
     init {
         loadLibraries()
+        viewModelScope.launch {
+            authRepository.sessionStatus.collect { sessionStatus ->
+                when (sessionStatus) {
+                    is SessionStatus.Authenticated -> {
+                        _state.update {
+                            it.copy(
+                                isAuthenticated = true,
+                            )
+                        }
+                    }
+                    else -> {
+                        _state.update {
+                            it.copy(
+                                isAuthenticated = false,
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private var allLibraries: List<Library> = emptyList()

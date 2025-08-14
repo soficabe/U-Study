@@ -41,8 +41,8 @@ fun LibraryDetailScreen(state: LibraryDetailState,
                         navController: NavHostController) {
 
     Scaffold(
-        topBar = { AppBar("Library Detail", navController) },
-        bottomBar = { NavigationBar(navController = navController) }
+        topBar = { AppBar("Library Detail", navController, isAuthenticated = state.isAuthenticated) },
+        bottomBar = { NavigationBar(navController = navController, isAutheticated = state.isAuthenticated) }
     ) { paddingValues ->
         Box(
             modifier = Modifier

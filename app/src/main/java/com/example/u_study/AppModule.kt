@@ -71,12 +71,12 @@ val appModule = module {
     viewModel { RegisterViewModel(get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { FavLibrariesViewModel(get()) }
-    viewModel { LibrariesViewModel(get()) }
+    viewModel { LibrariesViewModel(get(), get()) }
     viewModel { ModifyUserViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { StatsViewModel() }
     viewModel { TodoViewModel(get()) }
     viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
-    viewModel { LibraryDetailViewModel(get(), get()) }
+    viewModel { LibraryDetailViewModel(get(), get(), get()) }
 
 }

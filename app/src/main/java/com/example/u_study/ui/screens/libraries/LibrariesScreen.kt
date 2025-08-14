@@ -29,10 +29,10 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
 
     Scaffold (
         topBar = {
-            AppBar(stringResource(R.string.librariesListScreen_name), navController)
+            AppBar(stringResource(R.string.librariesListScreen_name), navController, isAuthenticated = state.isAuthenticated)
         },
         bottomBar = {
-            NavigationBar(navController = navController)
+            NavigationBar(navController = navController, isAutheticated = state.isAuthenticated)
         }
     ) { contentPadding ->
         LazyColumn (

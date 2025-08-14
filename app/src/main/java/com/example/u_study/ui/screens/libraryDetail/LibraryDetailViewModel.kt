@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.database.entities.Library
+import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.LibraryRepository
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +14,8 @@ import kotlinx.coroutines.launch
 
 data class LibraryDetailState(
     //che valori inserire? forse qualcosa sui preferiti
-    val library: Library? = null
+    val library: Library? = null,
+    val isAuthenticated: Boolean = false
 )
 
 interface LibraryDetailActions {
@@ -21,7 +24,8 @@ interface LibraryDetailActions {
 
 class LibraryDetailViewModel(
     private val libraryRepository: LibraryRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LibraryDetailState())
@@ -32,6 +36,27 @@ class LibraryDetailViewModel(
 
         if (libraryId != null) {
             loadLibraryDetails(libraryId.toInt())
+        }
+
+        viewModelScope.launch {
+            authRepository.sessionStatus.collect { sessionStatus ->
+                when (sessionStatus) {
+                    is SessionStatus.Authenticated -> {
+                        _state.update {
+                            it.copy(
+                                isAuthenticated = true,
+                            )
+                        }
+                    }
+                    else -> {
+                        _state.update {
+                            it.copy(
+                                isAuthenticated = false,
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
