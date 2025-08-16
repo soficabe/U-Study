@@ -42,25 +42,49 @@ class LibraryRepository (private val postgrest: Postgrest, private val auth: Aut
         return allLib.filter { it.isFavourite }
     }
 
-    /*suspend fun getLibraryById(id: Int): Library? {
+    suspend fun getLibraryById(id: Int): Library? {
         return try {
-            libraryTable.select {
+            val libraryResultList = libraryTable.select {
                 filter {
                     Library::id eq id
                 }
-            }.singleOrNull<Library>() //recupera un solo elemento o null
+            }.decodeList<Library>() //recupero dettagli biblio
+            if (libraryResultList.size != 1) {
+                return null
+            } //(controllo errore)
+
+            val library = libraryResultList.first() //questo perché ho usato decodeList e non singleOrNull
+
+            //controllo se è tra i preferiti dell'utente
+            val userId = auth.currentUserOrNull()?.id
+
+            if (userId == null) { //se non c'è utente loggato
+                return library
+            }
+
+            //esiste una riga nella tabella FavLibrary per questo utente e questa libreria?
+            val favouriteEntry = favLibraryTable.select {
+                filter {
+                    FavLibrary::userId eq userId
+                    FavLibrary::libId eq id
+                }
+            }.decodeList<FavLibrary>()
+
+            // favouriteEntry non vuota -> abbiamo corrispondenza
+            library.copy(isFavourite = favouriteEntry.isNotEmpty())
+
         } catch (e: Exception) {
             Log.e("LibraryRepository", "Error to get library by id", e)
             null
         }
-    }*/
+    }
 
     //questa funzione sotto fa esattamente quello che farebbe quella sopra,
     //ma è un po' più brigosa. L'ho fatta al volo perché mi dava errore nell'import
     //di singleOrNull (che è un import di github, quindi puoi immaginare come sia complesso).
     //se riesci ad importarla tu, elimina pure questa sotto e lascia questa sopra :P
 
-    suspend fun getLibraryById(id: Int): Library? {
+    /*suspend fun getLibraryById(id: Int): Library? {
         return try {
             val resultList = libraryTable.select {
                 filter {
@@ -77,7 +101,7 @@ class LibraryRepository (private val postgrest: Postgrest, private val auth: Aut
             Log.e("LibraryRepository", "Error to get library by id", e)
             null
         }
-    }
+    }*/
 
     suspend fun addFavourite(libraryId: Int) {
         val newFav = buildJsonObject {

@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -33,7 +34,9 @@ import com.example.u_study.data.database.entities.Library
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.NavigationBar
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun LibraryDetailScreen(state: LibraryDetailState,
@@ -55,9 +58,10 @@ fun LibraryDetailScreen(state: LibraryDetailState,
                 // se la libreria è trovata
                 LibraryDetailCard(
                     library = state.library,
-                    onFavouriteClick = { /* TODO: lalala */ },
+                    onFavouriteClick = actions::onFavouriteClick,
                     onBackToListClick = { navController.popBackStack() },
-                    onViewInMapClick = { /* TODO: naviga alla mappaaa */ }
+                    onViewInMapClick = { /* TODO: naviga alla mappaaa */ },
+                    stateLib = state
                 )
             } else {
                 // se la libreria non è stata trovata :(((
@@ -72,7 +76,8 @@ fun LibraryDetailCard(
     library: Library,
     onFavouriteClick: () -> Unit,
     onBackToListClick: () -> Unit,
-    onViewInMapClick: () -> Unit
+    onViewInMapClick: () -> Unit,
+    stateLib: LibraryDetailState
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -92,15 +97,17 @@ fun LibraryDetailCard(
                     Text(library.name, style = MaterialTheme.typography.titleLarge)
                     Text(library.city, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                IconButton(onClick = { /* TODO */ }) {
-                    Icon(Icons.Default.MoreVert, "More options")
-                }
             }
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-            TextButton(onClick = onFavouriteClick) {
-                Icon(Icons.Outlined.FavoriteBorder, "Add to favourites", modifier = Modifier.size(20.dp))
+            TextButton(onClick = onFavouriteClick, enabled = stateLib.isAuthenticated) {
+                Icon(
+                    imageVector = if (library.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Favourite",
+                    modifier = Modifier.size(20.dp),
+                    tint = if (library.isFavourite) Color.Red else LocalContentColor.current
+                )
                 Spacer(Modifier.width(8.dp))
-                Text("Add to favourites")
+                Text(text = if (library.isFavourite) "Remove from favourites" else "Add to favourites")
             }
             Spacer(Modifier.height(16.dp))
             Column(

@@ -69,7 +69,17 @@ class LibraryDetailViewModel(
 
     val actions = object : LibraryDetailActions {
         override fun onFavouriteClick() {
-            TODO("Not yet implemented")
+            val currentLibrary = _state.value.library ?: return
+
+            viewModelScope.launch {
+                if (currentLibrary.isFavourite) {
+                    libraryRepository.removeFavourite(currentLibrary.id)
+                } else {
+                    libraryRepository.addFavourite(currentLibrary.id)
+                }
+                //ricarico dati per aggiornare UI
+                loadLibraryDetails(currentLibrary.id)
+            }
         }
 
     }
