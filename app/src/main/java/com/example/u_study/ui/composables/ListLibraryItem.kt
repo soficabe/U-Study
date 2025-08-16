@@ -8,15 +8,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -24,7 +28,7 @@ import com.example.u_study.R
 import com.example.u_study.data.database.entities.Library
 
 @Composable
-fun ListLibraryItem(library: Library, onClick: () -> Unit) {
+fun ListLibraryItem(library: Library, onClick: () -> Unit, onFavouriteClick: () -> Unit) {
     Card (
         modifier = Modifier
             .fillMaxWidth()
@@ -52,7 +56,13 @@ fun ListLibraryItem(library: Library, onClick: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 16.dp).weight(1F)
             )
-            Icon(Icons.Outlined.FavoriteBorder, "Like Library")
+            IconButton(onClick = onFavouriteClick) {
+                Icon(
+                    imageVector = if (library.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Favourite",
+                    tint = if (library.isFavourite) Color.Red else LocalContentColor.current
+                )
+            }
 
         }
     }

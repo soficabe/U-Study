@@ -60,6 +60,13 @@ fun FavLibrariesScreen(state: FavLibrariesState, actions: FavLibrariesActions, n
                     library = library,
                     onClick = {
                         navController.navigate(UStudyRoute.LibraryDetailScreen(libraryId = library.id.toString()))
+                    },
+                    onFavouriteClick = {
+                        if (library.isFavourite) {
+                            actions.removeFavLib(library.id)
+                        } else {
+                            /*actions.addFavLib(library.id)*/
+                        }
                     }
                 )
             }

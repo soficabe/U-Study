@@ -18,8 +18,8 @@ data class LibrariesState(
 )
 
 interface LibrariesActions {
-    fun addFavLib(lib: String)
-    fun removeFavLib(favLib: String)
+    fun addFavLib(libraryId: Int)
+    fun removeFavLib(libraryId: Int)
     fun onSearchQueryChanged(query: String)
 }
 
@@ -72,12 +72,18 @@ class LibrariesViewModel (private val libraryRepository: LibraryRepository, priv
 
     val actions = object : LibrariesActions {
 
-        override fun addFavLib(lib: String) {
-            TODO()
+        override fun addFavLib(libraryId: Int) {
+            viewModelScope.launch {
+                libraryRepository.addFavourite(libraryId)
+                loadLibraries() // ricarico lista per mostrare cuore pieno!!
+            }
         }
 
-        override fun removeFavLib(favLib: String) {
-            TODO()
+        override fun removeFavLib(libraryId: Int) {
+            viewModelScope.launch {
+                libraryRepository.removeFavourite(libraryId)
+                loadLibraries()
+            }
         }
 
         override fun onSearchQueryChanged(query: String) {

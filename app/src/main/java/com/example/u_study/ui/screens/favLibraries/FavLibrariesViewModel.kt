@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.database.entities.Library
 import com.example.u_study.data.repositories.LibraryRepository
-import com.example.u_study.ui.screens.libraries.LibrariesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,7 +16,7 @@ data class FavLibrariesState(
 )
 
 interface FavLibrariesActions {
-    fun removeFavLib(favLib: String)
+    fun removeFavLib(libraryId: Int)
     fun onSearchQueryChanged(query: String)
 
 }
@@ -29,14 +28,18 @@ class FavLibrariesViewModel(private val libraryRepository: LibraryRepository): V
 
     private var allLibraries: List<Library> = emptyList()
 
+    init {
+        loadLibraries()
+    }
+
     private fun loadLibraries() {
         viewModelScope.launch {
-            allLibraries = libraryRepository.getLibraries()
+            allLibraries = libraryRepository.getFavouriteLibraries()
 
             val filteredList = if (_state.value.searchQuery.isBlank()) {
-                libraryRepository.getLibraries()
+                libraryRepository.getFavouriteLibraries()
             } else {
-                libraryRepository.getLibraries().filter { library ->
+                libraryRepository.getFavouriteLibraries().filter { library ->
                     library.city.startsWith(_state.value.searchQuery, ignoreCase = true) //per maiuscole - minuscole
                 }
             }
@@ -46,8 +49,11 @@ class FavLibrariesViewModel(private val libraryRepository: LibraryRepository): V
     }
 
     val actions = object : FavLibrariesActions {
-        override fun removeFavLib(favLib: String) {
-            TODO()
+        override fun removeFavLib(libraryId: Int) {
+            viewModelScope.launch {
+                libraryRepository.removeFavourite(libraryId)
+                loadLibraries() // Ricarica la lista per mostrare il cuore vuoto
+            }
         }
 
         override fun onSearchQueryChanged(query: String) {

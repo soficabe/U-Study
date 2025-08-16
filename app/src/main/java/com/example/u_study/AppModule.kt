@@ -125,7 +125,7 @@ val appModule = module {
      * Repository per gestione librerie e contenuti di studio.
      * Dipende da: Postgrest client
      */
-    single { LibraryRepository(get()) }
+    single { LibraryRepository(get(), get()) }
 
     // ===== PRESENTATION LAYER - VIEWMODELS =====
 

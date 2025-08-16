@@ -30,5 +30,7 @@ data class Library(
     val email: String? = null,
 
     @SerialName("url")
-    val url: String? = null
+    val url: String? = null,
+
+    val isFavourite: Boolean = false
 )

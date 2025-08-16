@@ -1,21 +1,45 @@
 package com.example.u_study.data.repositories
 
 import android.util.Log
+import com.example.u_study.data.database.entities.FavLibrary
 import com.example.u_study.data.database.entities.Library
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
-class LibraryRepository (private val postgrest: Postgrest) {
+class LibraryRepository (private val postgrest: Postgrest, private val auth: Auth) {
 
     private val libraryTable = postgrest.from("Library")
+    private val favLibraryTable = postgrest.from("FavLibrary")
 
 
     suspend fun getLibraries(): List<Library> {
         return try {
-            libraryTable.select().decodeList<Library>()
+            //prendo gli id di tutte le biblioteche preferite dell'user
+            val favouriteIds = favLibraryTable.select {
+                filter {
+                    //confronta la proprietà userId di FavLibrary con l'id dell'utente loggato.
+                    FavLibrary::userId eq (auth.currentUserOrNull()?.id ?: "")
+                }
+            }.decodeList<FavLibrary>().map { it.libId }.toSet()
+
+            val allLibraries = libraryTable.select().decodeList<Library>() //tutte le biblioteche
+
+            //tra tutte le biblio, quelle il cui id è in lista vengono messe come preferite
+            allLibraries.map { library ->
+                library.copy(isFavourite = library.id in favouriteIds)
+            }
         } catch (e: Exception) {
-            Log.e("LibraryRepository", "Error to get libraries", e)
-            emptyList() //se errore -> lista vuota
+            Log.e("LibraryRepository", "Error fetching libraries with favourites", e)
+            emptyList()
         }
+    }
+
+    //easy: filtriamo la lista per tenere solo le biblio con il cuore pieno
+    suspend fun getFavouriteLibraries(): List<Library> {
+        val allLib = getLibraries()
+        return allLib.filter { it.isFavourite }
     }
 
     /*suspend fun getLibraryById(id: Int): Library? {
@@ -54,4 +78,23 @@ class LibraryRepository (private val postgrest: Postgrest) {
             null
         }
     }
+
+    suspend fun addFavourite(libraryId: Int) {
+        val newFav = buildJsonObject {
+            put("lib_id", libraryId)
+            // user_id viene inserito automaticamente dal database grazie al default
+        }
+        favLibraryTable.insert(newFav)
+    }
+
+    suspend fun removeFavourite(libraryId: Int) {
+        favLibraryTable.delete {
+            filter {
+                eq("lib_id", libraryId)
+                eq("user_id", auth.currentUserOrNull()?.id ?: "")
+            }
+        }
+    }
+
+
 }
