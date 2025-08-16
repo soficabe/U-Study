@@ -39,11 +39,13 @@
     <string name="lastName">Cognome</string>
     <string name="confirmPassword">Conferma Password</string>
     <string name="checkboxRegisterText">Ho accettato i termini e le condizioni</string>
+    <string name="signing_in">Accedendo</string>
     <string name="signIn_button">Accedi</string>
     <string name="signUp_button">Registrati</string>
     <string name="dontHaveAccount_text">Non hai un account? Registrati</string>
     <string name="withoutLogging_text">Continua senza accedere</string>
     <string name="haveAnAccount_text">Hai un account? Accedi</string>
+    <string name="or_separator">Oppure</string>
 
     <!-- register and login error messages -->
     <string name="requiredFields_error">Tutti i campi sono obbligatori.</string>

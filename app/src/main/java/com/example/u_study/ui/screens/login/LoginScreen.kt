@@ -50,35 +50,49 @@ import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
-
+/**
+ * Schermata di login dell'applicazione.
+ *
+ * Implementa il pattern State Hoisting: riceve state e actions come parametri
+ * invece di creare direttamente il ViewModel. Questo migliora testabilità
+ * e separazione delle responsabilità.
+ *
+ * @param state stato corrente della schermata di login
+ * @param actions interfaccia delle azioni disponibili per l'utente
+ * @param navController controller per la navigazione tra schermate
+ */
 @Composable
 fun LoginScreen(
     state: LoginState,
     actions: LoginActions,
     navController: NavHostController
 ) {
+    // State locale per lo scrolling della schermata
     val scrollState = rememberScrollState()
 
+    // State locale per la visibilità della password
+    // rememberSaveable preserva il valore durante configuration changes
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
+    // Effetto che reagisce ai cambiamenti del risultato del login
+    // Gestisce la navigazione basata sull'esito dell'autenticazione
     LaunchedEffect(state.loginResult) {
         when (state.loginResult) {
+            LoginResult.Start -> {
+                // Stato iniziale - nessuna azione richiesta
+            }
             LoginResult.Success -> {
+                // Naviga alla home e rimuove login dallo stack
+                // popUpTo con inclusive = true previene il ritorno al login con back button
                 navController.navigate(UStudyRoute.HomeScreen) {
                     popUpTo(UStudyRoute.LoginScreen) { inclusive = true }
                 }
             }
-
             LoginResult.InvalidCredentials -> {
-
+                // Errore gestito tramite state.errorMessageLog nella UI
             }
-
             LoginResult.Error -> {
-
-            }
-
-            LoginResult.Start -> {
-
+                // Errore generico gestito tramite state.errorMessageLog
             }
         }
     }
@@ -88,18 +102,23 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 32.dp)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState), // Scrolling per gestire tastiera virtuale
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //logo
+            // Logo dell'app
             Logo()
 
             Spacer(Modifier.height(32.dp))
 
-            Text(stringResource(R.string.loginText), style = MaterialTheme.typography.headlineLarge)
+            // Titolo della schermata
+            Text(
+                stringResource(R.string.loginText),
+                style = MaterialTheme.typography.headlineLarge
+            )
             Spacer(Modifier.height(32.dp))
 
+            // Campo email
             OutlinedTextField(
                 value = state.email,
                 onValueChange = actions::setEmail,
@@ -107,29 +126,44 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+
             Spacer(Modifier.height(16.dp))
 
+            // Campo password con toggle visibilità
             OutlinedTextField(
                 value = state.password,
                 onValueChange = actions::setPassword,
                 label = { Text(stringResource(R.string.password)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                // Visual transformation per nascondere/mostrare password
+                visualTransformation = if (passwordVisible)
+                    VisualTransformation.None
+                else
+                    PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
-                    val image =
-                        if (passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
+                    // Icona toggle per visibilità password
+                    val image = if (passwordVisible)
+                        Icons.Outlined.Visibility
+                    else
+                        Icons.Outlined.VisibilityOff
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = image,
-                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            contentDescription = if (passwordVisible)
+                                "Hide password"
+                            else
+                                "Show password"
                         )
                     }
                 }
             )
 
             Spacer(Modifier.height(16.dp))
+
+            // Visualizzazione errori
+            // Usa state.errorMessageLog che contiene l'ID della risorsa string
             if (state.errorMessageLog != null) {
                 Text(
                     text = stringResource(id = state.errorMessageLog),
@@ -140,17 +174,29 @@ fun LoginScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            SaveButton(stringResource(R.string.signIn_button), onClick = { actions.login() })
+            // Bottone login principale
+            SaveButton(
+                text = if (state.isLoggingIn)
+                    stringResource(R.string.signing_in)
+                else
+                    stringResource(R.string.signIn_button),
+                enabled = !state.isLoggingIn,
+                onClick = { actions.login() }
+            )
 
+            // Link per navigare alla registrazione
             TextButton(
-                onClick = { navController.navigate(UStudyRoute.RegisterScreen) }) {
+                onClick = { navController.navigate(UStudyRoute.RegisterScreen) }
+            ) {
                 Text(stringResource(R.string.dontHaveAccount_text))
             }
 
+            // Separatore visivo "Or"
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 12.dp, bottom = 24.dp)
             ) {
+                // Linea sinistra
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -159,11 +205,12 @@ fun LoginScreen(
                 )
 
                 Text(
-                    text = "Or",
+                    text = stringResource(R.string.or_separator),
                     color = Color.DarkGray,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
 
+                // Linea destra
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -172,10 +219,12 @@ fun LoginScreen(
                 )
             }
 
+            // Bottone Google Sign In
             GoogleSignInButton (
                 onClick = { actions.loginWithGoogle() }
             )
 
+            // Opzione per accedere senza login (guest mode)
             TextButton(
                 onClick = { navController.navigate(UStudyRoute.HomeScreen) },
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -187,6 +236,14 @@ fun LoginScreen(
     }
 }
 
+/**
+ * Componente riutilizzabile per il bottone di login con Google.
+ *
+ * Implementa il design standard Google con icona e testo.
+ * Separato in componente dedicato per riutilizzabilità e testing.
+ *
+ * @param onClick callback invocato quando l'utente preme il bottone
+ */
 @Composable
 fun GoogleSignInButton(onClick: () -> Unit) {
     OutlinedButton(
@@ -194,6 +251,7 @@ fun GoogleSignInButton(onClick: () -> Unit) {
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
+        // Icona Google
         Image(
             painter = painterResource(R.drawable.ic_google),
             contentDescription = null,

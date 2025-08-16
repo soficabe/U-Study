@@ -42,36 +42,54 @@ import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.Logo
 import com.example.u_study.ui.composables.SaveButton
 
+/**
+ * Schermata di registrazione per nuovi utenti.
+ *
+ * Implementa un form completo per la creazione account con:
+ * - Campi per dati personali (nome, cognome, email)
+ * - Campi password con conferma
+ * - Checkbox per accettazione termini
+ * - Validazione e gestione errori
+ *
+ * Segue il pattern State Hoisting per mantenere separazione tra UI e logica.
+ *
+ * @param state stato corrente del form di registrazione
+ * @param actions interfaccia delle azioni disponibili per l'utente
+ * @param navController controller per navigazione tra schermate
+ */
 @Composable
 fun RegisterScreen(
     state: RegisterState,
     actions: RegisterActions,
     navController: NavHostController
 ) {
+    // State locale per scrolling
     val scrollState = rememberScrollState()
 
-    //stato campi
+    // State locali per visibilità password
+    // Mantenuti separatamente per controllo indipendente
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
+    // Effetto per gestire navigazione post-registrazione
     LaunchedEffect(state.registerResult) {
         when (state.registerResult) {
+            RegisterResult.Start -> {
+                // Stato iniziale - nessuna azione richiesta
+            }
             RegisterResult.Success -> {
+                // Navigazione alla home con rimozione dello stack di registrazione
+                // Previene il ritorno alla registrazione con back button
                 navController.navigate(UStudyRoute.HomeScreen) {
                         popUpTo(UStudyRoute.RegisterScreen) { inclusive = true }
                     }
                 }
-
             RegisterResult.UserExisting -> {
-
+                // Errore gestito tramite state.errorMessage nella UI
             }
             RegisterResult.Error -> {
-
+                // Errore generico gestito tramite state.errorMessage
             }
-            RegisterResult.Start -> {
-
-            }
-
         }
     }
 
@@ -84,11 +102,14 @@ fun RegisterScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Logo dell'applicazione
             Logo()
 
             Spacer(Modifier.height(32.dp))
 
+            // Form di registrazione raggruppato in Column separata
             Column(modifier = Modifier.padding(16.dp)) {
+                // Campo Nome
                 OutlinedTextField(
                     value = state.firstName,
                     onValueChange = actions::setFirstName,
@@ -96,7 +117,10 @@ fun RegisterScreen(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
+
                 Spacer(Modifier.height(8.dp))
+
+                // Campo Cognome
                 OutlinedTextField(
                     value = state.lastName,
                     onValueChange = actions::setLastName,
@@ -104,7 +128,10 @@ fun RegisterScreen(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
+
                 Spacer(Modifier.height(8.dp))
+
+                // Campo Email
                 OutlinedTextField(
                     value = state.email,
                     onValueChange = actions::setEmail,
@@ -112,24 +139,38 @@ fun RegisterScreen(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
+
                 Spacer(Modifier.height(8.dp))
+
+                // Campo Password con toggle visibilità
                 OutlinedTextField(
                     value = state.password,
                     onValueChange = actions::setPassword,
                     label = { Text(stringResource(R.string.password)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    // Visual transformation per nascondere/mostrare password
+                    visualTransformation = if (passwordVisible)
+                        VisualTransformation.None
+                    else
+                        PasswordVisualTransformation(),
                     trailingIcon = {
+                        // Toggle per visibilità password
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
-                                if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                if (passwordVisible)
+                                    Icons.Default.Visibility
+                                else
+                                    Icons.Default.VisibilityOff,
                                 "Change password visibility"
                             )
                         }
                     }
                 )
+
                 Spacer(Modifier.height(8.dp))
+
+                // Campo Conferma Password con toggle visibilità separato
                 OutlinedTextField(
                     value = state.confirmPassword,
                     onValueChange = actions::setConfirmPassword,
@@ -146,7 +187,10 @@ fun RegisterScreen(
                         }
                     }
                 )
+
                 Spacer(Modifier.height(16.dp))
+
+                // Checkbox per accettazione termini e condizioni
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = state.termsAccepted,
@@ -157,6 +201,9 @@ fun RegisterScreen(
                 }
 
                 Spacer(Modifier.height(16.dp))
+
+                // Visualizzazione messaggi di errore
+                // Utilizza state.errorMessage che contiene l'ID della risorsa string
                 if (state.errorMessage != null) {
                     Text(
                         text = stringResource(id = state.errorMessage),
@@ -167,11 +214,15 @@ fun RegisterScreen(
                 }
 
                 Spacer(Modifier.height(16.dp))
+
+                // Bottone per eseguire registrazione
+                // Collega l'azione register() del ViewModel
                 SaveButton(
                     text = stringResource(R.string.signUp_button),
                     onClick = { actions.register() })
             }
 
+            // Link per navigare al login se l'utente ha già un account
             TextButton(onClick = { navController.navigate(UStudyRoute.LoginScreen) }) {
                 Text(stringResource(R.string.haveAnAccount_text))
             }

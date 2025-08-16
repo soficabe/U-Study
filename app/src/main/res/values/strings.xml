@@ -40,11 +40,13 @@
     <string name="lastName">Last Name</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="checkboxRegisterText">I have accepted the terms and conditions</string>
+    <string name="signing_in">Signing In</string>
     <string name="signIn_button">Sign In</string>
     <string name="signUp_button">Sign Up</string>
     <string name="dontHaveAccount_text">Don\'t have an account? Sign Up</string>
     <string name="withoutLogging_text">Continue without logging in</string>
     <string name="haveAnAccount_text">Have an account? Sign in</string>
+    <string name="or_separator">Or</string>
 
     <!-- register and login error messages -->
     <string name="requiredFields_error">All fields are required.</string>
