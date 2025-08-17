@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,10 @@ import com.example.u_study.ui.screens.libraries.LibrariesState
 
 @Composable
 fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navController: NavHostController) {
+
+    LaunchedEffect(Unit) {
+        actions.refresh()
+    }
 
     Scaffold (
         topBar = {
@@ -44,7 +49,7 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                 OutlinedTextField(
                     value = state.searchQuery,
                     onValueChange = actions::onSearchQueryChanged,
-                    label = { Text("Cerca per città...") },
+                    label = { Text(stringResource(R.string.searchByCity)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),

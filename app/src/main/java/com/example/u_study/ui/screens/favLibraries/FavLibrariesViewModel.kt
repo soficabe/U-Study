@@ -18,6 +18,7 @@ data class FavLibrariesState(
 interface FavLibrariesActions {
     fun removeFavLib(libraryId: Int)
     fun onSearchQueryChanged(query: String)
+    fun refresh()
 
 }
 
@@ -58,6 +59,10 @@ class FavLibrariesViewModel(private val libraryRepository: LibraryRepository): V
 
         override fun onSearchQueryChanged(query: String) {
             _state.update { it.copy(searchQuery = query) }
+            loadLibraries()
+        }
+
+        override fun refresh() {
             loadLibraries()
         }
     }

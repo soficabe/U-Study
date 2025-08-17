@@ -14,6 +14,7 @@
     <string name="favoriteLibrariesScreen_name">Biblioteche Preferite</string>
     <string name="librariesMapScreen_name">Mappa Biblioteche</string>
     <string name="settingsScreen_name">Impostazioni</string>
+    <string name="libraryDetailScreen_name">Dettaglio Biblioteca</string>
 
     <!-- buttons -->
     <string name="greeting">Ciao</string>
@@ -32,7 +33,7 @@
     <string name="librariesMap_nav">Mappa</string>
 
     <!-- sign in and sign up -->
-    <string name="loginText">Accedi per continuare</string>
+    <string name="loginText">Accedi</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="firstName">Nome</string>
@@ -46,6 +47,7 @@
     <string name="withoutLogging_text">Continua senza accedere</string>
     <string name="haveAnAccount_text">Hai un account? Accedi</string>
     <string name="or_separator">Oppure</string>
+    <string name="signInWithGoogle">Accedi con Google</string>
 
     <!-- register and login error messages -->
     <string name="requiredFields_error">Tutti i campi sono obbligatori.</string>
@@ -70,6 +72,18 @@
     <string name="completedStudySessions_text">Sessioni studio completate</string>
     <string name="visitedLibraries_text">Biblioteche visitate</string>
     <string name="studyHours_text">Ore di studio</string>
+
+    <!-- libraries -->
+    <string name="searchByCity">Cerca per città…</string>
+    <string name="libraryNotFound">Biblioteca non trovata.</string>
+    <string name="backToList">Indietro</string>
+    <string name="viewInMap">Apri Mappa</string>
+    <string name="addFavoriteLib">Aggiungi ai preferiti</string>
+    <string name="removeFavoriteLib">Rimuovi dai preferiti</string>
+    <string name="phoneNumber">Numero di telefono:</string>
+    <string name="emailDetail">Email:</string>
+    <string name="url">Url:</string>
+
 
     <!-- To-Do chips -->
     <string name="onGoing_chip">In corso</string>

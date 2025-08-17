@@ -261,7 +261,7 @@ fun GoogleSignInButton(onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(10.dp))
 
         Text(
-            text = "Sign In With Google",
+            text = stringResource(R.string.signInWithGoogle),
             color = Color.DarkGray,
             modifier = Modifier.padding(vertical = 4.dp)
         )

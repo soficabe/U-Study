@@ -37,6 +37,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.example.u_study.R
+import com.example.u_study.ui.UStudyRoute
 
 @Composable
 fun LibraryDetailScreen(state: LibraryDetailState,
@@ -44,7 +47,7 @@ fun LibraryDetailScreen(state: LibraryDetailState,
                         navController: NavHostController) {
 
     Scaffold(
-        topBar = { AppBar("Library Detail", navController, isAuthenticated = state.isAuthenticated) },
+        topBar = { AppBar(stringResource(R.string.libraryDetailScreen_name), navController, isAuthenticated = state.isAuthenticated) },
         bottomBar = { NavigationBar(navController = navController, isAutheticated = state.isAuthenticated) }
     ) { paddingValues ->
         Box(
@@ -65,7 +68,7 @@ fun LibraryDetailScreen(state: LibraryDetailState,
                 )
             } else {
                 // se la libreria non è stata trovata :(((
-                Text("Libreria non trovata.")
+                Text(stringResource(R.string.libraryNotFound))
             }
         }
     }
@@ -107,7 +110,7 @@ fun LibraryDetailCard(
                     tint = if (library.isFavourite) Color.Red else LocalContentColor.current
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(text = if (library.isFavourite) "Remove from favourites" else "Add to favourites")
+                Text(text = if (library.isFavourite) stringResource(R.string.removeFavoriteLib) else stringResource(R.string.addFavoriteLib))
             }
             Spacer(Modifier.height(16.dp))
             Column(
@@ -115,9 +118,9 @@ fun LibraryDetailCard(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Phone Number: ${library.phoneNumber}")
-                Text("Email: ${library.email}")
-                Text("Url: ${library.url}")
+                Text("${stringResource(R.string.phoneNumber)} ${library.phoneNumber}")
+                Text("${stringResource(R.string.emailDetail)} ${library.email}")
+                Text("${stringResource(R.string.url)} ${library.url}")
             }
             Spacer(Modifier.height(24.dp))
             Row(
@@ -125,10 +128,10 @@ fun LibraryDetailCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(onClick = onBackToListClick, modifier = Modifier.weight(1f)) {
-                    Text("Back to List")
+                    Text(stringResource(R.string.backToList))
                 }
                 Button(onClick = onViewInMapClick, modifier = Modifier.weight(1f)) {
-                    Text("View in Map")
+                    Text(stringResource(R.string.viewInMap))
                 }
             }
         }

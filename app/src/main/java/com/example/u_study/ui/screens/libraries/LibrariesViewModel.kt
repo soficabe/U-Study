@@ -21,6 +21,7 @@ interface LibrariesActions {
     fun addFavLib(libraryId: Int)
     fun removeFavLib(libraryId: Int)
     fun onSearchQueryChanged(query: String)
+    fun refresh()
 }
 
 class LibrariesViewModel (private val libraryRepository: LibraryRepository, private val authRepository: AuthRepository): ViewModel() {
@@ -88,6 +89,10 @@ class LibrariesViewModel (private val libraryRepository: LibraryRepository, priv
 
         override fun onSearchQueryChanged(query: String) {
             _state.update { it.copy(searchQuery = query) }
+            loadLibraries()
+        }
+
+        override fun refresh() {
             loadLibraries()
         }
     }

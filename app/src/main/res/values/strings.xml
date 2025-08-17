@@ -13,6 +13,8 @@
     <string name="favoriteLibrariesScreen_name">Favorite Libraries</string>
     <string name="librariesMapScreen_name">Libraries Map</string>
     <string name="settingsScreen_name">Settings</string>
+    <string name="libraryDetailScreen_name">Library Detail</string>
+
 
     <!-- home buttons -->
     <string name="greeting">Hello</string>
@@ -47,6 +49,7 @@
     <string name="withoutLogging_text">Continue without logging in</string>
     <string name="haveAnAccount_text">Have an account? Sign in</string>
     <string name="or_separator">Or</string>
+    <string name="signInWithGoogle">Sign In With Google</string>
 
     <!-- register and login error messages -->
     <string name="requiredFields_error">All fields are required.</string>
@@ -69,6 +72,17 @@
     <string name="completedStudySessions_text">Completed Study Sessions</string>
     <string name="visitedLibraries_text">Visited Libraries</string>
     <string name="studyHours_text">Study Hours</string>
+
+    <!-- libraries -->
+    <string name="searchByCity">Search by city…</string>
+    <string name="libraryNotFound">Library not Found.</string>
+    <string name="backToList">Back to List</string>
+    <string name="viewInMap">View in Map</string>
+    <string name="addFavoriteLib">Add to favourites</string>
+    <string name="removeFavoriteLib">Remove from favourites</string>
+    <string name="phoneNumber">Phone Number:</string>
+    <string name="emailDetail">Email:</string>
+    <string name="url">Url:</string>
 
     <!-- To-Do chips -->
     <string name="onGoing_chip">On Going</string>
