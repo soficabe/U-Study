@@ -17,13 +17,6 @@ sealed interface UpdateUserProfileResult {
 
 /**
  * Repository per la gestione dei dati utente nel database.
- *
- * Gestisce le operazioni CRUD sui profili utente attraverso Supabase Postgrest.
- * Separato da AuthRepository per mantenere la separazione delle responsabilità:
- * - AuthRepository: gestione autenticazione e sessioni
- * - UserRepository: gestione dati profilo nel database
- *
- * Tutte le operazioni vengono eseguite nel contesto IO per non bloccare il main thread.
  */
 class UserRepository(
     private val supabase: SupabaseClient
@@ -53,19 +46,19 @@ class UserRepository(
 
     /**
      * Aggiorna il profilo di un utente esistente nel database.
-     *
-     * Supporta aggiornamenti parziali: vengono modificati solo i campi non-null.
-     * Costruisce dinamicamente la query di update includendo solo i campi specificati.
+     * Ora supporta anche l'aggiornamento dell'URL dell'immagine profilo.
      *
      * @param userId ID dell'utente da aggiornare
      * @param name nuovo nome (opzionale)
      * @param surname nuovo cognome (opzionale)
+     * @param imageUrl nuovo URL dell'immagine profilo (opzionale)
      * @return UpdateUserProfileResult indicante l'esito dell'operazione
      */
     suspend fun updateUserProfile(
         userId: String,
         name: String? = null,
-        surname: String? = null
+        surname: String? = null,
+        imageUrl: String? = null
     ): UpdateUserProfileResult {
         return withContext(Dispatchers.IO) {
             try {
@@ -73,6 +66,7 @@ class UserRepository(
                 val updateData = mutableMapOf<String, String?>()
                 name?.let { updateData["name"] = it }
                 surname?.let { updateData["surname"] = it }
+                imageUrl?.let { updateData["image"] = it }
 
                 // Esecuzione update solo se ci sono campi da modificare
                 if (updateData.isNotEmpty()) {

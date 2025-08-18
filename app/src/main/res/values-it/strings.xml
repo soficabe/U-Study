@@ -111,4 +111,13 @@
     <string name="errorString">Errore:</string>
     <string name="weakPassword">Password troppo debole.</string>
 
+    <!-- Image Picker Dialog -->
+    <string name="select_profile_image">Seleziona immagine profilo</string>
+    <string name="choose_image_source">Scegli la sorgente dell\'immagine</string>
+    <string name="take_photo">Scatta una foto</string>
+    <string name="choose_from_gallery">Scegli dalla galleria</string>
+    <string name="cancel">Annulla</string>
+
+    <!-- Profile Image -->
+    <string name="tap_to_change_profile_image">Tocca per cambiare l\'immagine profilo</string>
 </resources>

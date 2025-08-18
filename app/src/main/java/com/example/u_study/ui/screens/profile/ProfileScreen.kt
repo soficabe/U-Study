@@ -47,7 +47,7 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
         topBar = { AppBar(title = stringResource(R.string.profileScreen_name), navController) },
         bottomBar = { NavigationBar(navController = navController) }
     ) {
-        innerPadding ->
+            innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -58,37 +58,51 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
         ) {
             Spacer(Modifier.height(24.dp))
 
-            //immagine VA MODIFICATA PER RETTANGOLARI? :(
-            ProfileIcon()
+            // Immagine profilo aggiornata per supportare le URL
+            ProfileIcon(
+                imageUrl = state.user?.image
+            )
 
             Spacer(Modifier.height(16.dp))
 
-            //nome cognome
-            Text(text = "${state.user?.name ?: ""} ${state.user?.surname ?: ""}",
+            // Nome cognome
+            Text(
+                text = "${state.user?.name ?: ""} ${state.user?.surname ?: ""}",
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold
+            )
 
             Spacer(Modifier.height(24.dp))
 
-            //bottoni
+            // Bottoni
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
-                ProfileButton(icon = Icons.Outlined.Favorite, text = stringResource(R.string.favoriteLibraries_button), onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) })
-                ProfileButton(icon = Icons.AutoMirrored.Outlined.ShowChart, text = stringResource(R.string.stats_button), onClick = { navController.navigate(UStudyRoute.StatsScreen) })
+                ProfileButton(
+                    icon = Icons.Outlined.Favorite,
+                    text = stringResource(R.string.favoriteLibraries_button),
+                    onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) }
+                )
+                ProfileButton(
+                    icon = Icons.AutoMirrored.Outlined.ShowChart,
+                    text = stringResource(R.string.stats_button),
+                    onClick = { navController.navigate(UStudyRoute.StatsScreen) }
+                )
             }
 
             Spacer(Modifier.height(32.dp))
 
-            //mail
+            // Mail
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(stringResource(R.string.email),
+                Text(
+                    stringResource(R.string.email),
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold)
+                    fontWeight = FontWeight.SemiBold
+                )
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
                     value = state.user?.email ?: "",
@@ -99,22 +113,22 @@ fun ProfileScreen(state: ProfileState, navController: NavHostController) {
                         disabledTextColor = MaterialTheme.colorScheme.onSurface,
                         disabledBorderColor = MaterialTheme.colorScheme.outline,
                         disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ) //ho cambiato i colori visto che con enabled=false li rovinava
+                    )
                 )
             }
 
             Spacer(Modifier.height(32.dp))
 
-            SaveButton(text = stringResource(R.string.editProfile_button), onClick = {navController.navigate(UStudyRoute.ModifyUserScreen)})
+            SaveButton(
+                text = stringResource(R.string.editProfile_button),
+                onClick = { navController.navigate(UStudyRoute.ModifyUserScreen) }
+            )
 
             Spacer(Modifier.height(16.dp))
-
         }
     }
 }
 
-/* Sono i bottoni blu presenti sotto l'immagine profilo
- */
 @Composable
 fun ProfileButton(icon: ImageVector, text: String, onClick: () -> Unit) {
     Button(

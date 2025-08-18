@@ -1,11 +1,15 @@
 package com.example.u_study.ui.screens.modifyUser
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.repositories.AuthRepository
+import com.example.u_study.data.repositories.ImageRepository
+import com.example.u_study.data.repositories.ImageUploadResult
 import com.example.u_study.data.repositories.UpdateUserResult
 import com.example.u_study.data.repositories.UserRepository
 import com.example.u_study.data.repositories.UpdateUserProfileResult
+import com.example.u_study.utils.ImagePickerManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,31 +27,44 @@ data class ModifyUserState(
     val firstName: String = "",
     val lastName: String = "",
     val email: String = "",
+    val imageUrl: String? = null,
     val originalFirstName: String = "",
     val originalLastName: String = "",
     val originalEmail: String = "",
+    val originalImageUrl: String? = null,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
+    val isUploadingImage: Boolean = false,
+    val showImagePicker: Boolean = false,
     val errorMessage: String? = null,
     val isSuccess: Boolean = false
 ) {
     val hasChanges: Boolean
         get() = firstName != originalFirstName ||
                 lastName != originalLastName ||
-                email != originalEmail
+                email != originalEmail ||
+                imageUrl != originalImageUrl
 }
 
 interface ModifyUserActions {
     fun setFirstName(firstName: String)
     fun setLastName(lastName: String)
     fun setEmail(email: String)
+    fun showImagePicker()
+    fun hideImagePicker()
+    fun onImageSelected(uri: Uri)
+    fun onImageError(error: String)
     fun saveChanges()
     fun clearMessages()
+    fun takePicture()
+    fun pickFromGallery()
 }
 
 class ModifyUserViewModel(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val imageRepository: ImageRepository,
+    private val imagePickerManager: ImagePickerManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ModifyUserState())
@@ -66,6 +83,22 @@ class ModifyUserViewModel(
             _state.update { it.copy(email = email, errorMessage = null) }
         }
 
+        override fun showImagePicker() {
+            _state.update { it.copy(showImagePicker = true) }
+        }
+
+        override fun hideImagePicker() {
+            _state.update { it.copy(showImagePicker = false) }
+        }
+
+        override fun onImageSelected(uri: Uri) {
+            uploadImage(uri)
+        }
+
+        override fun onImageError(error: String) {
+            _state.update { it.copy(errorMessage = error, isUploadingImage = false) }
+        }
+
         override fun saveChanges() {
             saveUserProfile()
         }
@@ -73,6 +106,15 @@ class ModifyUserViewModel(
         override fun clearMessages() {
             _state.update { it.copy(errorMessage = null, isSuccess = false) }
         }
+
+        override fun takePicture() {
+            imagePickerManager.takePicture()
+        }
+
+        override fun pickFromGallery() {
+            imagePickerManager.pickFromGallery()
+        }
+
     }
 
     init {
@@ -90,15 +132,18 @@ class ModifyUserViewModel(
                 val firstName = userProfile?.name ?: ""
                 val lastName = userProfile?.surname ?: ""
                 val email = userProfile?.email ?: currentUser.email ?: ""
+                val imageUrl = userProfile?.image
 
                 _state.update { currentState ->
                     currentState.copy(
                         firstName = firstName,
                         lastName = lastName,
                         email = email,
+                        imageUrl = imageUrl,
                         originalFirstName = firstName,
                         originalLastName = lastName,
                         originalEmail = email,
+                        originalImageUrl = imageUrl,
                         isLoading = false
                     )
                 }
@@ -113,20 +158,65 @@ class ModifyUserViewModel(
         }
     }
 
+    private fun uploadImage(uri: Uri) {
+        viewModelScope.launch {
+            _state.update { it.copy(isUploadingImage = true, errorMessage = null) }
+
+            try {
+                val currentUser = authRepository.getUser()
+
+                // Processa l'immagine (ridimensiona e comprimi)
+                val processedImageData = imagePickerManager.processImage(uri)
+
+                if (processedImageData == null) {
+                    _state.update {
+                        it.copy(
+                            isUploadingImage = false,
+                            errorMessage = "Errore nel processamento dell'immagine"
+                        )
+                    }
+                    return@launch
+                }
+
+                // Upload su Supabase Storage
+                when (val uploadResult = imageRepository.uploadProfileImage(
+                    currentUser.id,
+                    processedImageData
+                )) {
+                    is ImageUploadResult.Success -> {
+                        _state.update {
+                            it.copy(
+                                imageUrl = uploadResult.imageUrl,
+                                isUploadingImage = false
+                            )
+                        }
+
+                        // Pulisci i file temporanei
+                        imagePickerManager.cleanupTempFiles()
+                    }
+                    is ImageUploadResult.Error -> {
+                        _state.update {
+                            it.copy(
+                                isUploadingImage = false,
+                                errorMessage = uploadResult.message
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        isUploadingImage = false,
+                        errorMessage = "Errore durante l'upload dell'immagine: ${e.message}"
+                    )
+                }
+            }
+        }
+    }
+
     private fun saveUserProfile() {
         viewModelScope.launch {
             when (val result = validateAndSaveProfile()) {
-                is SaveProfileResult.Success -> {
-                    _state.update {
-                        it.copy(
-                            isSaving = false,
-                            isSuccess = true,
-                            originalFirstName = it.firstName,
-                            originalLastName = it.lastName,
-                            originalEmail = it.email
-                        )
-                    }
-                }
                 is SaveProfileResult.EmailAlreadyExists -> {
                     _state.update {
                         it.copy(isSaving = false, errorMessage = "Questa email è già in uso")
@@ -144,6 +234,18 @@ class ModifyUserViewModel(
                 is SaveProfileResult.Error -> {
                     _state.update {
                         it.copy(isSaving = false, errorMessage = result.message)
+                    }
+                }
+                is SaveProfileResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            isSaving = false,
+                            isSuccess = true,
+                            originalFirstName = it.firstName,
+                            originalLastName = it.lastName,
+                            originalEmail = it.email,
+                            originalImageUrl = it.imageUrl
+                        )
                     }
                 }
             }
@@ -188,6 +290,7 @@ class ModifyUserViewModel(
             val nameChanged = currentState.firstName != currentState.originalFirstName
             val surnameChanged = currentState.lastName != currentState.originalLastName
             val emailChanged = currentState.email != currentState.originalEmail
+            val imageChanged = currentState.imageUrl != currentState.originalImageUrl
 
             // Aggiorna l'email tramite Supabase Auth se è cambiata
             if (emailChanged) {
@@ -204,12 +307,13 @@ class ModifyUserViewModel(
                 }
             }
 
-            // Aggiorna nome e cognome se necessario
-            if (nameChanged || surnameChanged) {
+            // Aggiorna nome, cognome e/o immagine se necessario
+            if (nameChanged || surnameChanged || imageChanged) {
                 when (val userResult = userRepository.updateUserProfile(
                     userId = currentUser.id,
                     name = if (nameChanged) currentState.firstName else null,
-                    surname = if (surnameChanged) currentState.lastName else null
+                    surname = if (surnameChanged) currentState.lastName else null,
+                    imageUrl = if (imageChanged) currentState.imageUrl else null
                 )) {
                     is UpdateUserProfileResult.Success -> {
                         return SaveProfileResult.Success

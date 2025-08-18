@@ -1,5 +1,7 @@
 package com.example.u_study.ui.screens.modifyUser
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +30,7 @@ import androidx.navigation.NavHostController
 import com.example.u_study.R
 import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
+import com.example.u_study.ui.composables.ImagePickerDialog
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
@@ -53,12 +56,23 @@ fun ModifyUserScreen(
         if (state.isSuccess) {
             snackbarHostState.showSnackbar("Profilo aggiornato con successo!")
             actions.clearMessages()
-            // Torna indietro dopo il successo
-            //navController.popBackStack() --> con questo non ti aggiorna subito le cose
             navController.navigate(UStudyRoute.ProfileScreen) {
                 popUpTo(UStudyRoute.ModifyUserScreen) { inclusive = true }
             }
         }
+    }
+
+    // Dialog per selezione immagine
+    if (state.showImagePicker) {
+        ImagePickerDialog(
+            onDismiss = actions::hideImagePicker,
+            onCameraClick = {
+                actions.takePicture()
+            },
+            onGalleryClick = {
+                actions.pickFromGallery()
+            }
+        )
     }
 
     Scaffold(
@@ -93,8 +107,34 @@ fun ModifyUserScreen(
 
                 Spacer(Modifier.height(24.dp))
 
-                // Immagine profilo
-                ProfileIcon()
+                // Immagine profilo con overlay di caricamento
+                Box(contentAlignment = Alignment.Center) {
+                    ProfileIcon(
+                        imageUrl = state.imageUrl,
+                        isClickable = true,
+                        onClick = actions::showImagePicker
+                    )
+
+                    // Overlay di caricamento durante upload
+                    if (state.isUploadingImage) {
+                        Box(
+                            modifier = Modifier.matchParentSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                // Testo di istruzioni
+                Text(
+                    text = stringResource(R.string.tap_to_change_profile_image),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
 
                 Spacer(Modifier.height(32.dp))
 
@@ -114,7 +154,7 @@ fun ModifyUserScreen(
                         value = state.firstName,
                         onValueChange = actions::setFirstName,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !state.isSaving,
+                        enabled = !state.isSaving && !state.isUploadingImage,
                         singleLine = true
                     )
 
@@ -131,7 +171,7 @@ fun ModifyUserScreen(
                         value = state.lastName,
                         onValueChange = actions::setLastName,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !state.isSaving,
+                        enabled = !state.isSaving && !state.isUploadingImage,
                         singleLine = true
                     )
 
@@ -148,7 +188,7 @@ fun ModifyUserScreen(
                         value = state.email,
                         onValueChange = actions::setEmail,
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !state.isSaving,
+                        enabled = !state.isSaving && !state.isUploadingImage,
                         singleLine = true
                     )
                 }
@@ -157,17 +197,35 @@ fun ModifyUserScreen(
 
                 // Pulsante salva
                 if (state.isSaving) {
-                    CircularProgressIndicator()
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        "Salvando...",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            "Salvando...",
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                } else if (state.isUploadingImage) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            "Caricamento immagine...",
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 } else {
                     SaveButton(
                         text = stringResource(R.string.saveChanges_button),
-                        enabled = state.hasChanges && !state.isSaving,
+                        enabled = state.hasChanges && !state.isSaving && !state.isUploadingImage,
                         onClick = actions::saveChanges
                     )
 

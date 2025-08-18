@@ -97,4 +97,6 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.play.services.auth)
+
+    implementation(libs.coil.compose)
 }

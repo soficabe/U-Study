@@ -110,4 +110,13 @@
     <string name="errorString">Error:</string>
     <string name="weakPassword">The password is weak.</string>
 
+    <!-- Image Picker Dialog -->
+    <string name="select_profile_image">Select profile image</string>
+    <string name="choose_image_source">Choose the image source</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Profile Image -->
+    <string name="tap_to_change_profile_image">Tap to change the profile image</string>
 </resources>

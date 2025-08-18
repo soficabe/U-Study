@@ -3,6 +3,7 @@ package com.example.u_study
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.u_study.data.repositories.AuthRepository
+import com.example.u_study.data.repositories.ImageRepository
 import com.example.u_study.data.repositories.LibraryRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.data.repositories.ToDoRepository
@@ -18,6 +19,7 @@ import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.settings.SettingsViewModel
 import com.example.u_study.ui.screens.stats.StatsViewModel
 import com.example.u_study.ui.screens.todo.TodoViewModel
+import com.example.u_study.utils.ImagePickerManager
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.FlowType
@@ -30,6 +32,7 @@ import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.storage.Storage
 import io.github.jan.supabase.storage.storage
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 /**
@@ -95,6 +98,17 @@ val appModule = module {
     single { get<SupabaseClient>().postgrest }
     single { get<SupabaseClient>().storage }
 
+    // ===== UTILITIES =====
+
+    /**
+     * Factory per ImagePickerManager - ogni ViewModel avrà la sua istanza
+     * con callback specifici per gestire i risultati.
+     */
+    factory { (onImageSelected: (android.net.Uri) -> Unit, onError: (String) -> Unit) ->
+        ImagePickerManager(get(), onImageSelected, onError)
+    }
+
+
     // ===== DATA LAYER - REPOSITORIES =====
 
     /**
@@ -127,6 +141,12 @@ val appModule = module {
      */
     single { LibraryRepository(get(), get()) }
 
+    single { ImageRepository(get()) }
+
+    /**
+     * Repository per gestione immagini su Supabase Storage.
+     * Dipende da: Storage client
+     */
     // ===== PRESENTATION LAYER - VIEWMODELS =====
 
     /**
@@ -147,7 +167,24 @@ val appModule = module {
     viewModel { LibraryDetailViewModel(get(), get(), get()) }
 
     // User management
-    viewModel { ModifyUserViewModel(get<AuthRepository>(), get<UserRepository>()) }
+    /**
+     * ModifyUserViewModel aggiornato con gestione immagini.
+     * Utilizza un factory pattern per creare l'ImagePickerManager
+     * con callback specifici per questo ViewModel.
+     */
+    viewModel {
+        val viewModel = ModifyUserViewModel(
+            get<AuthRepository>(),
+            get<UserRepository>(),
+            get<ImageRepository>(),
+            // ImagePickerManager sarà inizializzato nel ViewModel con i callback appropriati
+            get { parametersOf(
+                { uri: android.net.Uri -> }, // placeholder - verrà sostituito nel ViewModel
+                { error: String -> }          // placeholder - verrà sostituito nel ViewModel
+            )}
+        )
+        viewModel
+    }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
 
     // Core app features
