@@ -97,7 +97,7 @@ fun UStudyNavGraph(
         composable<UStudyRoute.ModifyUserScreen> {
             val modifyUserViewModel = koinViewModel<ModifyUserViewModel>()
             val modifyUserState by modifyUserViewModel.state.collectAsStateWithLifecycle()
-            ModifyUserScreen(modifyUserState, modifyUserViewModel.actions, navController)
+            ModifyUserScreen(modifyUserState, modifyUserViewModel.actions, modifyUserViewModel, navController)
         }
 
         composable<UStudyRoute.StatsScreen> {

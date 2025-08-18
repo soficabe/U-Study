@@ -52,23 +52,31 @@ interface ModifyUserActions {
     fun setEmail(email: String)
     fun showImagePicker()
     fun hideImagePicker()
-    fun onImageSelected(uri: Uri)
-    fun onImageError(error: String)
-    fun saveChanges()
-    fun clearMessages()
     fun takePicture()
     fun pickFromGallery()
+    fun saveChanges()
+    fun clearMessages()
 }
 
 class ModifyUserViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val imageRepository: ImageRepository,
-    private val imagePickerManager: ImagePickerManager
+    private val imageRepository: ImageRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ModifyUserState())
     val state = _state.asStateFlow()
+
+    // ImagePickerManager sarà inizializzato lazy quando necessario
+    private var imagePickerManager: ImagePickerManager? = null
+
+    /**
+     * Inizializza l'ImagePickerManager con i callback appropriati.
+     * Deve essere chiamato dal Composable che usa questo ViewModel.
+     */
+    fun initializeImagePickerManager(manager: ImagePickerManager) {
+        imagePickerManager = manager
+    }
 
     val actions = object : ModifyUserActions {
         override fun setFirstName(firstName: String) {
@@ -91,12 +99,16 @@ class ModifyUserViewModel(
             _state.update { it.copy(showImagePicker = false) }
         }
 
-        override fun onImageSelected(uri: Uri) {
-            uploadImage(uri)
+        override fun takePicture() {
+            imagePickerManager?.takePicture() ?: run {
+                _state.update { it.copy(errorMessage = "Camera non disponibile") }
+            }
         }
 
-        override fun onImageError(error: String) {
-            _state.update { it.copy(errorMessage = error, isUploadingImage = false) }
+        override fun pickFromGallery() {
+            imagePickerManager?.pickFromGallery() ?: run {
+                _state.update { it.copy(errorMessage = "Galleria non disponibile") }
+            }
         }
 
         override fun saveChanges() {
@@ -106,19 +118,26 @@ class ModifyUserViewModel(
         override fun clearMessages() {
             _state.update { it.copy(errorMessage = null, isSuccess = false) }
         }
-
-        override fun takePicture() {
-            imagePickerManager.takePicture()
-        }
-
-        override fun pickFromGallery() {
-            imagePickerManager.pickFromGallery()
-        }
-
     }
 
     init {
         loadUserData()
+    }
+
+    /**
+     * Callback per quando un'immagine viene selezionata.
+     * Utilizzato dall'ImagePickerManager.
+     */
+    fun onImageSelected(uri: Uri) {
+        uploadImage(uri)
+    }
+
+    /**
+     * Callback per errori durante la selezione immagine.
+     * Utilizzato dall'ImagePickerManager.
+     */
+    fun onImageError(error: String) {
+        _state.update { it.copy(errorMessage = error, isUploadingImage = false) }
     }
 
     private fun loadUserData() {
@@ -166,7 +185,7 @@ class ModifyUserViewModel(
                 val currentUser = authRepository.getUser()
 
                 // Processa l'immagine (ridimensiona e comprimi)
-                val processedImageData = imagePickerManager.processImage(uri)
+                val processedImageData = imagePickerManager?.processImage(uri)
 
                 if (processedImageData == null) {
                     _state.update {
@@ -192,7 +211,7 @@ class ModifyUserViewModel(
                         }
 
                         // Pulisci i file temporanei
-                        imagePickerManager.cleanupTempFiles()
+                        imagePickerManager?.cleanupTempFiles()
                     }
                     is ImageUploadResult.Error -> {
                         _state.update {
@@ -217,25 +236,6 @@ class ModifyUserViewModel(
     private fun saveUserProfile() {
         viewModelScope.launch {
             when (val result = validateAndSaveProfile()) {
-                is SaveProfileResult.EmailAlreadyExists -> {
-                    _state.update {
-                        it.copy(isSaving = false, errorMessage = "Questa email è già in uso")
-                    }
-                }
-                is SaveProfileResult.ValidationError -> {
-                    // Il messaggio di errore è già stato impostato dalla validazione
-                    _state.update { it.copy(isSaving = false) }
-                }
-                is SaveProfileResult.NetworkError -> {
-                    _state.update {
-                        it.copy(isSaving = false, errorMessage = "Errore di connessione")
-                    }
-                }
-                is SaveProfileResult.Error -> {
-                    _state.update {
-                        it.copy(isSaving = false, errorMessage = result.message)
-                    }
-                }
                 is SaveProfileResult.Success -> {
                     _state.update {
                         it.copy(
@@ -246,6 +246,24 @@ class ModifyUserViewModel(
                             originalEmail = it.email,
                             originalImageUrl = it.imageUrl
                         )
+                    }
+                }
+                is SaveProfileResult.EmailAlreadyExists -> {
+                    _state.update {
+                        it.copy(isSaving = false, errorMessage = "Questa email è già in uso")
+                    }
+                }
+                is SaveProfileResult.ValidationError -> {
+                    _state.update { it.copy(isSaving = false) }
+                }
+                is SaveProfileResult.NetworkError -> {
+                    _state.update {
+                        it.copy(isSaving = false, errorMessage = "Errore di connessione")
+                    }
+                }
+                is SaveProfileResult.Error -> {
+                    _state.update {
+                        it.copy(isSaving = false, errorMessage = result.message)
                     }
                 }
             }
@@ -334,5 +352,11 @@ class ModifyUserViewModel(
 
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // Pulisci i file temporanei quando il ViewModel viene distrutto
+        imagePickerManager?.cleanupTempFiles()
     }
 }

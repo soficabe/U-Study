@@ -34,15 +34,28 @@ import com.example.u_study.ui.composables.ImagePickerDialog
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
+import com.example.u_study.utils.rememberImagePickerManager
 
 @Composable
 fun ModifyUserScreen(
     state: ModifyUserState,
     actions: ModifyUserActions,
+    viewModel: ModifyUserViewModel,
     navController: NavHostController
 ) {
     val scrollState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    // Inizializza l'ImagePickerManager
+    val imagePickerManager = rememberImagePickerManager(
+        onImageSelected = viewModel::onImageSelected,
+        onError = viewModel::onImageError
+    )
+
+    // Registra l'ImagePickerManager con il ViewModel
+    LaunchedEffect(imagePickerManager) {
+        viewModel.initializeImagePickerManager(imagePickerManager)
+    }
 
     // Gestione dei messaggi di errore e successo
     LaunchedEffect(state.errorMessage) {
@@ -66,12 +79,8 @@ fun ModifyUserScreen(
     if (state.showImagePicker) {
         ImagePickerDialog(
             onDismiss = actions::hideImagePicker,
-            onCameraClick = {
-                actions.takePicture()
-            },
-            onGalleryClick = {
-                actions.pickFromGallery()
-            }
+            onCameraClick = actions::takePicture,
+            onGalleryClick = actions::pickFromGallery
         )
     }
 

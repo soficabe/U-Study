@@ -141,12 +141,12 @@ val appModule = module {
      */
     single { LibraryRepository(get(), get()) }
 
-    single { ImageRepository(get()) }
-
     /**
      * Repository per gestione immagini su Supabase Storage.
      * Dipende da: Storage client
      */
+    single { ImageRepository(get()) }
+
     // ===== PRESENTATION LAYER - VIEWMODELS =====
 
     /**
@@ -167,24 +167,7 @@ val appModule = module {
     viewModel { LibraryDetailViewModel(get(), get(), get()) }
 
     // User management
-    /**
-     * ModifyUserViewModel aggiornato con gestione immagini.
-     * Utilizza un factory pattern per creare l'ImagePickerManager
-     * con callback specifici per questo ViewModel.
-     */
-    viewModel {
-        val viewModel = ModifyUserViewModel(
-            get<AuthRepository>(),
-            get<UserRepository>(),
-            get<ImageRepository>(),
-            // ImagePickerManager sarà inizializzato nel ViewModel con i callback appropriati
-            get { parametersOf(
-                { uri: android.net.Uri -> }, // placeholder - verrà sostituito nel ViewModel
-                { error: String -> }          // placeholder - verrà sostituito nel ViewModel
-            )}
-        )
-        viewModel
-    }
+    viewModel { ModifyUserViewModel( get<AuthRepository>(), get<UserRepository>(), get<ImageRepository>()) }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
 
     // Core app features

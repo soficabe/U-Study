@@ -22,6 +22,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.android.ext.android.inject
 import androidx.lifecycle.lifecycleScope
 import com.example.u_study.data.models.Language
+import com.example.u_study.utils.ImagePickerManager
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.Auth
 import java.util.Locale
@@ -52,6 +53,9 @@ class MainActivity : ComponentActivity() {
      * Utilizzato per gestire il flusso OAuth e l'exchange dei codici di autorizzazione.
      */
     private val auth: Auth by inject()
+
+    // Mappa per tenere traccia degli ImagePickerManager per ViewModel
+    private val imagePickerManagers = mutableMapOf<String, ImagePickerManager>()
 
     // ===== LIFECYCLE METHODS =====
 
@@ -127,6 +131,22 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             handleDeepLink(intent)
         }
+    }
+
+    /**
+     * Registra un ImagePickerManager per un ViewModel specifico.
+     * Deve essere chiamato dal ViewModel durante l'inizializzazione.
+     */
+    fun registerImagePickerManager(key: String, manager: ImagePickerManager) {
+        manager.initializeLaunchers(this)
+        imagePickerManagers[key] = manager
+    }
+
+    /**
+     * Rimuove un ImagePickerManager quando non più necessario.
+     */
+    fun unregisterImagePickerManager(key: String) {
+        imagePickerManagers.remove(key)
     }
 
     // ===== OAUTH DEEP LINK HANDLING =====
