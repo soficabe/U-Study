@@ -1,19 +1,22 @@
 package com.example.u_study.ui.screens.modifyUser
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.ImageRepository
-import com.example.u_study.data.repositories.ImageUploadResult
 import com.example.u_study.data.repositories.UpdateUserResult
 import com.example.u_study.data.repositories.UserRepository
 import com.example.u_study.data.repositories.UpdateUserProfileResult
-import com.example.u_study.utils.ImagePickerManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 sealed interface SaveProfileResult {
     data object Success : SaveProfileResult
@@ -52,10 +55,10 @@ interface ModifyUserActions {
     fun setEmail(email: String)
     fun showImagePicker()
     fun hideImagePicker()
-    fun takePicture()
-    fun pickFromGallery()
+    fun onImageError(error: String)
     fun saveChanges()
     fun clearMessages()
+    fun onProfileImageSelected(uri: Uri, context: Context)
 }
 
 class ModifyUserViewModel(
@@ -66,17 +69,6 @@ class ModifyUserViewModel(
 
     private val _state = MutableStateFlow(ModifyUserState())
     val state = _state.asStateFlow()
-
-    // ImagePickerManager sarà inizializzato lazy quando necessario
-    private var imagePickerManager: ImagePickerManager? = null
-
-    /**
-     * Inizializza l'ImagePickerManager con i callback appropriati.
-     * Deve essere chiamato dal Composable che usa questo ViewModel.
-     */
-    fun initializeImagePickerManager(manager: ImagePickerManager) {
-        imagePickerManager = manager
-    }
 
     val actions = object : ModifyUserActions {
         override fun setFirstName(firstName: String) {
@@ -99,16 +91,8 @@ class ModifyUserViewModel(
             _state.update { it.copy(showImagePicker = false) }
         }
 
-        override fun takePicture() {
-            imagePickerManager?.takePicture() ?: run {
-                _state.update { it.copy(errorMessage = "Camera non disponibile") }
-            }
-        }
-
-        override fun pickFromGallery() {
-            imagePickerManager?.pickFromGallery() ?: run {
-                _state.update { it.copy(errorMessage = "Galleria non disponibile") }
-            }
+        override fun onImageError(error: String) {
+            _state.update { it.copy(errorMessage = error, isUploadingImage = false) }
         }
 
         override fun saveChanges() {
@@ -118,26 +102,14 @@ class ModifyUserViewModel(
         override fun clearMessages() {
             _state.update { it.copy(errorMessage = null, isSuccess = false) }
         }
+
+        override fun onProfileImageSelected(uri: Uri, context: Context) {
+            uploadProfileImage(uri, context)
+        }
     }
 
     init {
         loadUserData()
-    }
-
-    /**
-     * Callback per quando un'immagine viene selezionata.
-     * Utilizzato dall'ImagePickerManager.
-     */
-    fun onImageSelected(uri: Uri) {
-        uploadImage(uri)
-    }
-
-    /**
-     * Callback per errori durante la selezione immagine.
-     * Utilizzato dall'ImagePickerManager.
-     */
-    fun onImageError(error: String) {
-        _state.update { it.copy(errorMessage = error, isUploadingImage = false) }
     }
 
     private fun loadUserData() {
@@ -177,77 +149,9 @@ class ModifyUserViewModel(
         }
     }
 
-    private fun uploadImage(uri: Uri) {
-        viewModelScope.launch {
-            _state.update { it.copy(isUploadingImage = true, errorMessage = null) }
-
-            try {
-                val currentUser = authRepository.getUser()
-
-                // Processa l'immagine (ridimensiona e comprimi)
-                val processedImageData = imagePickerManager?.processImage(uri)
-
-                if (processedImageData == null) {
-                    _state.update {
-                        it.copy(
-                            isUploadingImage = false,
-                            errorMessage = "Errore nel processamento dell'immagine"
-                        )
-                    }
-                    return@launch
-                }
-
-                // Upload su Supabase Storage
-                when (val uploadResult = imageRepository.uploadProfileImage(
-                    currentUser.id,
-                    processedImageData
-                )) {
-                    is ImageUploadResult.Success -> {
-                        _state.update {
-                            it.copy(
-                                imageUrl = uploadResult.imageUrl,
-                                isUploadingImage = false
-                            )
-                        }
-
-                        // Pulisci i file temporanei
-                        imagePickerManager?.cleanupTempFiles()
-                    }
-                    is ImageUploadResult.Error -> {
-                        _state.update {
-                            it.copy(
-                                isUploadingImage = false,
-                                errorMessage = uploadResult.message
-                            )
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        isUploadingImage = false,
-                        errorMessage = "Errore durante l'upload dell'immagine: ${e.message}"
-                    )
-                }
-            }
-        }
-    }
-
     private fun saveUserProfile() {
         viewModelScope.launch {
             when (val result = validateAndSaveProfile()) {
-                is SaveProfileResult.Success -> {
-                    _state.update {
-                        it.copy(
-                            isSaving = false,
-                            isSuccess = true,
-                            originalFirstName = it.firstName,
-                            originalLastName = it.lastName,
-                            originalEmail = it.email,
-                            originalImageUrl = it.imageUrl
-                        )
-                    }
-                }
                 is SaveProfileResult.EmailAlreadyExists -> {
                     _state.update {
                         it.copy(isSaving = false, errorMessage = "Questa email è già in uso")
@@ -266,6 +170,18 @@ class ModifyUserViewModel(
                         it.copy(isSaving = false, errorMessage = result.message)
                     }
                 }
+                is SaveProfileResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            isSaving = false,
+                            isSuccess = true,
+                            originalFirstName = it.firstName,
+                            originalLastName = it.lastName,
+                            originalEmail = it.email,
+                            originalImageUrl = it.imageUrl
+                        )
+                    }
+                }
             }
         }
     }
@@ -273,7 +189,6 @@ class ModifyUserViewModel(
     private suspend fun validateAndSaveProfile(): SaveProfileResult {
         val currentState = _state.value
 
-        // Validazione
         if (currentState.firstName.isBlank()) {
             _state.update { it.copy(errorMessage = "Il nome non può essere vuoto") }
             return SaveProfileResult.ValidationError
@@ -304,17 +219,14 @@ class ModifyUserViewModel(
         try {
             val currentUser = authRepository.getUser()
 
-            // Determina cosa è cambiato
             val nameChanged = currentState.firstName != currentState.originalFirstName
             val surnameChanged = currentState.lastName != currentState.originalLastName
             val emailChanged = currentState.email != currentState.originalEmail
             val imageChanged = currentState.imageUrl != currentState.originalImageUrl
 
-            // Aggiorna l'email tramite Supabase Auth se è cambiata
             if (emailChanged) {
                 when (val authResult = authRepository.updateUserEmail(currentState.email)) {
                     is UpdateUserResult.Success -> {
-                        // Email aggiornata con successo in auth
                     }
                     is UpdateUserResult.EmailAlreadyExists -> {
                         return SaveProfileResult.EmailAlreadyExists
@@ -325,7 +237,6 @@ class ModifyUserViewModel(
                 }
             }
 
-            // Aggiorna nome, cognome e/o immagine se necessario
             if (nameChanged || surnameChanged || imageChanged) {
                 when (val userResult = userRepository.updateUserProfile(
                     userId = currentUser.id,
@@ -341,7 +252,6 @@ class ModifyUserViewModel(
                     }
                 }
             } else {
-                // Solo email cambiata, già gestita dal trigger
                 return SaveProfileResult.Success
             }
 
@@ -354,9 +264,32 @@ class ModifyUserViewModel(
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        // Pulisci i file temporanei quando il ViewModel viene distrutto
-        imagePickerManager?.cleanupTempFiles()
+    private fun uploadProfileImage(uri: Uri, context: Context) {
+        viewModelScope.launch {
+            _state.update { it.copy(isUploadingImage = true, errorMessage = null) }
+            try {
+                Log.d("PROFILE_PHOTO", "Selected URI: $uri (scheme: ${uri.scheme})")
+                // Se lo schema è file:// fai anche il controllo file diretto (per device vecchi)
+                if (uri.scheme == "file" && uri.path != null) {
+                    val file = File(uri.path!!)
+                    Log.d("PROFILE_PHOTO", "path=${file.path} exists=${file.exists()} size=${file.length()}")
+                    if (!file.exists() || file.length() == 0L) {
+                        _state.update { it.copy(isUploadingImage = false, errorMessage = "Foto non trovata o file vuoto") }
+                        return@launch
+                    }
+                }
+                val currentUser = authRepository.getUser()
+                val imageUrl = withContext(Dispatchers.IO) {
+                    imageRepository.uploadProfileImage(currentUser.id, uri, context)
+                }
+                if (imageUrl != null) {
+                    _state.update { it.copy(imageUrl = imageUrl, isUploadingImage = false) }
+                } else {
+                    _state.update { it.copy(isUploadingImage = false, errorMessage = "Errore upload immagine (file vuoto o non accessibile)") }
+                }
+            } catch (e: Exception) {
+                _state.update { it.copy(isUploadingImage = false, errorMessage = "Errore upload immagine") }
+            }
+        }
     }
 }

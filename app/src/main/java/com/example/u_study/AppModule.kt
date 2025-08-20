@@ -19,7 +19,6 @@ import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.settings.SettingsViewModel
 import com.example.u_study.ui.screens.stats.StatsViewModel
 import com.example.u_study.ui.screens.todo.TodoViewModel
-import com.example.u_study.utils.ImagePickerManager
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.FlowType
@@ -97,16 +96,6 @@ val appModule = module {
     single { get<SupabaseClient>().composeAuth }
     single { get<SupabaseClient>().postgrest }
     single { get<SupabaseClient>().storage }
-
-    // ===== UTILITIES =====
-
-    /**
-     * Factory per ImagePickerManager - ogni ViewModel avrà la sua istanza
-     * con callback specifici per gestire i risultati.
-     */
-    factory { (onImageSelected: (android.net.Uri) -> Unit, onError: (String) -> Unit) ->
-        ImagePickerManager(get(), onImageSelected, onError)
-    }
 
 
     // ===== DATA LAYER - REPOSITORIES =====

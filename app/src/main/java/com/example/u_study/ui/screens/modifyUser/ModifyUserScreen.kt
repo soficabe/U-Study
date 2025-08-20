@@ -1,5 +1,8 @@
 package com.example.u_study.ui.screens.modifyUser
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,9 +22,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,27 +42,72 @@ import com.example.u_study.ui.composables.ImagePickerDialog
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
-import com.example.u_study.utils.rememberImagePickerManager
+import java.io.File
+import androidx.core.content.FileProvider
+import kotlinx.coroutines.delay
 
 @Composable
 fun ModifyUserScreen(
     state: ModifyUserState,
     actions: ModifyUserActions,
-    viewModel: ModifyUserViewModel,
     navController: NavHostController
 ) {
     val scrollState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
-    // Inizializza l'ImagePickerManager
-    val imagePickerManager = rememberImagePickerManager(
-        onImageSelected = viewModel::onImageSelected,
-        onError = viewModel::onImageError
-    )
+    // Launcher per la galleria
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            actions.onProfileImageSelected(uri, context)
+        }
+    }
 
-    // Registra l'ImagePickerManager con il ViewModel
-    LaunchedEffect(imagePickerManager) {
-        viewModel.initializeImagePickerManager(imagePickerManager)
+    // Stato per gestire la photoUri e il retry asincrono camera
+    var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success: Boolean ->
+        photoUri?.let { uri ->
+            if (success) {
+                // Invece di LaunchedEffect qui, aggiorna lo stato:
+                pendingCameraUri = uri
+            }
+        }
+    }
+
+    // Effetto di retry su pendingCameraUri
+    LaunchedEffect(pendingCameraUri) {
+        pendingCameraUri?.let { uri ->
+            var retries = 5
+            var found = false
+            while (retries > 0 && !found) {
+                try {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    if (inputStream != null) {
+                        inputStream.close()
+                        found = true
+                    } else {
+                        delay(200)
+                        retries--
+                    }
+                } catch (e: Exception) {
+                    delay(200)
+                    retries--
+                }
+            }
+            if (found) {
+                actions.onProfileImageSelected(uri, context)
+            } else {
+                actions.onImageError("Errore: la foto non è stata salvata correttamente. Riprova.")
+            }
+            // Reset
+            pendingCameraUri = null
+        }
     }
 
     // Gestione dei messaggi di errore e successo
@@ -79,8 +132,16 @@ fun ModifyUserScreen(
     if (state.showImagePicker) {
         ImagePickerDialog(
             onDismiss = actions::hideImagePicker,
-            onCameraClick = actions::takePicture,
-            onGalleryClick = actions::pickFromGallery
+            onCameraClick = {
+                // Crea file solo al click camera
+                val imageFile = File.createTempFile("tmp_image", ".jpg", context.externalCacheDir)
+                val uri = FileProvider.getUriForFile(context, context.packageName + ".provider", imageFile)
+                photoUri = uri
+                cameraLauncher.launch(uri)
+            },
+            onGalleryClick = {
+                galleryLauncher.launch("image/*")
+            }
         )
     }
 
@@ -91,7 +152,6 @@ fun ModifyUserScreen(
     ) { innerPadding ->
 
         if (state.isLoading) {
-            // Stato di caricamento
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -104,7 +164,6 @@ fun ModifyUserScreen(
                 Text("Caricamento profilo...", style = MaterialTheme.typography.bodyMedium)
             }
         } else {
-            // Contenuto principale
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -116,7 +175,6 @@ fun ModifyUserScreen(
 
                 Spacer(Modifier.height(24.dp))
 
-                // Immagine profilo con overlay di caricamento
                 Box(contentAlignment = Alignment.Center) {
                     ProfileIcon(
                         imageUrl = state.imageUrl,
@@ -124,7 +182,6 @@ fun ModifyUserScreen(
                         onClick = actions::showImagePicker
                     )
 
-                    // Overlay di caricamento durante upload
                     if (state.isUploadingImage) {
                         Box(
                             modifier = Modifier.matchParentSize(),
@@ -137,7 +194,6 @@ fun ModifyUserScreen(
 
                 Spacer(Modifier.height(8.dp))
 
-                // Testo di istruzioni
                 Text(
                     text = stringResource(R.string.tap_to_change_profile_image),
                     style = MaterialTheme.typography.bodySmall,
@@ -147,12 +203,10 @@ fun ModifyUserScreen(
 
                 Spacer(Modifier.height(32.dp))
 
-                // Column per allineare a sinistra
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    // Nome
                     Text(
                         stringResource(R.string.firstName),
                         style = MaterialTheme.typography.labelLarge,
@@ -169,7 +223,6 @@ fun ModifyUserScreen(
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Cognome
                     Text(
                         stringResource(R.string.lastName),
                         style = MaterialTheme.typography.labelLarge,
@@ -186,7 +239,6 @@ fun ModifyUserScreen(
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Email
                     Text(
                         stringResource(R.string.email),
                         style = MaterialTheme.typography.labelLarge,
@@ -204,7 +256,6 @@ fun ModifyUserScreen(
 
                 Spacer(Modifier.height(32.dp))
 
-                // Pulsante salva
                 if (state.isSaving) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
