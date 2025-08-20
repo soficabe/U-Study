@@ -162,5 +162,5 @@ val appModule = module {
     // Core app features
     viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { TodoViewModel(get()) }
-    viewModel { StatsViewModel() } // No dependencies - local computation only
+    viewModel { StatsViewModel(get()) } // No dependencies - local computation only
 }
