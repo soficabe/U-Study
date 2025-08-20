@@ -1,8 +1,6 @@
 package com.example.u_study.ui.screens.modifyUser
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,9 +40,8 @@ import com.example.u_study.ui.composables.ImagePickerDialog
 import com.example.u_study.ui.composables.NavigationBar
 import com.example.u_study.ui.composables.ProfileIcon
 import com.example.u_study.ui.composables.SaveButton
-import java.io.File
-import androidx.core.content.FileProvider
-import kotlinx.coroutines.delay
+import com.example.u_study.utils.rememberProfileCameraLauncher
+import com.example.u_study.utils.rememberProfileGalleryLauncher
 
 @Composable
 fun ModifyUserScreen(
@@ -56,58 +53,13 @@ fun ModifyUserScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    // Launcher per la galleria
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            actions.onProfileImageSelected(uri, context)
-        }
-    }
-
-    // Stato per gestire la photoUri e il retry asincrono camera
-    var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success: Boolean ->
-        photoUri?.let { uri ->
-            if (success) {
-                // Invece di LaunchedEffect qui, aggiorna lo stato:
-                pendingCameraUri = uri
-            }
-        }
-    }
-
-    // Effetto di retry su pendingCameraUri
-    LaunchedEffect(pendingCameraUri) {
-        pendingCameraUri?.let { uri ->
-            var retries = 5
-            var found = false
-            while (retries > 0 && !found) {
-                try {
-                    val inputStream = context.contentResolver.openInputStream(uri)
-                    if (inputStream != null) {
-                        inputStream.close()
-                        found = true
-                    } else {
-                        delay(200)
-                        retries--
-                    }
-                } catch (e: Exception) {
-                    delay(200)
-                    retries--
-                }
-            }
-            if (found) {
-                actions.onProfileImageSelected(uri, context)
-            } else {
-                actions.onImageError("Errore: la foto non è stata salvata correttamente. Riprova.")
-            }
-            // Reset
-            pendingCameraUri = null
-        }
+    // --- NUOVA GESTIONE CAMERA E GALLERIA CENTRALIZZATA ---
+    val launchCamera = rememberProfileCameraLauncher(
+        onPhotoReady = { uri -> actions.onProfileImageSelected(uri, context) },
+        onError = actions::onImageError
+    )
+    val launchGallery = rememberProfileGalleryLauncher { uri ->
+        actions.onProfileImageSelected(uri, context)
     }
 
     // Gestione dei messaggi di errore e successo
@@ -132,16 +84,8 @@ fun ModifyUserScreen(
     if (state.showImagePicker) {
         ImagePickerDialog(
             onDismiss = actions::hideImagePicker,
-            onCameraClick = {
-                // Crea file solo al click camera
-                val imageFile = File.createTempFile("tmp_image", ".jpg", context.externalCacheDir)
-                val uri = FileProvider.getUriForFile(context, context.packageName + ".provider", imageFile)
-                photoUri = uri
-                cameraLauncher.launch(uri)
-            },
-            onGalleryClick = {
-                galleryLauncher.launch("image/*")
-            }
+            onCameraClick = launchCamera,
+            onGalleryClick = launchGallery
         )
     }
 

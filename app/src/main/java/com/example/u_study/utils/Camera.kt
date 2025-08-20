@@ -1,49 +1,79 @@
 package com.example.u_study.utils
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import java.io.File
+import kotlinx.coroutines.delay
 
-interface CameraLauncher {
-    val capturedImageUri: Uri
-    fun captureImage()
-}
-
+/**
+ * Utility composable per la gestione della foto profilo tramite camera.
+ * Incapsula la logica di file temporaneo, FileProvider e retry asincrono.
+ *
+ * @param onPhotoReady callback da chiamare con l'Uri della foto scattata (pronta per essere letta)
+ * @return funzione launchCamera()
+ */
 @Composable
-fun rememberCameraLauncher(
-    onPictureTaken: (Uri) -> Unit = {}
-): CameraLauncher {
-    val ctx = LocalContext.current
+fun rememberProfileCameraLauncher(
+    onPhotoReady: (Uri) -> Unit,
+    onError: ((String) -> Unit)? = null
+): () -> Unit {
+    val context = LocalContext.current
 
-    val imageUri = remember {
-        val imageFile = File.createTempFile("tmp_image", ".jpg", ctx.externalCacheDir)
-        FileProvider.getUriForFile(ctx, ctx.packageName + ".provider", imageFile)
-    }
-    var capturedImageUri by remember { mutableStateOf(Uri.EMPTY) }
+    var photoUri by remember { mutableStateOf<Uri?>(null) }
+    var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
 
-    val cameraActivityLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { pictureTaken ->
-            if (pictureTaken) {
-                capturedImageUri = imageUri
-                onPictureTaken(capturedImageUri)
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success: Boolean ->
+        photoUri?.let { uri ->
+            if (success) {
+                pendingCameraUri = uri
+            } else {
+                onError?.invoke("Errore: la foto non è stata salvata correttamente. Riprova.")
             }
         }
+    }
 
-    val cameraLauncher = object : CameraLauncher {
-        override val capturedImageUri: Uri
-            get() = capturedImageUri
-
-        override fun captureImage() {
-            cameraActivityLauncher.launch(imageUri)
+    // Retry asincrono per assicurarsi che il file sia pronto
+    LaunchedEffect(pendingCameraUri) {
+        pendingCameraUri?.let { uri ->
+            var retries = 5
+            var found = false
+            while (retries > 0 && !found) {
+                try {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    if (inputStream != null) {
+                        inputStream.close()
+                        found = true
+                    } else {
+                        delay(200)
+                        retries--
+                    }
+                } catch (e: Exception) {
+                    delay(200)
+                    retries--
+                }
+            }
+            if (found) {
+                onPhotoReady(uri)
+            } else {
+                onError?.invoke("Errore: la foto non è stata salvata correttamente. Riprova.")
+            }
+            pendingCameraUri = null
         }
     }
-    return cameraLauncher
+
+    val launchCamera = {
+        val imageFile = File.createTempFile("tmp_image", ".jpg", context.externalCacheDir)
+        val uri = FileProvider.getUriForFile(context, context.packageName + ".provider", imageFile)
+        photoUri = uri
+        cameraLauncher.launch(uri)
+    }
+
+    return launchCamera
 }
