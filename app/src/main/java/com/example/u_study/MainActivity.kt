@@ -8,8 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.u_study.data.models.Language
@@ -24,51 +24,37 @@ import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.Auth
 import java.util.Locale
 
+// Importa la tua utility per leggere la lingua
+import com.example.u_study.utils.getUserLanguageSync
+
 class MainActivity : ComponentActivity() {
-    // ===== DEPENDENCY INJECTION =====
     private val auth: Auth by inject()
 
-    // --- PATCH: Locale Apply Helper ---
-    private fun Context.wrapInLocale(language: Language): Context {
+    // Helper per applicare la lingua subito
+    private fun applyLocale(language: Language) {
         val locale = Locale(language.code)
         Locale.setDefault(locale)
         val config = resources.configuration
         config.setLocale(locale)
         config.setLayoutDirection(locale)
-        return createConfigurationContext(config)
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        // Fallback diretto su inglese (la lingua effettiva verrà aggiornata runtime con Compose)
-        val lang = Language.ENGLISH
-        super.attachBaseContext(newBase.wrapInLocale(lang))
+        @Suppress("DEPRECATION")
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Gestisce il deep link OAuth se presente nell'intent di apertura
-        lifecycleScope.launch {
-            handleDeepLink(intent)
-        }
+        // 1. Carica la lingua PRIMA di setContent
+        val userLang = getUserLanguageSync(applicationContext)
+        applyLocale(userLang)
 
-        // Abilita layout edge-to-edge per esperienza utente moderna
+        // Gestisce il deep link OAuth se presente nell'intent di apertura
+        lifecycleScope.launch { handleDeepLink(intent) }
         enableEdgeToEdge()
 
         setContent {
             val settingsViewModel = koinViewModel<SettingsViewModel>()
             val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
-
-            // --- PATCH: Aggiornamento runtime locale ---
-            LaunchedEffect(settingsState.lang) {
-                val locale = Locale(settingsState.lang.code)
-                Locale.setDefault(locale)
-                val config = resources.configuration
-                config.setLocale(locale)
-                config.setLayoutDirection(locale)
-                @Suppress("DEPRECATION")
-                resources.updateConfiguration(config, resources.displayMetrics)
-            }
 
             U_StudyTheme(
                 darkTheme = when (settingsState.theme) {
@@ -89,10 +75,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-
-        lifecycleScope.launch {
-            handleDeepLink(intent)
-        }
+        lifecycleScope.launch { handleDeepLink(intent) }
     }
 
     private suspend fun handleDeepLink(intent: Intent?) {

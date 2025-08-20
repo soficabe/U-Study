@@ -27,7 +27,7 @@ data class SettingsState(
 
 interface SettingsActions {
     fun changeTheme(theme: Theme) : Job
-    suspend fun changeLang(lang: Language) : Job
+    suspend fun changeLang(lang: Language)
     fun logout()
     fun updatePassword(password: String, confirm: String)
 
@@ -64,7 +64,13 @@ class SettingsViewModel(
             settingsRepository.setTheme(theme)
         }
 
-        override suspend fun changeLang(lang: Language) = viewModelScope.launch {
+        // PRIMA (sbagliato): coroutine dentro coroutine!
+        // override suspend fun changeLang(lang: Language) = viewModelScope.launch {
+        //    settingsRepository.setLanguage(lang)
+        // }
+
+        // DOPO (corretto): funzione sospesa che aspetta la scrittura!
+        override suspend fun changeLang(lang: Language) {
             settingsRepository.setLanguage(lang)
         }
 

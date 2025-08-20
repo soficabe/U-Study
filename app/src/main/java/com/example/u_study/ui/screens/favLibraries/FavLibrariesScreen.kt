@@ -1,4 +1,4 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.favLibraries
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +22,6 @@ import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
-import com.example.u_study.ui.screens.favLibraries.FavLibrariesActions
-import com.example.u_study.ui.screens.favLibraries.FavLibrariesState
 
 @Composable
 fun FavLibrariesScreen(state: FavLibrariesState, actions: FavLibrariesActions, navController: NavHostController) {

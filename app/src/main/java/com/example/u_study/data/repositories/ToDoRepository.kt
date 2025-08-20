@@ -3,7 +3,6 @@ package com.example.u_study.data.repositories
 import android.util.Log
 import com.example.u_study.data.database.entities.ToDo
 import io.github.jan.supabase.postgrest.Postgrest
-import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 

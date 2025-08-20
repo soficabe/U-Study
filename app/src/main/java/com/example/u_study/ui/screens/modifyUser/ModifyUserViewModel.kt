@@ -225,7 +225,7 @@ class ModifyUserViewModel(
             val imageChanged = currentState.imageUrl != currentState.originalImageUrl
 
             if (emailChanged) {
-                when (val authResult = authRepository.updateUserEmail(currentState.email)) {
+                when (authRepository.updateUserEmail(currentState.email)) {
                     is UpdateUserResult.Success -> {
                     }
                     is UpdateUserResult.EmailAlreadyExists -> {
@@ -238,7 +238,7 @@ class ModifyUserViewModel(
             }
 
             if (nameChanged || surnameChanged || imageChanged) {
-                when (val userResult = userRepository.updateUserProfile(
+                when (userRepository.updateUserProfile(
                     userId = currentUser.id,
                     name = if (nameChanged) currentState.firstName else null,
                     surname = if (surnameChanged) currentState.lastName else null,

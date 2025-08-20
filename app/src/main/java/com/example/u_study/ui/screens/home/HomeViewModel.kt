@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.database.entities.User
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.UserRepository
-import com.example.u_study.ui.screens.register.RegisterState
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

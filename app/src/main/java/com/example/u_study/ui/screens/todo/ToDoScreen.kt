@@ -1,8 +1,8 @@
-package com.example.u_study.ui.screens
+package com.example.u_study.ui.screens.todo
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,9 +36,6 @@ import com.example.u_study.data.database.entities.ToDo
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.FilterChipsRow
 import com.example.u_study.ui.composables.NavigationBar
-import com.example.u_study.ui.screens.todo.TodoActions
-import com.example.u_study.ui.screens.todo.TodoFilter
-import com.example.u_study.ui.screens.todo.TodoState
 
 @Composable
 fun ToDoScreen(state: TodoState, actions: TodoActions, navController: NavHostController) {

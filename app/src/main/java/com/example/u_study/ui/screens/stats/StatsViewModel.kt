@@ -3,7 +3,6 @@ package com.example.u_study.ui.screens.stats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.repositories.ToDoRepository
-import com.example.u_study.ui.screens.todo.TodoFilter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

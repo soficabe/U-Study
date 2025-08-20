@@ -1,6 +1,5 @@
 package com.example.u_study.ui.screens.settings
 
-import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -188,12 +187,15 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                 onOptionSelected = { selectedLanguage ->
                     showLangDialog = false
                     scope.launch {
-                        //aspetta che il salvataggio sia completo
-                        actions.changeLang(selectedLanguage)
+                        // PRIMA: la coroutine lanciava una coroutine, NON aspettando la scrittura
+                        // actions.changeLang(selectedLanguage)
+                        // val intent = ...
+                        // context.startActivity(intent)
 
+                        // DOPO: questa coroutine aspetta davvero che il valore sia scritto!
+                        actions.changeLang(selectedLanguage)
                         val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
                         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        //riavvio app
                         context.startActivity(intent)
                     }
                 },
