@@ -99,4 +99,6 @@ dependencies {
     implementation(libs.play.services.auth)
 
     implementation(libs.coil.compose)
+
+    implementation (libs.osmdroid.android)
 }

@@ -53,16 +53,14 @@ class LibrariesViewModel (private val libraryRepository: LibraryRepository, priv
         }
     }
 
-    private var allLibraries: List<Library> = emptyList()
 
     private fun loadLibraries() {
         viewModelScope.launch {
-            allLibraries = libraryRepository.getLibraries()
 
             val filteredList = if (_state.value.searchQuery.isBlank()) {
-                libraryRepository.getLibraries()
+                libraryRepository.getLibraries().sortedBy { it.city }
             } else {
-                libraryRepository.getLibraries().filter { library ->
+                libraryRepository.getLibraries().sortedBy { it.city }.filter { library ->
                     library.city.startsWith(_state.value.searchQuery, ignoreCase = true) //per maiuscole - minuscole
                 }
             }

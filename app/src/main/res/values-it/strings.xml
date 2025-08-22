@@ -27,7 +27,7 @@
     <string name="stats_button">Statistiche</string>
 
     <!-- Navigation buttons -->
-    <string name="sessions_nav">Sessioni</string>
+    <string name="home_nav">Home</string>
     <string name="toDo_nav">Lista TO-DO</string>
     <string name="librariesList_nav">Biblioteche</string>
     <string name="librariesMap_nav">Mappa</string>
@@ -110,7 +110,7 @@
     <string name="updatePasswordSuccess">Password Aggiornata!</string>
     <string name="errorString">Errore:</string>
     <string name="weakPassword">Password troppo debole.</string>
-    <string name="appearance">Apparenza</string>
+    <string name="appearance">Aspetto</string>
     <string name="privacy">Privacy</string>
     <string name="others">Altro</string>
 

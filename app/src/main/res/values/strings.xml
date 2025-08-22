@@ -29,7 +29,7 @@
 
 
     <!-- Navigation buttons -->
-    <string name="sessions_nav">Sessions</string>
+    <string name="home_nav">Home</string>
     <string name="toDo_nav">TO-DO List</string>
     <string name="librariesList_nav">Lib List</string>
     <string name="librariesMap_nav">Lib Map</string>

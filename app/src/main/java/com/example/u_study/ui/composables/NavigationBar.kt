@@ -3,6 +3,7 @@ package com.example.u_study.ui.composables
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CheckBox
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
@@ -26,8 +27,8 @@ import com.example.u_study.ui.UStudyRoute
 fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostController, isAutheticated: Boolean = true) {
     NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
         NavigationBarItem(
-            icon = { Icon(Icons.Outlined.Timer, contentDescription = "Study Session") },
-            label = { Text(stringResource(R.string.sessions_nav)) },
+            icon = { Icon(Icons.Outlined.Home, contentDescription = "Home") },
+            label = { Text(stringResource(R.string.home_nav)) },
             selected = false,
             onClick = { navController.navigate(UStudyRoute.HomeScreen) }
         )
