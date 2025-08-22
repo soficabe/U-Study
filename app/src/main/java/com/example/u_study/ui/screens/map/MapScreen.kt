@@ -19,6 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.u_study.R
 import com.example.u_study.ui.composables.AppBar
+import kotlinx.coroutines.launch
 
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
@@ -37,6 +38,9 @@ fun MapScreen(
     var showPermissionDeniedWarning by remember { mutableStateOf(false) }
     var showPermissionPermanentlyDeniedWarning by remember { mutableStateOf(false) }
     var requestLocation by remember { mutableStateOf(false) }
+
+    var mapViewInstance: MapView? by remember { mutableStateOf(null) }
+    val scope = rememberCoroutineScope()
 
     val locationPermission = rememberMultiplePermissions(
         listOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -107,6 +111,7 @@ fun MapScreen(
                             )
                             overlays.add(marker)
                         }
+                        mapViewInstance = this
                     }
                 },
                 update = { mapView ->
@@ -124,6 +129,23 @@ fun MapScreen(
                         )
                         mapView.overlays.add(marker)
                     }
+
+                    // --- INIZIA LA PARTE NUOVA ---
+
+                    // 1. Aggiungi il marker per la posizione dell'utente, se disponibile
+                    coordinates?.let { coords ->
+                        val myLocationMarker = Marker(mapView).apply {
+                            // Usiamo un'icona diversa per la posizione (da creare in res/drawable)
+                            icon = context.getDrawable(R.drawable.ic_my_location_marker)
+                            position = GeoPoint(coords.latitude, coords.longitude)
+                            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                            title = "La mia posizione"
+                        }
+                        mapView.overlays.add(myLocationMarker)
+                    }
+
+                    // --- FINE DELLA PARTE NUOVA ---
+
                     if (libraryIdToZoom != null) {
                         val lib = libraries.find { it.id == libraryIdToZoom }
                         if (lib != null) {
@@ -131,6 +153,9 @@ fun MapScreen(
                             mapView.controller.setZoom(17.0)
                         }
                     }
+
+                    // Forza la mappa a ridisegnarsi per mostrare i nuovi marker
+                    mapView.invalidate()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,7 +165,21 @@ fun MapScreen(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Button(onClick = {
                     if (locationPermission.statuses.any { it.value.isGranted }) {
-                        requestLocation = true
+                        //requestLocation = true
+                        scope.launch {
+                            // 1. Chiedi al service di calcolare la posizione attuale
+                            val currentLocation = locationService.getCurrentLocation()
+
+                            // 2. Se la posizione è stata trovata (non è null)...
+                            currentLocation?.let { coords ->
+                                // 3. ...usa il nostro riferimento per centrare la mappa su quel punto
+                                mapViewInstance?.controller?.animateTo(
+                                    GeoPoint(coords.latitude, coords.longitude),
+                                    17.0, // Un buon livello di zoom per la posizione corrente
+                                    1000L  // Durata dell'animazione in millisecondi (1 secondo)
+                                )
+                            }
+                        }
                     } else {
                         locationPermission.launchPermissionRequest()
                     }

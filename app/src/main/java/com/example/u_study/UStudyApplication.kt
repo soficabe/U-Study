@@ -1,9 +1,11 @@
 package com.example.u_study
 
 import android.app.Application
+import android.preference.PreferenceManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.osmdroid.config.Configuration
 
 /**
  * Application class principale dell'app.
@@ -23,6 +25,13 @@ class UStudyApplication : Application() {
      */
     override fun onCreate() {
         super.onCreate()
+
+        Configuration.getInstance().load(
+            applicationContext,
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        )
+        Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
+
 
         // Inizializzazione del framework Koin per la dependency injection
         startKoin {
