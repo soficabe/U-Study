@@ -249,6 +249,6 @@ fun MapScreen(
 
 }
 
-fun isNear(coords: Coordinates, library: Library, radiusMeters: Double = 50.0): Boolean {
+fun isNear(coords: Coordinates, library: Library, radiusMeters: Double = 5000.0): Boolean {
     return distanceBetween(coords, Coordinates(library.latitude.toDouble(), library.longitude.toDouble())) < radiusMeters
 }

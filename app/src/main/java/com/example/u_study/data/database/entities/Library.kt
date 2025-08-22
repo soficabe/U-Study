@@ -32,5 +32,7 @@ data class Library(
     @SerialName("url")
     val url: String? = null,
 
-    val isFavourite: Boolean = false
+    val isFavourite: Boolean = false,
+
+    val isVisited: Boolean = false
 )
