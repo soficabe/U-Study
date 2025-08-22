@@ -14,6 +14,7 @@
     <string name="librariesMapScreen_name">Libraries Map</string>
     <string name="settingsScreen_name">Settings</string>
     <string name="libraryDetailScreen_name">Library Detail</string>
+    <string name="mapScreen_name">Map</string>
 
 
     <!-- home buttons -->

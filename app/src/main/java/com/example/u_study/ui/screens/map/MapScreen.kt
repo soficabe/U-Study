@@ -71,7 +71,7 @@ fun MapScreen(
 
     Scaffold(
         topBar = {
-        AppBar(stringResource(R.string.favoriteLibrariesScreen_name), navController)
+        AppBar(stringResource(R.string.mapScreen_name), navController)
         },
         bottomBar = {
             com.example.u_study.ui.composables.NavigationBar(navController = navController)

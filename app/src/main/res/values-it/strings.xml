@@ -15,6 +15,7 @@
     <string name="librariesMapScreen_name">Mappa Biblioteche</string>
     <string name="settingsScreen_name">Impostazioni</string>
     <string name="libraryDetailScreen_name">Dettaglio Biblioteca</string>
+    <string name="mapScreen_name">Mappa</string>
 
     <!-- buttons -->
     <string name="greeting">Ciao</string>
