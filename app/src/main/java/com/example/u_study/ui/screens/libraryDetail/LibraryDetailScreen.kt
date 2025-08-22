@@ -50,13 +50,13 @@ fun LibraryDetailScreen(state: LibraryDetailState,
         topBar = { AppBar(stringResource(R.string.libraryDetailScreen_name), navController, isAuthenticated = state.isAuthenticated) },
         bottomBar = { NavigationBar(navController = navController, isAutheticated = state.isAuthenticated) }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
-                .verticalScroll(scrollState)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(paddingValues)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 16.dp, vertical = 64.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (state.library != null) {
                 // se la libreria è trovata
@@ -69,7 +69,12 @@ fun LibraryDetailScreen(state: LibraryDetailState,
                 )
             } else {
                 // se la libreria non è stata trovata :(((
-                Text(stringResource(R.string.libraryNotFound))
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(stringResource(R.string.libraryNotFound))
+                }
             }
         }
     }
@@ -119,9 +124,11 @@ fun LibraryDetailCard(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("${stringResource(R.string.phoneNumber)} ${library.phoneNumber}")
-                Text("${stringResource(R.string.emailDetail)} ${library.email}")
-                Text("${stringResource(R.string.url)} ${library.url}")
+                val notAvailable = stringResource(R.string.notAvailable)
+
+                Text("${stringResource(R.string.phoneNumber)} ${library.phoneNumber ?: notAvailable}")
+                Text("${stringResource(R.string.emailDetail)} ${library.email ?: notAvailable}")
+                Text("${stringResource(R.string.url)} ${library.url ?: notAvailable}")
             }
             Spacer(Modifier.height(24.dp))
             Row(

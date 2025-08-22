@@ -72,6 +72,7 @@
     <string name="completedStudySessions_text">Completed Study Sessions</string>
     <string name="visitedLibraries_text">Visited Libraries</string>
     <string name="studyHours_text">Study Hours</string>
+    <string name="notAvailable">Not available</string>
 
     <!-- libraries -->
     <string name="searchByCity">Search by city…</string>
@@ -83,6 +84,7 @@
     <string name="phoneNumber">Phone Number:</string>
     <string name="emailDetail">Email:</string>
     <string name="url">Url:</string>
+
 
     <!-- To-Do chips -->
     <string name="onGoing_chip">On Going</string>
