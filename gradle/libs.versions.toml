@@ -25,6 +25,7 @@ datastoreCoreAndroid = "1.1.7"
 osmdroidAndroid = "6.1.20"
 playServicesAuth = "21.4.0"
 supabase = "3.1.4"
+constraintlayout = "2.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,6 +65,7 @@ postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt", version
 bom ={ module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
 compose-auth = { module = "io.github.jan-tennert.supabase:compose-auth", version.ref = "supabase" }
 storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "supabase" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 
 [plugins]

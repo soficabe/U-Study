@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
