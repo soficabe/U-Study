@@ -134,8 +134,10 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
 
             SettingsWithSwitch(stringResource(R.string.sendPushNotifications), Icons.Filled.Notifications,
                 pushNotifications, onCheckedChange = { pushNotifications = it } )
-            HorizontalDivider()
+            //HorizontalDivider()
 
+            TextTitle(stringResource(R.string.appearance))
+            HorizontalDivider()
             SettingsClickable(stringResource(R.string.changeTheme), Icons.Filled.WbSunny, onClick = {showThemeDialog = true})
 
             HorizontalDivider()
@@ -145,6 +147,8 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
             if (state.isAuthenticated) {
                 //fatti: cambio password e logout
                 //da fare: azzerare statistiche
+
+                TextTitle(stringResource(R.string.privacy))
 
                 HorizontalDivider()
                 SettingsClickable(stringResource(R.string.changePassword), Icons.Filled.Lock, onClick = { showPasswordDialog = true })

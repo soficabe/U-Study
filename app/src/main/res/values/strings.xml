@@ -109,6 +109,9 @@
     <string name="updatePasswordSuccess">Password Updated!</string>
     <string name="errorString">Error:</string>
     <string name="weakPassword">The password is weak.</string>
+    <string name="appearance">Appearance</string>
+    <string name="privacy">Privacy</string>
+    <string name="others">Others</string>
 
     <!-- Image Picker Dialog -->
     <string name="select_profile_image">Select profile image</string>

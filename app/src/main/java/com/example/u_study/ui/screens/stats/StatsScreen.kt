@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.CollectionsBookmark
@@ -41,6 +44,8 @@ import com.example.u_study.ui.theme.Orange
 
 @Composable
 fun StatsScreen(state: StatsState, navController: NavHostController) {
+    val scrollState = rememberScrollState()
+
     Scaffold (
         topBar = {
             AppBar(stringResource(R.string.statsScreen_name), navController)
@@ -52,13 +57,14 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
         Column (
             modifier = Modifier
                 .padding(contentPadding)
-                .padding(vertical = 48.dp),
+                .padding(vertical = 48.dp)
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(text= stringResource(R.string.statsText), style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
 
-            Spacer(modifier = Modifier.height(106.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

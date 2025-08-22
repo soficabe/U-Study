@@ -110,6 +110,9 @@
     <string name="updatePasswordSuccess">Password Aggiornata!</string>
     <string name="errorString">Errore:</string>
     <string name="weakPassword">Password troppo debole.</string>
+    <string name="appearance">Apparenza</string>
+    <string name="privacy">Privacy</string>
+    <string name="others">Altro</string>
 
     <!-- Image Picker Dialog -->
     <string name="select_profile_image">Seleziona immagine profilo</string>
