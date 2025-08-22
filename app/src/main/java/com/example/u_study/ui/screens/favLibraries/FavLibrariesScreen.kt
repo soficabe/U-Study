@@ -22,9 +22,10 @@ import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
+import com.example.u_study.ui.screens.map.MapViewModel
 
 @Composable
-fun FavLibrariesScreen(state: FavLibrariesState, actions: FavLibrariesActions, navController: NavHostController) {
+fun FavLibrariesScreen(state: FavLibrariesState, actions: FavLibrariesActions, navController: NavHostController, mapViewModel: MapViewModel) {
 
     LaunchedEffect(Unit) {
         actions.refresh()
@@ -69,7 +70,8 @@ fun FavLibrariesScreen(state: FavLibrariesState, actions: FavLibrariesActions, n
                         } else {
                             /*actions.addFavLib(library.id)*/
                         }
-                    }
+                    },
+                    mapViewModel = mapViewModel
                 )
             }
         }

@@ -2,9 +2,13 @@ package com.example.u_study.data.repositories
 
 import android.util.Log
 import com.example.u_study.data.database.entities.User
+import com.example.u_study.data.database.entities.VisitedLibrary
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -82,6 +86,51 @@ class UserRepository(
             } catch (e: Exception) {
                 Log.e("UserRepository", "Error updating user profile: ${e.message}", e)
                 UpdateUserProfileResult.Error
+            }
+        }
+    }
+
+    /**
+     * Restituisce tutte le biblioteche visitate dall'utente loggato (reactive Flow).
+     */
+    fun getVisitedLibraries(): Flow<List<VisitedLibrary>> = flow {
+        try {
+            val userId = supabase.auth.currentUserOrNull()?.id ?: return@flow emit(emptyList())
+            val results = supabase.from("VisitedLibrary")
+                .select {
+                    filter { eq("user_id", userId) }
+                }
+                .decodeList<VisitedLibrary>()
+            emit(results)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error fetching visited libraries: ${e.message}", e)
+            emit(emptyList())
+        }
+    }
+
+    /**
+     * Marca una biblioteca come visitata per l'utente loggato (no-op se già esiste).
+     */
+    suspend fun markLibraryVisited(libraryId: Int) {
+        withContext(Dispatchers.IO) {
+            try {
+                val userId = supabase.auth.currentUserOrNull()?.id ?: return@withContext
+                // Verifica se esiste già il record
+                val exists = supabase.from("VisitedLibrary")
+                    .select {
+                        filter {
+                            eq("user_id", userId)
+                            eq("lib_id", libraryId)
+                        }
+                    }
+                    .decodeList<VisitedLibrary>()
+                    .isNotEmpty()
+                if (!exists) {
+                    val data = mapOf("lib_id" to libraryId, "user_id" to userId)
+                    supabase.from("VisitedLibrary").insert(data)
+                }
+            } catch (e: Exception) {
+                Log.e("UserRepository", "Error marking library as visited: ${e.message}", e)
             }
         }
     }

@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.datastore.core.android)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -102,4 +103,5 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation (libs.osmdroid.android)
+    implementation(libs.kotlinx.coroutines.play.services)
 }

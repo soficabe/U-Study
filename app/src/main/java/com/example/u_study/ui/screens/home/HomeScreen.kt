@@ -99,7 +99,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 FeatureButton(icon = Icons.Outlined.Book, text = stringResource(R.string.librariesList_button), onClick = { navController.navigate(UStudyRoute.LibrariesScreen)})
-                FeatureButton(icon = Icons.Outlined.LocationOn, text = stringResource(R.string.librariesMap_button), onClick = {})
+                FeatureButton(icon = Icons.Outlined.LocationOn, text = stringResource(R.string.librariesMap_button), onClick = { navController.navigate(UStudyRoute.MapScreen) })
             }
 
             Spacer(modifier = Modifier.height(24.dp))

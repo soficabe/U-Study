@@ -64,7 +64,7 @@ fun LibraryDetailScreen(state: LibraryDetailState,
                     library = state.library,
                     onFavouriteClick = actions::onFavouriteClick,
                     onBackToListClick = { navController.popBackStack() },
-                    onViewInMapClick = { /* TODO: naviga alla mappaaa */ },
+                    onViewInMapClick = { navController.navigate("map_screen/${state.library.id}") },
                     stateLib = state
                 )
             } else {

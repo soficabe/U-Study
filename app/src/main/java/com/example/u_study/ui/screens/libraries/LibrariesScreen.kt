@@ -22,9 +22,10 @@ import com.example.u_study.ui.UStudyRoute
 import com.example.u_study.ui.composables.AppBar
 import com.example.u_study.ui.composables.ListLibraryItem
 import com.example.u_study.ui.composables.NavigationBar
+import com.example.u_study.ui.screens.map.MapViewModel
 
 @Composable
-fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navController: NavHostController) {
+fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navController: NavHostController, mapViewModel: MapViewModel) {
 
     LaunchedEffect(Unit) {
         actions.refresh()
@@ -43,7 +44,7 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                 .padding(contentPadding),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            item { //barra di ricerca
+            item {
                 OutlinedTextField(
                     value = state.searchQuery,
                     onValueChange = actions::onSearchQueryChanged,
@@ -56,7 +57,7 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                 )
             }
 
-            items(state.libs, key = { it.id }) { library -> //per ogni ciclo, library contiene la var. corrente
+            items(state.libs, key = { it.id }) { library ->
                 ListLibraryItem(
                     library = library,
                     onClick = {
@@ -68,13 +69,10 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                         } else {
                             actions.addFavLib(library.id)
                         }
-                    }
+                    },
+                    mapViewModel = mapViewModel
                 )
             }
-            /* note: uso key in modo tale che compose sappia sempre cosa è aggiunto e cosa tolto, in modo
-            da non dover rigenerare la lista ogni volta da capo. In pratica a ogni riga della lista viene
-            assegnata un'etichetta
-            */
         }
     }
 }

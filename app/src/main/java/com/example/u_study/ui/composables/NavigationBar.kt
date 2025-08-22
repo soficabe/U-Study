@@ -53,7 +53,7 @@ fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostControlle
             icon = { Icon(Icons.Outlined.LocationOn, contentDescription = "Libraries Map") },
             label = { Text(stringResource(R.string.librariesMap_nav)) },
             selected = false,
-            onClick = { navController.navigate(UStudyRoute.FavLibrariesScreen) }
+            onClick = { navController.navigate(UStudyRoute.MapScreen) }
         )
 
     }

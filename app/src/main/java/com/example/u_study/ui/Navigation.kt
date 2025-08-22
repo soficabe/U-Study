@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.u_study.ui.screens.map.MapScreen
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesScreen
 import com.example.u_study.ui.screens.home.HomeScreen
 import com.example.u_study.ui.screens.libraries.LibrariesScreen
@@ -24,6 +25,7 @@ import com.example.u_study.ui.screens.libraryDetail.LibraryDetailViewModel
 import com.example.u_study.ui.screens.modifyUser.ModifyUserViewModel
 import com.example.u_study.ui.screens.profile.ProfileScreen
 import com.example.u_study.ui.screens.libraryDetail.LibraryDetailScreen
+import com.example.u_study.ui.screens.map.MapViewModel
 import com.example.u_study.ui.screens.profile.ProfileViewModel
 import com.example.u_study.ui.screens.register.RegisterViewModel
 import com.example.u_study.ui.screens.settings.SettingsState
@@ -56,6 +58,8 @@ sealed interface UStudyRoute {
     data object FavLibrariesScreen : UStudyRoute
     @Serializable
     data class LibraryDetailScreen(val libraryId: String) : UStudyRoute
+    @Serializable
+    data object MapScreen : UStudyRoute
 }
 
 @Composable
@@ -118,20 +122,35 @@ fun UStudyNavGraph(
 
         composable<UStudyRoute.LibrariesScreen> {
             val librariesViewModel = koinViewModel<LibrariesViewModel>()
+            val mapViewModel = koinViewModel<MapViewModel>()
             val librariesState by librariesViewModel.state.collectAsStateWithLifecycle()
-            LibrariesScreen(librariesState, librariesViewModel.actions, navController)
+            LibrariesScreen(librariesState, librariesViewModel.actions, navController, mapViewModel)
         }
 
         composable<UStudyRoute.FavLibrariesScreen> {
             val favLibrariesViewModel = koinViewModel<FavLibrariesViewModel>()
+            val mapViewModel = koinViewModel<MapViewModel>()
             val favLibrariesState by favLibrariesViewModel.state.collectAsStateWithLifecycle()
-            FavLibrariesScreen(favLibrariesState, favLibrariesViewModel.actions, navController)
+            FavLibrariesScreen(favLibrariesState, favLibrariesViewModel.actions, navController, mapViewModel)
         }
 
         composable<UStudyRoute.LibraryDetailScreen> {
             val libraryDetailViewModel = koinViewModel<LibraryDetailViewModel>()
             val libraryDetailState by libraryDetailViewModel.state.collectAsStateWithLifecycle()
             LibraryDetailScreen(libraryDetailState, libraryDetailViewModel.actions, navController)
+        }
+
+        composable<UStudyRoute.MapScreen> {
+            val mapViewModel = koinViewModel<MapViewModel>()
+            MapScreen(viewModel = mapViewModel, navController = navController)
+        }
+
+        composable(
+            "map_screen/{libraryId}",
+        ) { backStackEntry ->
+            val libraryId = backStackEntry.arguments?.getString("libraryId")?.toIntOrNull()
+            val mapViewModel = koinViewModel<MapViewModel>()
+            MapScreen(libraryId, mapViewModel, navController)
         }
     }
 }

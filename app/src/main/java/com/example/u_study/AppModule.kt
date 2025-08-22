@@ -8,6 +8,7 @@ import com.example.u_study.data.repositories.LibraryRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.data.repositories.ToDoRepository
 import com.example.u_study.data.repositories.UserRepository
+import com.example.u_study.ui.screens.map.MapViewModel
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
 import com.example.u_study.ui.screens.home.HomeViewModel
 import com.example.u_study.ui.screens.libraries.LibrariesViewModel
@@ -162,4 +163,7 @@ val appModule = module {
     viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { TodoViewModel(get()) }
     viewModel { StatsViewModel(get()) } // No dependencies - local computation only
+
+    // Map
+    viewModel { MapViewModel(get(), get()) }
 }

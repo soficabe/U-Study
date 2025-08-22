@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.MenuBook
@@ -23,6 +24,8 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,13 +36,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.u_study.R
 import com.example.u_study.data.database.entities.Library
+import com.example.u_study.ui.screens.map.MapViewModel
 
 @Composable
-fun ListLibraryItem(library: Library, onClick: () -> Unit, onFavouriteClick: () -> Unit) {
+fun ListLibraryItem(
+    library: Library,
+    onClick: () -> Unit,
+    onFavouriteClick: () -> Unit,
+    mapViewModel: MapViewModel
+) {
+    val visited by mapViewModel.visitedLibraries.collectAsState()
+    val isVisited = visited.contains(library.id)
+
     Card (
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .background(if (isVisited) Color(0xFFD6F5D6) else Color.White)
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -49,12 +62,21 @@ fun ListLibraryItem(library: Library, onClick: () -> Unit, onFavouriteClick: () 
                 .fillMaxWidth()
                 .padding(vertical = 12.dp, horizontal = 16.dp)
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.MenuBook,
-                contentDescription = "Library Icon",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(40.dp)
-            )
+            if (isVisited) {
+                Spacer(Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = "Visitata",
+                    tint = Color(0xFF4CAF50)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.MenuBook,
+                    contentDescription = "Library Icon",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
             Spacer(Modifier.width(16.dp))
 
             Column(modifier = Modifier.weight(1F)) {
