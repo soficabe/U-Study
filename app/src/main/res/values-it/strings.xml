@@ -25,7 +25,7 @@
     <string name="toDo_button">Lista TO-DO</string>
     <string name="librariesList_button">Lista Biblioteche</string>
     <string name="librariesMap_button">Mappa Biblioteche</string>
-    <string name="favoriteLibraries_button">Biblioteche Preferite</string>
+    <string name="favoriteLibraries_button">Biblio Preferite</string>
     <string name="stats_button">Statistiche</string>
 
     <!-- Navigation buttons -->

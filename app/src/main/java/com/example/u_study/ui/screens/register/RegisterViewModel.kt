@@ -130,6 +130,11 @@ class RegisterViewModel (
                 return
             }
 
+            if (currentState.password.length < 6) {
+                _state.update { it.copy(errorMessage = R.string.weakPassword) }
+                return
+            }
+
             // Esecuzione registrazione asincrona
             viewModelScope.launch {
                 // Imposta stato di caricamento

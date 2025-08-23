@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WbSunny
@@ -65,30 +64,27 @@ import com.example.u_study.ui.composables.NavigationBar
 import kotlinx.coroutines.launch
 
 
-/* Da migliorare e completare. Ci sono due tipi di "voci" disponibili:
+/** Due tipi di "voci" disponibili:
  * - quelli con lo Switch (SettingsWithSwitch)
  * - quelli completamente cliccabili (SettingsClickable). Qui si può anche
  *   cambiare il colore del testo e dell'icona passando per input
  * Entrambi hanno le icone con un modifier particolare (ma sempre uguale) per
  * avere sfondo grigio di una certa dimensione
  *
- * In più, ho creato anche il Composable TextTitle per non dover tutte le volte
+ * Composable TextTitle per non dover tutte le volte
  * assegnare il padding e il bold al testo
- * FINEEEEEEEE poi quando sceglieremo bene cosa mettere, avremo i composable pronti
+ *
  */
 @Composable
 fun SettingsScreen (state: SettingsState, actions: SettingsActions, navController: NavHostController) {
     val scrollState = rememberScrollState()
-
-    //notifiche push
-    var pushNotifications by rememberSaveable { mutableStateOf(true) }
 
     //cambio tema (scuro, chiaro, default)
     var showThemeDialog by remember { mutableStateOf(false) }
     var selectedTheme by remember { mutableStateOf(state.theme) }
     val themeOptions = Theme.entries
 
-    //cambio lingua: da verificare
+    //cambio lingua
     var showLangDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -129,13 +125,6 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                 .verticalScroll(scrollState)
         ) {
 
-            TextTitle(stringResource(R.string.loginAlerts))
-            HorizontalDivider()
-
-            SettingsWithSwitch(stringResource(R.string.sendPushNotifications), Icons.Filled.Notifications,
-                pushNotifications, onCheckedChange = { pushNotifications = it } )
-            //HorizontalDivider()
-
             TextTitle(stringResource(R.string.appearance))
             HorizontalDivider()
             SettingsClickable(stringResource(R.string.changeTheme), Icons.Filled.WbSunny, onClick = {showThemeDialog = true})
@@ -145,8 +134,6 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
             SettingsClickable(stringResource(R.string.changeLang), Icons.Filled.Language, onClick = {showLangDialog = true})
 
             if (state.isAuthenticated) {
-                //fatti: cambio password e logout
-                //da fare: azzerare statistiche
 
                 TextTitle(stringResource(R.string.privacy))
 
@@ -191,12 +178,6 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
                 onOptionSelected = { selectedLanguage ->
                     showLangDialog = false
                     scope.launch {
-                        // PRIMA: la coroutine lanciava una coroutine, NON aspettando la scrittura
-                        // actions.changeLang(selectedLanguage)
-                        // val intent = ...
-                        // context.startActivity(intent)
-
-                        // DOPO: questa coroutine aspetta davvero che il valore sia scritto!
                         actions.changeLang(selectedLanguage)
                         val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
                         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

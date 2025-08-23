@@ -111,7 +111,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LongButton(icon = Icons.Filled.FavoriteBorder, text = stringResource(R.string.favoriteLibraries_button),
+            LongButton(icon = Icons.Filled.FavoriteBorder, text = stringResource(R.string.favoriteLibrariesScreen_name),
                 onClick = {
                     if(state.isAuthenticated)
                         navController.navigate(UStudyRoute.FavLibrariesScreen)

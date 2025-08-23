@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.u_study.R
 
 
-/* Logo usato in RegisterScreen.kt e LoginScreen.kt.
+/** Logo usato in RegisterScreen.kt e LoginScreen.kt.
  * è l'unione di immagine + testo blu.
  */
 @Composable

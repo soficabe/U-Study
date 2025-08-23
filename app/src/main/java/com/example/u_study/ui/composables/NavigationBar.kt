@@ -35,7 +35,12 @@ fun NavigationBar(modifier: Modifier = Modifier, navController: NavHostControlle
             icon = { Icon(Icons.Outlined.School, contentDescription = "Exams") },
             label = { Text(stringResource(R.string.examsScreen_name)) },
             selected = false,
-            onClick = { navController.navigate(UStudyRoute.ExamsScreen) }
+            onClick = {
+                if (isAutheticated)
+                    navController.navigate(UStudyRoute.ExamsScreen)
+                else
+                    navController.navigate(UStudyRoute.LoginScreen)
+            }
         )
 
         NavigationBarItem(
