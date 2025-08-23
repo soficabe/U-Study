@@ -7,6 +7,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.u_study.ui.screens.exams.ExamsScreen
+import com.example.u_study.ui.screens.exams.ExamsViewModel
 import com.example.u_study.ui.screens.map.MapScreen
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesScreen
 import com.example.u_study.ui.screens.home.HomeScreen
@@ -60,6 +62,8 @@ sealed interface UStudyRoute {
     data class LibraryDetailScreen(val libraryId: String) : UStudyRoute
     @Serializable
     data object MapScreen : UStudyRoute
+    @Serializable
+    data object ExamsScreen : UStudyRoute
 }
 
 @Composable
@@ -118,6 +122,12 @@ fun UStudyNavGraph(
             val todoViewModel = koinViewModel<TodoViewModel>()
             val todoState by todoViewModel.state.collectAsStateWithLifecycle()
             ToDoScreen(todoState, todoViewModel.actions, navController)
+        }
+
+        composable<UStudyRoute.ExamsScreen> {
+            val examsViewModel = koinViewModel<ExamsViewModel>()
+            val examsState by examsViewModel.state.collectAsStateWithLifecycle()
+            ExamsScreen(examsState, examsViewModel.actions, navController)
         }
 
         composable<UStudyRoute.LibrariesScreen> {

@@ -15,12 +15,13 @@
     <string name="settingsScreen_name">Settings</string>
     <string name="libraryDetailScreen_name">Library Detail</string>
     <string name="mapScreen_name">Map</string>
+    <string name="examsScreen_name">Exams</string>
 
 
     <!-- home buttons -->
     <string name="greeting">Hello</string>
     <string name="guest_greeting">Welcome!</string>
-    <string name="studySession_button">Study Session</string>
+    <string name="exams_button">Exams</string>
     <string name="toDo_button">TO-DO List</string>
     <string name="librariesList_button">Libraries List</string>
     <string name="librariesMap_button">Libraries Map</string>
@@ -85,6 +86,22 @@
     <string name="phoneNumber">Phone Number:</string>
     <string name="emailDetail">Email:</string>
     <string name="url">Url:</string>
+
+    <!-- Exams -->
+    <string name="nextExams">Next Exams</string>
+    <string name="completedExams">Completed Exams</string>
+    <string name="noExamsScheduled">No exams scheduled.</string>
+    <string name="noExamsTakenYet">No exams taken yet.</string>
+    <string name="chooseOption">Choose an option</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="back">Back</string>
+    <string name="addNewExam">Add New Exam</string>
+    <string name="modifyExam">Modify Exam</string>
+    <string name="nameExam">Exam name</string>
+    <string name="cfu">CFU</string>
+    <string name="dateExam">Exam date</string>
+    <string name="vote">Vote (optional)</string>
 
 
     <!-- To-Do chips -->

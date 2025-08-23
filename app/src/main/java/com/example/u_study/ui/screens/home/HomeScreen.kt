@@ -20,7 +20,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -81,7 +81,14 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                FeatureButton(icon = Icons.Outlined.Timer, text = stringResource(R.string.studySession_button), onClick = { navController.navigate(UStudyRoute.LoginScreen) })
+                FeatureButton(icon = Icons.Outlined.School, text = stringResource(R.string.exams_button),
+                    onClick = {
+                        if(state.isAuthenticated)
+                            navController.navigate(UStudyRoute.ExamsScreen)
+                        else
+                            navController.navigate(UStudyRoute.LoginScreen)
+                    }
+                )
                 FeatureButton(icon = Icons.Outlined.CheckBox, text = stringResource(R.string.toDo_button),
                     onClick = {
                         if(state.isAuthenticated)

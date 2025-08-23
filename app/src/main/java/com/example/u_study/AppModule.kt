@@ -3,11 +3,13 @@ package com.example.u_study
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.u_study.data.repositories.AuthRepository
+import com.example.u_study.data.repositories.ExamRepository
 import com.example.u_study.data.repositories.ImageRepository
 import com.example.u_study.data.repositories.LibraryRepository
 import com.example.u_study.data.repositories.SettingsRepository
 import com.example.u_study.data.repositories.ToDoRepository
 import com.example.u_study.data.repositories.UserRepository
+import com.example.u_study.ui.screens.exams.ExamsViewModel
 import com.example.u_study.ui.screens.map.MapViewModel
 import com.example.u_study.ui.screens.favLibraries.FavLibrariesViewModel
 import com.example.u_study.ui.screens.home.HomeViewModel
@@ -136,6 +138,12 @@ val appModule = module {
      */
     single { ImageRepository(get()) }
 
+    /**
+     * Repository per gestione esami
+     * Dipende da: Postgrest client
+     */
+    single { ExamRepository(get()) }
+
     // ===== PRESENTATION LAYER - VIEWMODELS =====
 
     /**
@@ -166,4 +174,7 @@ val appModule = module {
 
     // Map
     viewModel { MapViewModel(get(), get()) }
+
+    // Exams
+    viewModel { ExamsViewModel(get()) }
 }

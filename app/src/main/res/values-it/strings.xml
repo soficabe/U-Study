@@ -16,11 +16,12 @@
     <string name="settingsScreen_name">Impostazioni</string>
     <string name="libraryDetailScreen_name">Dettaglio Biblioteca</string>
     <string name="mapScreen_name">Mappa</string>
+    <string name="examsScreen_name">Esami</string>
 
     <!-- buttons -->
     <string name="greeting">Ciao</string>
     <string name="guest_greeting">Benvenuto!</string>
-    <string name="studySession_button">Sessione Studio</string>
+    <string name="exams_button">Esami</string>
     <string name="toDo_button">Lista TO-DO</string>
     <string name="librariesList_button">Lista Biblioteche</string>
     <string name="librariesMap_button">Mappa Biblioteche</string>
@@ -85,6 +86,22 @@
     <string name="emailDetail">Email:</string>
     <string name="url">Url:</string>
     <string name="notAvailable">Non presente</string>
+
+    <!-- Exams -->
+    <string name="nextExams">Prossimi Esami</string>
+    <string name="completedExams">Esami Sostenuti</string>
+    <string name="noExamsScheduled">Nessun esame in programma.</string>
+    <string name="noExamsTakenYet">Nessun esame ancora sostenuto.</string>
+    <string name="chooseOption">Scegli un\'opzione</string>
+    <string name="edit">Modifica</string>
+    <string name="delete">Cancella</string>
+    <string name="back">Annulla</string>
+    <string name="addNewExam">Aggiungi Nuovo Esame</string>
+    <string name="modifyExam">Modica Exam</string>
+    <string name="nameExam">Nome esame</string>
+    <string name="cfu">CFU</string>
+    <string name="dateExam">Data esame</string>
+    <string name="vote">Voto (opzionale)</string>
 
 
     <!-- To-Do chips -->
