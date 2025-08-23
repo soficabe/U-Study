@@ -152,7 +152,8 @@ fun UStudyNavGraph(
 
         composable<UStudyRoute.MapScreen> {
             val mapViewModel = koinViewModel<MapViewModel>()
-            MapScreen(viewModel = mapViewModel, navController = navController)
+            val mapState by mapViewModel.state.collectAsStateWithLifecycle()
+            MapScreen(state = mapState,viewModel = mapViewModel, navController = navController)
         }
 
         composable(
@@ -160,7 +161,8 @@ fun UStudyNavGraph(
         ) { backStackEntry ->
             val libraryId = backStackEntry.arguments?.getString("libraryId")?.toIntOrNull()
             val mapViewModel = koinViewModel<MapViewModel>()
-            MapScreen(libraryId, mapViewModel, navController)
+            val mapState by mapViewModel.state.collectAsStateWithLifecycle()
+            MapScreen(mapState, libraryId, mapViewModel, navController)
         }
     }
 }

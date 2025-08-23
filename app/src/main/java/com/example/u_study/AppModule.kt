@@ -112,7 +112,7 @@ val appModule = module {
      * Repository per operazioni sui dati utente.
      * Dipende da: Postgrest client
      */
-    single { UserRepository(get()) }
+    single { UserRepository(get() /*, get()*/) }
 
     /**
      * Repository per gestione impostazioni applicazione.
@@ -173,7 +173,7 @@ val appModule = module {
     viewModel { StatsViewModel(get(), get(), get()) } // No dependencies - local computation only
 
     // Map
-    viewModel { MapViewModel(get(), get()) }
+    viewModel { MapViewModel(get(), get(), get()) }
 
     // Exams
     viewModel { ExamsViewModel(get()) }

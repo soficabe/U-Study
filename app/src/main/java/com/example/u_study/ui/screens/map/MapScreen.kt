@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
 fun MapScreen(
+    state: MapState,
     libraryIdToZoom: Int? = null,
     viewModel: MapViewModel,
     navController: NavHostController
@@ -80,10 +81,10 @@ fun MapScreen(
 
     Scaffold(
         topBar = {
-        AppBar(stringResource(R.string.mapScreen_name), navController)
+        AppBar(stringResource(R.string.mapScreen_name), navController, isAuthenticated = state.isAuthenticated)
         },
         bottomBar = {
-            com.example.u_study.ui.composables.NavigationBar(navController = navController)
+            com.example.u_study.ui.composables.NavigationBar(navController = navController, isAutheticated = state.isAuthenticated)
         }
     ){ contentPadding ->
         Column(Modifier
