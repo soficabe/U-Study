@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -80,8 +79,8 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = stringResource(R.string.completedStudySessions_text), statistic = state.numStudySessions)
-                StatsCard(icon = Icons.Outlined.Schedule, color = ElectricBlue, text = stringResource(R.string.studyHours_text), statistic = state.numStudyHours)
+                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = stringResource(R.string.numberExams_text), statistic = state.numExams)
+                StatsCard(icon = Icons.Outlined.Schedule, color = ElectricBlue, text = stringResource(R.string.gpa_text), statistic = state.gpa)
             }
         }
     }

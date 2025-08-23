@@ -2,6 +2,7 @@ package com.example.u_study.ui.screens.stats
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.u_study.data.repositories.ExamRepository
 import com.example.u_study.data.repositories.ToDoRepository
 import com.example.u_study.data.repositories.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,18 +10,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 data class StatsState(
     val numTasksDone: Number = 0,
-    val numStudySessions: Number = 0,
+    val numExams: Number = 0,
+    val gpa: Number = 0, //media
     val numVisitedLibraries: Number = 0,
-    val numStudyHours: Number = 0,
     val isLoading: Boolean = true
 )
 
 class StatsViewModel(
     private val toDoRepository: ToDoRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val examRepository: ExamRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(StatsState())
     val state = _state.asStateFlow()
@@ -39,7 +42,21 @@ class StatsViewModel(
             //VisitedLibraries
             val visitedLibs = userRepository.getVisitedLibraries().first().size
 
-            _state.update { it.copy(numTasksDone = completedTodos, numVisitedLibraries = visitedLibs, isLoading = false) }
+            //Exams
+            val doneExams = examRepository.getExams().filter{ LocalDate.parse(it.date) <= LocalDate.now() }
+            val nExams = doneExams.size
+
+            val examsWithGrade = doneExams.filter { it.grade != null }
+
+            val average = if (examsWithGrade.isNotEmpty()) {
+                val totalWeightedGrades = examsWithGrade.sumOf { (it.grade!! * it.cfu).toDouble() }
+                val totalCredits = examsWithGrade.sumOf { it.cfu.toDouble() }
+                String.format("%.2f", totalWeightedGrades / totalCredits).toDouble()
+            } else {
+                0.0
+            }
+
+            _state.update { it.copy(numTasksDone = completedTodos, numVisitedLibraries = visitedLibs, numExams = nExams, gpa = average, isLoading = false) }
         }
     }
 }

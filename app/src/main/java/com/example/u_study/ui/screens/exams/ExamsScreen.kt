@@ -325,7 +325,6 @@ private fun AddExamDialog(
                         label = { Text(stringResource(R.string.vote)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
-
                     )
                 }
             }

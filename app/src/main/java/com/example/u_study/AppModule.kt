@@ -170,7 +170,7 @@ val appModule = module {
     // Core app features
     viewModel { HomeViewModel(get<AuthRepository>(), get<UserRepository>()) }
     viewModel { TodoViewModel(get()) }
-    viewModel { StatsViewModel(get(), get()) } // No dependencies - local computation only
+    viewModel { StatsViewModel(get(), get(), get()) } // No dependencies - local computation only
 
     // Map
     viewModel { MapViewModel(get(), get()) }
