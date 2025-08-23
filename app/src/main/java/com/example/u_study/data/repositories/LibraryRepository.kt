@@ -16,20 +16,25 @@ class LibraryRepository (private val postgrest: Postgrest, private val auth: Aut
 
     suspend fun getLibraries(): List<Library> {
         return try {
-            //prendo gli id di tutte le biblioteche preferite dell'user
-            val favouriteIds = favLibraryTable.select {
-                filter {
-                    //confronta la proprietà userId di FavLibrary con l'id dell'utente loggato.
-                    FavLibrary::userId eq (auth.currentUserOrNull()?.id ?: "")
-                }
-            }.decodeList<FavLibrary>().map { it.libId }.toSet()
+            var favouriteIds: Set<Int> = emptySet()
 
-            val allLibraries = libraryTable.select().decodeList<Library>() //tutte le biblioteche
+            //controllo se user è loggato. Se lo è scarichiamo i suoi preferiti
+            if (auth.currentUserOrNull() != null) {
+                favouriteIds = favLibraryTable.select {
+                    filter {
+                        FavLibrary::userId eq (auth.currentUserOrNull()?.id ?: "")
+                    }
+                }.decodeList<FavLibrary>().map { it.libId }.toSet()
+            }
 
-            //tra tutte le biblio, quelle il cui id è in lista vengono messe come preferite
+            //la lista di tutte le biblioteche si vede sempre
+            val allLibraries = libraryTable.select().decodeList<Library>()
+
+            //arricchisco i dati con i favorite
             allLibraries.map { library ->
                 library.copy(isFavourite = library.id in favouriteIds)
             }
+
         } catch (e: Exception) {
             Log.e("LibraryRepository", "Error fetching libraries with favourites", e)
             emptyList()

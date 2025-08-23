@@ -70,7 +70,8 @@ fun LibrariesScreen(state: LibrariesState, actions: LibrariesActions, navControl
                             actions.addFavLib(library.id)
                         }
                     },
-                    mapViewModel = mapViewModel
+                    mapViewModel = mapViewModel,
+                    isAuthenticated = state.isAuthenticated
                 )
             }
         }

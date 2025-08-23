@@ -24,7 +24,9 @@ interface LibrariesActions {
     fun refresh()
 }
 
-class LibrariesViewModel (private val libraryRepository: LibraryRepository, private val authRepository: AuthRepository): ViewModel() {
+class LibrariesViewModel (
+    private val libraryRepository: LibraryRepository,
+    private val authRepository: AuthRepository): ViewModel() {
 
     private val _state = MutableStateFlow(LibrariesState())
     val state = _state.asStateFlow()

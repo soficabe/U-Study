@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.u_study.data.database.entities.User
 import com.example.u_study.data.database.entities.VisitedLibrary
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
@@ -25,9 +26,10 @@ sealed interface UpdateUserProfileResult {
  * Repository per la gestione dei dati utente nel database.
  */
 class UserRepository(
-    private val supabase: SupabaseClient
+    private val supabase: SupabaseClient,
+    private val auth: Auth
 ) {
-    // patch: aggiungi uno StateFlow che puoi aggiornare dopo ogni insert!
+
     private val _visitedLibraries = MutableStateFlow<List<VisitedLibrary>>(emptyList())
     val visitedLibraries = _visitedLibraries.asStateFlow()
 
@@ -105,6 +107,19 @@ class UserRepository(
         emit(list)
     }
 
+    /* carico/aggiorno i dati nel canale */
+    suspend fun refreshVisitedLibraries() {
+        val userId = auth.currentUserOrNull()?.id ?: return
+        try {
+            val results = supabase.from("VisitedLibrary")
+                .select { filter { eq("user_id", userId) } }
+                .decodeList<VisitedLibrary>()
+            _visitedLibraries.value = results
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error refreshing visited libraries", e)
+        }
+    }
+
     /**
      * Marca una biblioteca come visitata per l'utente loggato (no-op se già esiste).
      */
@@ -131,6 +146,8 @@ class UserRepository(
                     .select()
                     .decodeList<VisitedLibrary>()
                 _visitedLibraries.value = updatedResults
+
+                refreshVisitedLibraries()
             } catch (e: Exception) {
                 Log.e("UserRepository", "Error marking library as visited: ${e.message}", e)
             }

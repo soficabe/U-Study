@@ -112,7 +112,7 @@ val appModule = module {
      * Repository per operazioni sui dati utente.
      * Dipende da: Postgrest client
      */
-    single { UserRepository(get() /*, get()*/) }
+    single { UserRepository(get(), get()) }
 
     /**
      * Repository per gestione impostazioni applicazione.
