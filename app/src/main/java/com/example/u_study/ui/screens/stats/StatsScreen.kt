@@ -71,7 +71,7 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 StatsCard(icon = Icons.Outlined.Checklist, color = ElectricBlue, text = stringResource(R.string.tasksDone_text), statistic = state.numTasksDone)
-                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = stringResource(R.string.completedStudySessions_text), statistic = state.numStudySessions)
+                StatsCard(icon = Icons.Outlined.CollectionsBookmark, color = Orange, text = stringResource(R.string.visitedLibraries_text), statistic = state.numVisitedLibraries)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -80,7 +80,7 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatsCard(icon = Icons.Outlined.CollectionsBookmark, color = Orange, text = stringResource(R.string.visitedLibraries_text), statistic = state.numStudySessions)
+                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = stringResource(R.string.completedStudySessions_text), statistic = state.numStudySessions)
                 StatsCard(icon = Icons.Outlined.Schedule, color = ElectricBlue, text = stringResource(R.string.studyHours_text), statistic = state.numStudyHours)
             }
         }

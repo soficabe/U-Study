@@ -2,6 +2,7 @@ package com.example.u_study.ui.screens.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -64,9 +65,13 @@ fun MapScreen(
 
     // Aggiorna visitati (side effect)
     LaunchedEffect(coordinates, libraries) {
+        Log.d("MapScreen", "LaunchedEffect triggered, coordinates=$coordinates")
         coordinates?.let { coord ->
             libraries.forEach { library ->
-                if (!visited.contains(library.id) && isNear(coord, library)) {
+                val near = isNear(coord, library)
+                Log.d("MapScreen", "isNear(${library.name}) = $near")
+                if (!visited.contains(library.id) && near) {
+                    Log.d("MapScreen", "Mark as visited: ${library.name} (id=${library.id})")
                     viewModel.markLibraryVisited(library.id)
                 }
             }
