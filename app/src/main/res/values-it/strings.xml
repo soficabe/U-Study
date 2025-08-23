@@ -94,7 +94,7 @@
     <string name="noExamsTakenYet">Nessun esame ancora sostenuto.</string>
     <string name="chooseOption">Scegli un\'opzione</string>
     <string name="edit">Modifica</string>
-    <string name="delete">Cancella</string>
+    <string name="delete">Elimina Esame</string>
     <string name="back">Annulla</string>
     <string name="addNewExam">Aggiungi Nuovo Esame</string>
     <string name="modifyExam">Modica Exam</string>

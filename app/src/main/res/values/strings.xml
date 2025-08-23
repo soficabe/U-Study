@@ -94,7 +94,7 @@
     <string name="noExamsTakenYet">No exams taken yet.</string>
     <string name="chooseOption">Choose an option</string>
     <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
+    <string name="delete">Delete Exam</string>
     <string name="back">Back</string>
     <string name="addNewExam">Add New Exam</string>
     <string name="modifyExam">Modify Exam</string>

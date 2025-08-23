@@ -42,8 +42,8 @@ class ExamsViewModel(private val examRepository: ExamRepository) : ViewModel() {
             _state.update {
                 it.copy(
                     isLoading = false,
-                    upcomingExams = allExams.filter { exam -> exam.grade == null },
-                    completedExams = allExams.filter { exam -> exam.grade != null }
+                    upcomingExams = allExams.filter { exam -> LocalDate.parse(exam.date).isAfter(LocalDate.now())  },
+                completedExams = allExams.filter { exam -> !LocalDate.parse(exam.date).isAfter(LocalDate.now())  }
                 )
             }
         }

@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +44,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -59,11 +64,9 @@ fun ExamsScreen(
     actions: ExamsActions,
     navController: NavHostController
 ) {
-    //var showAddExamDialog by remember { mutableStateOf(false) }
     var selectedExam by remember { mutableStateOf<Exam?>(null) }
     var showOptionsDialog by remember { mutableStateOf(false) } //modifica o eliminazione
     var showAddorEditDialog by remember { mutableStateOf(false) }
-    //var examToEdit by remember { mutableStateOf<Exam?>(null) }
 
     Scaffold(
         topBar = { AppBar(stringResource(R.string.examsScreen_name), navController) },
@@ -157,18 +160,49 @@ fun ExamsScreen(
         AlertDialog(
             onDismissRequest = { showOptionsDialog = false },
             title = { Text(selectedExam?.name ?: "") },
-            text = { Text(stringResource(R.string.chooseOption)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showOptionsDialog = false
-                    showAddorEditDialog = true })
-                { Text(stringResource(R.string.edit)) }
+            text = {
+                Column {
+                    Text(stringResource(R.string.chooseOption))
+                    Spacer(Modifier.height(16.dp))
+
+                    //modifica
+                    TextButton(
+                        onClick = {
+                            showOptionsDialog = false
+                            showAddorEditDialog = true
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Edit, contentDescription = "Modifica")
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(R.string.edit))
+                        }
+                    }
+
+                    //elimina
+                    TextButton(
+                        onClick = {
+                            actions.deleteExam(selectedExam!!.id)
+                            showOptionsDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Delete, contentDescription = "Elimina", tint = Color.Red)
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
+                        }
+                    }
+                }
             },
+
+
+            confirmButton = {},
             dismissButton = {
-                TextButton(onClick = {
-                    actions.deleteExam(selectedExam!!.id)
-                    showOptionsDialog = false })
-                { Text(stringResource(R.string.delete)) }
+                TextButton(onClick = { showOptionsDialog = false }) {
+                    Text(stringResource(R.string.back))
+                }
             }
         )
     }
@@ -280,9 +314,18 @@ private fun AddExamDialog(
                 if (date != null && !date!!.isAfter(LocalDate.now())) {
                     OutlinedTextField(
                         value = grade,
-                        onValueChange = { grade = it },
+                        onValueChange = { newValue ->
+                            val filteredValue = newValue.filter { it.isDigit() }
+
+                            val numericValue = filteredValue.toIntOrNull()
+                            if (numericValue == null || numericValue in 0..30) {
+                                grade = filteredValue
+                            }
+                                        },
                         label = { Text(stringResource(R.string.vote)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+
                     )
                 }
             }
