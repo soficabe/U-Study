@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Card
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -38,6 +39,8 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.style.TextDecoration
 import com.example.u_study.R
 
 @Composable
@@ -88,6 +91,8 @@ fun LibraryDetailCard(
     onViewInMapClick: () -> Unit,
     stateLib: LibraryDetailState
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier.fillMaxWidth()
@@ -128,7 +133,29 @@ fun LibraryDetailCard(
 
                 Text("${stringResource(R.string.phoneNumber)} ${library.phoneNumber ?: notAvailable}")
                 Text("${stringResource(R.string.emailDetail)} ${library.email ?: notAvailable}")
-                Text("${stringResource(R.string.url)} ${library.url ?: notAvailable}")
+
+                // URL cliccabile
+                Row {
+                    Text("${stringResource(R.string.url)} ")
+                    if (library.url != null) {
+                        Text(
+                            text = library.url,
+                            color = MaterialTheme.colorScheme.primary,
+                            textDecoration = TextDecoration.Underline,
+                            modifier = Modifier.clickable {
+                                // Aggiungi https:// se l'URL non ha un protocollo
+                                val urlWithProtocol = if (library.url.startsWith("http://") || library.url.startsWith("https://")) {
+                                    library.url
+                                } else {
+                                    "https://${library.url}"
+                                }
+                                uriHandler.openUri(urlWithProtocol)
+                            }
+                        )
+                    } else {
+                        Text(notAvailable)
+                    }
+                }
             }
             Spacer(Modifier.height(24.dp))
             Row(

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.getViewModel
 import com.example.u_study.utils.*
 import com.example.u_study.data.database.entities.Library
@@ -168,7 +169,12 @@ fun MapScreen(
                     .weight(1f)
             )
 
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Button(onClick = {
                     if (locationPermission.statuses.any { it.value.isGranted }) {
                         //requestLocation = true
@@ -190,7 +196,7 @@ fun MapScreen(
                         locationPermission.launchPermissionRequest()
                     }
                 }) {
-                    Text("Aggiorna posizione")
+                    Text(stringResource(R.string.update_position_button))
                 }
             }
 

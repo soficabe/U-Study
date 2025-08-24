@@ -14,9 +14,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.CollectionsBookmark
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -79,8 +81,8 @@ fun StatsScreen(state: StatsState, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatsCard(icon = Icons.Outlined.Timer, color = Orange, text = stringResource(R.string.numberExams_text), statistic = state.numExams)
-                StatsCard(icon = Icons.Outlined.Schedule, color = ElectricBlue, text = stringResource(R.string.gpa_text), statistic = state.gpa)
+                StatsCard(icon = Icons.Outlined.School, color = Orange, text = stringResource(R.string.numberExams_text), statistic = state.numExams)
+                StatsCard(icon = Icons.Outlined.BarChart, color = ElectricBlue, text = stringResource(R.string.gpa_text), statistic = state.gpa)
             }
         }
     }

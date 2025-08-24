@@ -135,7 +135,7 @@ fun ProfileButton(icon: ImageVector, text: String, onClick: () -> Unit) {
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4)), // Blu
-        modifier = Modifier.width(150.dp).height(80.dp)
+        modifier = Modifier.width(160.dp).height(80.dp)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(imageVector = icon, contentDescription = null, tint = Color.White)

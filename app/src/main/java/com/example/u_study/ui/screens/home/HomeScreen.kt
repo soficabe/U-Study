@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -149,7 +150,7 @@ fun FeatureButton(icon: ImageVector, text: String, onClick: () -> Unit) {
         ) {
             Icon(imageVector = icon, contentDescription = text, modifier = Modifier.size(48.dp), tint = Color.Black)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = text, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
+            Text(text = text, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black, textAlign = TextAlign.Center)
         }
     }
 }

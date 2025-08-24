@@ -295,9 +295,17 @@ private fun AddExamDialog(
                 )
                 OutlinedTextField(
                     value = cfu,
-                    onValueChange = { cfu = it },
+                    onValueChange = { newValue ->
+                        val filteredValue = newValue.filter { it.isDigit() }
+
+                        val numericValue = filteredValue.toIntOrNull()
+                        if (numericValue == null || numericValue in 0..180) {
+                            cfu = filteredValue
+                        }
+                    },
                     label = { Text(stringResource(R.string.cfu)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
                 )
 
                 Box {
@@ -321,7 +329,7 @@ private fun AddExamDialog(
                             if (numericValue == null || numericValue in 0..30) {
                                 grade = filteredValue
                             }
-                                        },
+                        },
                         label = { Text(stringResource(R.string.vote)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
