@@ -27,14 +27,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.u_study.data.database.entities.Library
-import com.example.u_study.ui.screens.map.MapViewModel
 
 @Composable
 fun ListLibraryItem(
     library: Library,
     onClick: () -> Unit,
     onFavouriteClick: () -> Unit,
-    mapViewModel: MapViewModel,
     isAuthenticated: Boolean = true
 ) {
 

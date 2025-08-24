@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.u_study.data.database.entities.Library
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.LibraryRepository
+import com.example.u_study.data.repositories.UserRepository
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -26,7 +28,9 @@ interface LibrariesActions {
 
 class LibrariesViewModel (
     private val libraryRepository: LibraryRepository,
-    private val authRepository: AuthRepository): ViewModel() {
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
+): ViewModel() {
 
     private val _state = MutableStateFlow(LibrariesState())
     val state = _state.asStateFlow()
@@ -59,14 +63,23 @@ class LibrariesViewModel (
     private fun loadLibraries() {
         viewModelScope.launch {
 
+            val allLibs = libraryRepository.getLibraries()
+
+            val visitedIds = userRepository.getVisitedLibraries().first().map { it.libId }.toSet()
+
+            val enrichedLibs = allLibs.map { lib ->
+                lib.copy(isVisited = lib.id in visitedIds)
+            }
+
             val filteredList = if (_state.value.searchQuery.isBlank()) {
-                libraryRepository.getLibraries().sortedBy { it.city }
+                enrichedLibs
             } else {
-                libraryRepository.getLibraries().sortedBy { it.city }.filter { library ->
-                    library.city.startsWith(_state.value.searchQuery, ignoreCase = true) //per maiuscole - minuscole
+                enrichedLibs.filter { library ->
+                    library.city.startsWith(_state.value.searchQuery, ignoreCase = true)
                 }
             }
-            _state.update { it.copy(libs = filteredList) }
+
+            _state.update { it.copy(libs = filteredList.sortedBy { it.city }) }
 
         }
     }

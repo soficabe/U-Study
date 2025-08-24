@@ -159,8 +159,8 @@ val appModule = module {
     viewModel { LoginViewModel(get()) }
 
     // Library management
-    viewModel { FavLibrariesViewModel(get()) }
-    viewModel { LibrariesViewModel(get(), get()) }
+    viewModel { FavLibrariesViewModel(get(), get()) }
+    viewModel { LibrariesViewModel(get(), get(), get()) }
     viewModel { LibraryDetailViewModel(get(), get(), get()) }
 
     // User management

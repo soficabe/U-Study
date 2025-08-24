@@ -68,10 +68,9 @@ fun FavLibrariesScreen(state: FavLibrariesState, actions: FavLibrariesActions, n
                         if (library.isFavourite) {
                             actions.removeFavLib(library.id)
                         } else {
-                            /*actions.addFavLib(library.id)*/
+                            //niente
                         }
                     },
-                    mapViewModel = mapViewModel
                 )
             }
         }
