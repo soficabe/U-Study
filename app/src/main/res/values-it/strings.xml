@@ -67,6 +67,32 @@
     <string name="emailuser">sofiabianchi@gmail.com</string>
     <string name="editProfile_button">Modifica Profilo</string>
     <string name="saveChanges_button">Salva Modifiche</string>
+    <string name="profile_update_success">Profilo aggiornato con successo!</string>
+    <string name="profile_loading">Caricamento profilo…</string>
+    <string name="saving_text">Salvando…</string>
+    <string name="image_loading">Caricamento immagine…</string>
+    <string name="no_changes_to_be_saved">Nessuna modifica da salvare</string>
+    <string name="error_loading_profile">Errore nel caricamento dei dati del profilo</string>
+    <string name="error_email_already_exists">Questa email è già in uso</string>
+    <string name="error_connection">Errore di connessione</string>
+    <string name="error_first_name_empty">Il nome non può essere vuoto</string>
+    <string name="error_last_name_empty">Il cognome non può essere vuoto</string>
+    <string name="error_email_empty">L\'email non può essere vuota</string>
+    <string name="error_email_format_invalid">Formato email non valido</string>
+    <string name="error_updating_email">Errore nell\'aggiornamento dell\'email</string>
+    <string name="error_updating_profile">Errore nell\'aggiornamento del profilo</string>
+    <string name="error_unexpected">Errore imprevisto: %1$s</string>
+    <string name="error_photo_not_found">Foto non trovata o file vuoto</string>
+    <string name="error_image_upload_failed">Errore upload immagine (file vuoto o non accessibile)</string>
+    <string name="error_image_upload">Errore upload immagine</string>
+
+    <!-- camera errors -->
+    <string name="error_camera_photo_not_saved">Errore: la foto non è stata salvata correttamente. Riprova.</string>
+
+    <!-- location errors -->
+    <string name="error_location_disabled">La posizione è disabilitata</string>
+    <string name="error_location_permission_not_granted">Permesso di localizzazione non concesso</string>
+
 
     <!-- stats -->
     <string name="statsText">I tuoi traguardi</string>
@@ -106,7 +132,7 @@
 
     <!-- To-Do chips -->
     <string name="onGoing_chip">In corso</string>
-    <string name="completed_chip">Completate</string>
+    <string name="completed_chip">Completati</string>
 
     <!-- Settings -->
     <string name="loginAlerts">Avvisi di accesso</string>

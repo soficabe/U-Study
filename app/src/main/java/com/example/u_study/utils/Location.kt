@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.example.u_study.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +31,7 @@ class LocationService(private val ctx: Context) {
 
     suspend fun getCurrentLocation(): Coordinates? {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            throw IllegalStateException("Location is disabled")
+            throw IllegalStateException(ctx.getString(R.string.error_location_disabled))
         }
         if (
             ContextCompat.checkSelfPermission(
@@ -38,7 +39,7 @@ class LocationService(private val ctx: Context) {
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            throw SecurityException("Location Permission not granted")
+            throw SecurityException(ctx.getString(R.string.error_location_permission_not_granted))
         }
 
         _isLoadingLocation.value = true

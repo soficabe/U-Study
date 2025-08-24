@@ -164,7 +164,7 @@ val appModule = module {
     viewModel { LibraryDetailViewModel(get(), get(), get()) }
 
     // User management
-    viewModel { ModifyUserViewModel( get<AuthRepository>(), get<UserRepository>(), get<ImageRepository>()) }
+    viewModel { ModifyUserViewModel( get<AuthRepository>(), get<UserRepository>(), get<ImageRepository>(), get()) }
     viewModel { ProfileViewModel(get<AuthRepository>(), get<UserRepository>()) }
 
     // Core app features

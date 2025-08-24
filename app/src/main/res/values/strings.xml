@@ -67,6 +67,33 @@
     <string name="emailuser">sofiabianchi@gmail.com</string>
     <string name="editProfile_button">Edit Profile</string>
     <string name="saveChanges_button">Save Changes</string>
+    <string name="profile_update_success">Profile updated with success!</string>
+    <string name="profile_loading">Loading profile…</string>
+    <string name="saving_text">Saving…</string>
+    <string name="image_loading">Loading image…</string>
+    <string name="no_changes_to_be_saved">No changes to be saved</string>
+    <string name="error_loading_profile">Error loading profile data</string>
+    <string name="error_email_already_exists">This email is already in use</string>
+    <string name="error_connection">Connection error</string>
+    <string name="error_first_name_empty">First name cannot be empty</string>
+    <string name="error_last_name_empty">Last name cannot be empty</string>
+    <string name="error_email_empty">Email cannot be empty</string>
+    <string name="error_email_format_invalid">Invalid email format</string>
+    <string name="error_updating_email">Error updating email</string>
+    <string name="error_updating_profile">Error updating profile</string>
+    <string name="error_unexpected">Unexpected error: %1$s</string>
+    <string name="error_photo_not_found">Photo not found or empty file</string>
+    <string name="error_image_upload_failed">Image upload error (empty or inaccessible file)</string>
+    <string name="error_image_upload">Image upload error</string>
+
+    <!-- camera errors -->
+    <string name="error_camera_photo_not_saved">Error: the photo was not saved correctly. Please try again.</string>
+
+    <!-- location errors -->
+    <string name="error_location_disabled">Location is disabled</string>
+    <string name="error_location_permission_not_granted">Location permission not granted</string>
+
+
 
     <!-- stats -->
     <string name="statsText">Your Achievements</string>

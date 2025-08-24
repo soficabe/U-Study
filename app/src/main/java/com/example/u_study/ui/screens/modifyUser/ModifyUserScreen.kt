@@ -48,6 +48,9 @@ fun ModifyUserScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    val profileUpdateSuccessText = stringResource(R.string.profile_update_success)
+
+
     // --- NUOVA GESTIONE CAMERA E GALLERIA CENTRALIZZATA ---
     val launchCamera = rememberProfileCameraLauncher(
         onPhotoReady = { uri -> actions.onProfileImageSelected(uri, context) },
@@ -67,7 +70,7 @@ fun ModifyUserScreen(
 
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
-            snackbarHostState.showSnackbar("Profilo aggiornato con successo!")
+            snackbarHostState.showSnackbar(profileUpdateSuccessText)
             actions.clearMessages()
             navController.navigate(UStudyRoute.ProfileScreen) {
                 popUpTo(UStudyRoute.ModifyUserScreen) { inclusive = true }
@@ -100,7 +103,7 @@ fun ModifyUserScreen(
                 Spacer(Modifier.height(100.dp))
                 CircularProgressIndicator()
                 Spacer(Modifier.height(16.dp))
-                Text("Caricamento profilo...", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.profile_loading), style = MaterialTheme.typography.bodyMedium)
             }
         } else {
             Column(
@@ -203,7 +206,7 @@ fun ModifyUserScreen(
                         CircularProgressIndicator()
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            "Salvando...",
+                            stringResource(R.string.saving_text),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
@@ -216,7 +219,7 @@ fun ModifyUserScreen(
                         CircularProgressIndicator()
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            "Caricamento immagine...",
+                            stringResource(R.string.image_loading),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
@@ -231,7 +234,7 @@ fun ModifyUserScreen(
                     if (!state.hasChanges) {
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            "Nessuna modifica da salvare",
+                            stringResource(R.string.no_changes_to_be_saved),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center

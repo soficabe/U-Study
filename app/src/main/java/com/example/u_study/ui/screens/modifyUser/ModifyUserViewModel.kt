@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.u_study.R
 import com.example.u_study.data.repositories.AuthRepository
 import com.example.u_study.data.repositories.ImageRepository
 import com.example.u_study.data.repositories.UpdateUserResult
@@ -64,7 +65,8 @@ interface ModifyUserActions {
 class ModifyUserViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
+    private val context: Context // Aggiungi Context per le string resources
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ModifyUserState())
@@ -142,7 +144,7 @@ class ModifyUserViewModel(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "Errore nel caricamento dei dati del profilo"
+                        errorMessage = context.getString(R.string.error_loading_profile)
                     )
                 }
             }
@@ -154,7 +156,7 @@ class ModifyUserViewModel(
             when (val result = validateAndSaveProfile()) {
                 is SaveProfileResult.EmailAlreadyExists -> {
                     _state.update {
-                        it.copy(isSaving = false, errorMessage = "Questa email è già in uso")
+                        it.copy(isSaving = false, errorMessage = context.getString(R.string.error_email_already_exists))
                     }
                 }
                 is SaveProfileResult.ValidationError -> {
@@ -162,7 +164,7 @@ class ModifyUserViewModel(
                 }
                 is SaveProfileResult.NetworkError -> {
                     _state.update {
-                        it.copy(isSaving = false, errorMessage = "Errore di connessione")
+                        it.copy(isSaving = false, errorMessage = context.getString(R.string.error_connection))
                     }
                 }
                 is SaveProfileResult.Error -> {
@@ -190,27 +192,27 @@ class ModifyUserViewModel(
         val currentState = _state.value
 
         if (currentState.firstName.isBlank()) {
-            _state.update { it.copy(errorMessage = "Il nome non può essere vuoto") }
+            _state.update { it.copy(errorMessage = context.getString(R.string.error_first_name_empty)) }
             return SaveProfileResult.ValidationError
         }
 
         if (currentState.lastName.isBlank()) {
-            _state.update { it.copy(errorMessage = "Il cognome non può essere vuoto") }
+            _state.update { it.copy(errorMessage = context.getString(R.string.error_last_name_empty)) }
             return SaveProfileResult.ValidationError
         }
 
         if (currentState.email.isBlank()) {
-            _state.update { it.copy(errorMessage = "L'email non può essere vuota") }
+            _state.update { it.copy(errorMessage = context.getString(R.string.error_email_empty)) }
             return SaveProfileResult.ValidationError
         }
 
         if (!isValidEmail(currentState.email)) {
-            _state.update { it.copy(errorMessage = "Formato email non valido") }
+            _state.update { it.copy(errorMessage = context.getString(R.string.error_email_format_invalid)) }
             return SaveProfileResult.ValidationError
         }
 
         if (!currentState.hasChanges) {
-            _state.update { it.copy(errorMessage = "Nessuna modifica da salvare") }
+            _state.update { it.copy(errorMessage = context.getString(R.string.no_changes_to_be_saved)) }
             return SaveProfileResult.ValidationError
         }
 
@@ -232,7 +234,7 @@ class ModifyUserViewModel(
                         return SaveProfileResult.EmailAlreadyExists
                     }
                     is UpdateUserResult.Error -> {
-                        return SaveProfileResult.Error("Errore nell'aggiornamento dell'email")
+                        return SaveProfileResult.Error(context.getString(R.string.error_updating_email))
                     }
                 }
             }
@@ -248,7 +250,7 @@ class ModifyUserViewModel(
                         return SaveProfileResult.Success
                     }
                     is UpdateUserProfileResult.Error -> {
-                        return SaveProfileResult.Error("Errore nell'aggiornamento del profilo")
+                        return SaveProfileResult.Error(context.getString(R.string.error_updating_profile))
                     }
                 }
             } else {
@@ -256,7 +258,7 @@ class ModifyUserViewModel(
             }
 
         } catch (e: Exception) {
-            return SaveProfileResult.Error("Errore imprevisto: ${e.message}")
+            return SaveProfileResult.Error(context.getString(R.string.error_unexpected, e.message ?: ""))
         }
     }
 
@@ -269,12 +271,16 @@ class ModifyUserViewModel(
             _state.update { it.copy(isUploadingImage = true, errorMessage = null) }
             try {
                 Log.d("PROFILE_PHOTO", "Selected URI: $uri (scheme: ${uri.scheme})")
-                // Se lo schema è file:// fai anche il controllo file diretto (per device vecchi)
                 if (uri.scheme == "file" && uri.path != null) {
                     val file = File(uri.path!!)
                     Log.d("PROFILE_PHOTO", "path=${file.path} exists=${file.exists()} size=${file.length()}")
                     if (!file.exists() || file.length() == 0L) {
-                        _state.update { it.copy(isUploadingImage = false, errorMessage = "Foto non trovata o file vuoto") }
+                        _state.update {
+                            it.copy(
+                                isUploadingImage = false,
+                                errorMessage = context.getString(R.string.error_photo_not_found)
+                            )
+                        }
                         return@launch
                     }
                 }
@@ -285,10 +291,20 @@ class ModifyUserViewModel(
                 if (imageUrl != null) {
                     _state.update { it.copy(imageUrl = imageUrl, isUploadingImage = false) }
                 } else {
-                    _state.update { it.copy(isUploadingImage = false, errorMessage = "Errore upload immagine (file vuoto o non accessibile)") }
+                    _state.update {
+                        it.copy(
+                            isUploadingImage = false,
+                            errorMessage = context.getString(R.string.error_image_upload_failed)
+                        )
+                    }
                 }
             } catch (e: Exception) {
-                _state.update { it.copy(isUploadingImage = false, errorMessage = "Errore upload immagine") }
+                _state.update {
+                    it.copy(
+                        isUploadingImage = false,
+                        errorMessage = context.getString(R.string.error_image_upload)
+                    )
+                }
             }
         }
     }

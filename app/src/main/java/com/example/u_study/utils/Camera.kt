@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
+import com.example.u_study.R
 import java.io.File
 import kotlinx.coroutines.delay
 
@@ -33,7 +34,7 @@ fun rememberProfileCameraLauncher(
             if (success) {
                 pendingCameraUri = uri
             } else {
-                onError?.invoke("Errore: la foto non è stata salvata correttamente. Riprova.")
+                onError?.invoke(context.getString(R.string.error_camera_photo_not_saved))
             }
         }
     }
@@ -61,7 +62,7 @@ fun rememberProfileCameraLauncher(
             if (found) {
                 onPhotoReady(uri)
             } else {
-                onError?.invoke("Errore: la foto non è stata salvata correttamente. Riprova.")
+                onError?.invoke(context.getString(R.string.error_camera_photo_not_saved))
             }
             pendingCameraUri = null
         }
