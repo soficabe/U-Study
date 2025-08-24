@@ -51,7 +51,9 @@ class StatsViewModel(
             val average = if (examsWithGrade.isNotEmpty()) {
                 val totalWeightedGrades = examsWithGrade.sumOf { (it.grade!! * it.cfu).toDouble() }
                 val totalCredits = examsWithGrade.sumOf { it.cfu.toDouble() }
-                String.format("%.2f", totalWeightedGrades / totalCredits).toDouble()
+                val rawAverage = totalWeightedGrades / totalCredits
+                (rawAverage * 100).toInt() / 100.0
+                //String.format("%.2f", totalWeightedGrades / totalCredits).toDouble()
             } else {
                 0.0
             }

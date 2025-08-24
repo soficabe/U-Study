@@ -190,16 +190,6 @@ fun RegisterScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                // Checkbox per accettazione termini e condizioni
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = state.termsAccepted,
-                        onCheckedChange = actions::changeTerms
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.checkboxRegisterText))
-                }
-
                 Spacer(Modifier.height(16.dp))
 
                 // Visualizzazione messaggi di errore

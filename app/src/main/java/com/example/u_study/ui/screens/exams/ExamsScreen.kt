@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
@@ -261,6 +263,8 @@ private fun AddExamDialog(
 
     var showDatePicker by remember { mutableStateOf(false) }
 
+    val scrollState = rememberScrollState()
+
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState()
         DatePickerDialog(
@@ -269,25 +273,30 @@ private fun AddExamDialog(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            date = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                            date = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault())
+                                .toLocalDate()
                         }
                         showDatePicker = false
                     }
                 ) { Text("OK") }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.back)) }
+                TextButton(onClick = {
+                    showDatePicker = false
+                }) { Text(stringResource(R.string.back)) }
             }
         ) {
             DatePicker(state = datePickerState)
         }
     }
 
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(if (initialExam == null) stringResource(R.string.addNewExam) else stringResource(R.string.modifyExam)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(modifier = Modifier.verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },

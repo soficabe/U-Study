@@ -30,7 +30,6 @@ data class RegisterState(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val termsAccepted: Boolean = false,
     val registerResult: RegisterResult = RegisterResult.Error,
     val isLoading: Boolean = false,
     val errorMessage: Int? = null //se settata viene mostrata nella RegisterScreen
@@ -46,7 +45,6 @@ interface RegisterActions {
     fun setEmail(email: String)
     fun setPassword(password: String)
     fun setConfirmPassword(confirmPassword: String)
-    fun changeTerms(termsAccepted: Boolean)
     fun register()
 }
 
@@ -90,9 +88,6 @@ class RegisterViewModel (
         override fun setConfirmPassword(confirmPassword: String) =
             _state.update { it.copy(confirmPassword = confirmPassword) }
 
-        override fun changeTerms(termsAccepted: Boolean) =
-            _state.update { it.copy(termsAccepted = termsAccepted) }
-
         /**
          * Esegue la registrazione dell'utente con validazione completa.
          *
@@ -115,12 +110,6 @@ class RegisterViewModel (
                 currentState.email.isBlank() || currentState.password.isBlank()
             ) {
                 _state.update { it.copy(errorMessage = R.string.requiredFields_error) }
-                return
-            }
-
-            // Controllo accettazione termini
-            if (!currentState.termsAccepted) {
-                _state.update { it.copy(errorMessage = R.string.acceptTerms_error) }
                 return
             }
 

@@ -54,6 +54,9 @@ android {
         compose = true
         buildConfig = true
     }
+    lintOptions {
+        disable.add("NullSafeMutableLiveData")
+    }
 }
 
 dependencies {
