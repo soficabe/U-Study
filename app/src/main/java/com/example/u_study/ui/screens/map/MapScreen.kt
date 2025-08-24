@@ -46,6 +46,58 @@ fun MapScreen(
     var mapViewInstance: MapView? by remember { mutableStateOf(null) }
     val scope = rememberCoroutineScope()
 
+    // Stato salvabile per posizione e zoom della mappa
+    var mapCenter by rememberSaveable {
+        mutableStateOf(
+            if (libraryIdToZoom != null) {
+                val lib = libraries.find { it.id == libraryIdToZoom }
+                if (lib != null) "lat:${lib.latitude},lng:${lib.longitude}" else "lat:44.5,lng:11.3"
+            } else "lat:44.5,lng:11.3"
+        )
+    }
+
+    var mapZoom by rememberSaveable {
+        mutableDoubleStateOf(if (libraryIdToZoom != null) 17.0 else 11.0)
+    }
+
+    // Stato salvabile per la posizione dell'utente
+    var savedUserLocation by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+
+    // Funzione per parsare il centro della mappa dal string salvato
+    fun parseMapCenter(centerString: String): GeoPoint {
+        return try {
+            val parts = centerString.split(",")
+            val lat = parts[0].substringAfter("lat:").toDouble()
+            val lng = parts[1].substringAfter("lng:").toDouble()
+            GeoPoint(lat, lng)
+        } catch (e: Exception) {
+            GeoPoint(44.5, 11.3) // fallback
+        }
+    }
+
+    // Funzione per parsare la posizione dell'utente dal string salvato
+    fun parseUserLocation(locationString: String?): GeoPoint? {
+        return try {
+            locationString?.let {
+                val parts = it.split(",")
+                val lat = parts[0].substringAfter("lat:").toDouble()
+                val lng = parts[1].substringAfter("lng:").toDouble()
+                GeoPoint(lat, lng)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    // Funzione per aggiornare lo stato della mappa
+    fun updateMapState(mapView: MapView) {
+        val center = mapView.mapCenter
+        mapCenter = "lat:${center.latitude},lng:${center.longitude}"
+        mapZoom = mapView.zoomLevelDouble
+    }
+
     val locationPermission = rememberMultiplePermissions(
         listOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
     ) { statuses ->
@@ -66,6 +118,13 @@ fun MapScreen(
         }
     }
 
+    // Aggiorna lo stato salvato quando cambiano le coordinate
+    LaunchedEffect(coordinates) {
+        coordinates?.let { coords ->
+            savedUserLocation = "lat:${coords.latitude},lng:${coords.longitude}"
+        }
+    }
+
     // Aggiorna visitati (side effect)
     LaunchedEffect(coordinates, libraries) {
         Log.d("MapScreen", "LaunchedEffect triggered, coordinates=$coordinates")
@@ -83,7 +142,7 @@ fun MapScreen(
 
     Scaffold(
         topBar = {
-        AppBar(stringResource(R.string.mapScreen_name), navController, isAuthenticated = state.isAuthenticated)
+            AppBar(stringResource(R.string.mapScreen_name), navController, isAuthenticated = state.isAuthenticated)
         },
         bottomBar = {
             com.example.u_study.ui.composables.NavigationBar(navController = navController, isAutheticated = state.isAuthenticated)
@@ -98,11 +157,10 @@ fun MapScreen(
                         setTileSource(TileSourceFactory.MAPNIK)
                         setMultiTouchControls(true)
                         val controller = controller
-                        val startPoint = if (libraryIdToZoom != null) {
-                            val lib = libraries.find { it.id == libraryIdToZoom }
-                            if (lib != null) GeoPoint(lib.latitude.toDouble(), lib.longitude.toDouble()) else GeoPoint(44.5, 11.3)
-                        } else GeoPoint(44.5, 11.3)
-                        controller.setZoom(if (libraryIdToZoom != null) 17.0 else 11.0)
+
+                        // Usa lo stato salvato invece dei valori di default
+                        val startPoint = parseMapCenter(mapCenter)
+                        controller.setZoom(mapZoom)
                         controller.setCenter(startPoint)
 
                         overlays.clear()
@@ -138,12 +196,14 @@ fun MapScreen(
                         mapView.overlays.add(marker)
                     }
 
-                    // --- INIZIA LA PARTE NUOVA ---
+                    // Aggiungi il marker per la posizione dell'utente
+                    // Usa prima le coordinate attuali, poi quelle salvate come fallback
+                    val userLocationToShow = coordinates ?: parseUserLocation(savedUserLocation)?.let { geoPoint ->
+                        Coordinates(geoPoint.latitude, geoPoint.longitude)
+                    }
 
-                    // 1. Aggiungi il marker per la posizione dell'utente, se disponibile
-                    coordinates?.let { coords ->
+                    userLocationToShow?.let { coords ->
                         val myLocationMarker = Marker(mapView).apply {
-                            // Usiamo un'icona diversa per la posizione (da creare in res/drawable)
                             icon = context.getDrawable(R.drawable.ic_my_location_marker)
                             position = GeoPoint(coords.latitude, coords.longitude)
                             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
@@ -152,13 +212,14 @@ fun MapScreen(
                         mapView.overlays.add(myLocationMarker)
                     }
 
-                    // --- FINE DELLA PARTE NUOVA ---
-
                     if (libraryIdToZoom != null) {
                         val lib = libraries.find { it.id == libraryIdToZoom }
                         if (lib != null) {
                             mapView.controller.setCenter(GeoPoint(lib.latitude.toDouble(), lib.longitude.toDouble()))
                             mapView.controller.setZoom(17.0)
+                            // Aggiorna anche lo stato salvato
+                            mapCenter = "lat:${lib.latitude},lng:${lib.longitude}"
+                            mapZoom = 17.0
                         }
                     }
 
@@ -178,19 +239,23 @@ fun MapScreen(
             ) {
                 Button(onClick = {
                     if (locationPermission.statuses.any { it.value.isGranted }) {
-                        //requestLocation = true
                         scope.launch {
                             // 1. Chiedi al service di calcolare la posizione attuale
                             val currentLocation = locationService.getCurrentLocation()
 
-                            // 2. Se la posizione è stata trovata (non è null)...
+                            // 2. Se la posizione è stata trovata...
                             currentLocation?.let { coords ->
-                                // 3. ...usa il nostro riferimento per centrare la mappa su quel punto
-                                mapViewInstance?.controller?.animateTo(
-                                    GeoPoint(coords.latitude, coords.longitude),
-                                    17.0, // Un buon livello di zoom per la posizione corrente
-                                    1000L  // Durata dell'animazione in millisecondi (1 secondo)
-                                )
+                                // 3. Centra la mappa e aggiorna lo stato salvato
+                                mapViewInstance?.let { mapView ->
+                                    mapView.controller.animateTo(
+                                        GeoPoint(coords.latitude, coords.longitude),
+                                        17.0,
+                                        1000L
+                                    )
+                                    // Aggiorna lo stato salvato con la nuova posizione
+                                    mapCenter = "lat:${coords.latitude},lng:${coords.longitude}"
+                                    mapZoom = 17.0
+                                }
                             }
                         }
                     } else {
@@ -260,6 +325,14 @@ fun MapScreen(
         }
     }
 
+    // Aggiungi un DisposableEffect per salvare lo stato quando il composable viene distrutto
+    DisposableEffect(mapViewInstance) {
+        onDispose {
+            mapViewInstance?.let { mapView ->
+                updateMapState(mapView)
+            }
+        }
+    }
 }
 
 fun isNear(coords: Coordinates, library: Library, radiusMeters: Double = 5000.0): Boolean {
