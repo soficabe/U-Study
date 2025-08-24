@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import com.example.u_study.R
@@ -24,8 +25,8 @@ fun rememberProfileCameraLauncher(
 ): () -> Unit {
     val context = LocalContext.current
 
-    var photoUri by remember { mutableStateOf<Uri?>(null) }
-    var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
+    var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var pendingCameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
