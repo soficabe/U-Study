@@ -68,7 +68,7 @@ fun ExamsScreen(
 ) {
     var selectedExam by remember { mutableStateOf<Exam?>(null) }
     var showOptionsDialog by remember { mutableStateOf(false) } //modifica o eliminazione
-    var showAddorEditDialog by remember { mutableStateOf(false) }
+    var showAddorEditDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = { AppBar(stringResource(R.string.examsScreen_name), navController) },
@@ -261,7 +261,7 @@ private fun AddExamDialog(
     var date by rememberSaveable { mutableStateOf(initialExam?.date?.let { LocalDate.parse(it) }) }
     var grade by rememberSaveable { mutableStateOf(initialExam?.grade?.toString() ?: "") }
 
-    var showDatePicker by remember { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
 

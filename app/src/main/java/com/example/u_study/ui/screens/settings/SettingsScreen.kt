@@ -80,17 +80,17 @@ fun SettingsScreen (state: SettingsState, actions: SettingsActions, navControlle
     val scrollState = rememberScrollState()
 
     //cambio tema (scuro, chiaro, default)
-    var showThemeDialog by remember { mutableStateOf(false) }
+    var showThemeDialog by rememberSaveable { mutableStateOf(false) }
     var selectedTheme by remember { mutableStateOf(state.theme) }
     val themeOptions = Theme.entries
 
     //cambio lingua
-    var showLangDialog by remember { mutableStateOf(false) }
+    var showLangDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     //cambio password
-    var showPasswordDialog by remember { mutableStateOf(false) }
+    var showPasswordDialog by rememberSaveable { mutableStateOf(false) }
     var newPassword by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
