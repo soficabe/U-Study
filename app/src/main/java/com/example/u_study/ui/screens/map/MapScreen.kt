@@ -111,6 +111,11 @@ fun MapScreen(
         }
     }
 
+    // Richiedi subito la posizione appena entri nella mappa!
+    LaunchedEffect(Unit) {
+        locationService.getCurrentLocation()
+    }
+
     if (requestLocation) {
         LaunchedEffect(Unit) {
             locationService.getCurrentLocation()
@@ -125,7 +130,7 @@ fun MapScreen(
         }
     }
 
-    // Aggiorna visitati (side effect)
+    // Aggiorna visitati (side effect) appena hai la posizione O la lista delle biblioteche
     LaunchedEffect(coordinates, libraries) {
         Log.d("MapScreen", "LaunchedEffect triggered, coordinates=$coordinates")
         coordinates?.let { coord ->

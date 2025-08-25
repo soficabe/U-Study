@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import android.util.Log
 import com.example.u_study.data.repositories.AuthRepository
-import com.example.u_study.ui.screens.home.HomeState
 import io.github.jan.supabase.auth.status.SessionStatus
 
 data class MapState(
@@ -26,6 +25,11 @@ class MapViewModel(
     val state = _state.asStateFlow()
 
     init {
+        // Aggiorna la lista delle visitate SEMPRE all'avvio della mappa
+        viewModelScope.launch {
+            userRepository.refreshVisitedLibraries()
+        }
+
         viewModelScope.launch {
             authRepository.sessionStatus.collect { sessionStatus ->
                 when (sessionStatus) {
@@ -36,7 +40,6 @@ class MapViewModel(
                             )
                         }
                     }
-
                     else -> {
                         _state.update {
                             it.copy(
@@ -46,7 +49,6 @@ class MapViewModel(
                     }
                 }
             }
-
         }
     }
 
