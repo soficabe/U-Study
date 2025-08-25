@@ -66,17 +66,26 @@ fun ExamsScreen(
     actions: ExamsActions,
     navController: NavHostController
 ) {
-    var selectedExam by remember { mutableStateOf<Exam?>(null) }
-    var showOptionsDialog by remember { mutableStateOf(false) } //modifica o eliminazione
-    var showAddorEditDialog by rememberSaveable { mutableStateOf(false) }
+    // Salva SOLO l'id selezionato in modo saveable
+    var selectedExamId by rememberSaveable { mutableStateOf<Int?>(null) }
+    var showOptionsDialog by rememberSaveable { mutableStateOf(false) }
+    var showAddOrEditDialog by rememberSaveable { mutableStateOf(false) }
+
+    // Funzione di lookup
+    fun findExamById(id: Int?): Exam? {
+        return state.upcomingExams.find { it.id == id }
+            ?: state.completedExams.find { it.id == id }
+    }
+    val selectedExam = findExamById(selectedExamId)
 
     Scaffold(
         topBar = { AppBar(stringResource(R.string.examsScreen_name), navController) },
         bottomBar = { NavigationBar(navController = navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                selectedExam = null
-                showAddorEditDialog = true }, ) {
+                selectedExamId = null
+                showAddOrEditDialog = true
+            }) {
                 Icon(Icons.Filled.Add, contentDescription = "Aggiungi Esame")
             }
         }
@@ -88,7 +97,7 @@ fun ExamsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // ****** Esami Futuri ********
+            // Esami Futuri
             item {
                 Text(
                     stringResource(R.string.nextExams),
@@ -107,13 +116,13 @@ fun ExamsScreen(
             } else {
                 items(state.upcomingExams, key = { it.id }) { exam ->
                     ExamItem(exam = exam, onClick = {
-                        selectedExam = exam
+                        selectedExamId = exam.id
                         showOptionsDialog = true
                     })
                 }
             }
 
-            // ******* Esami Passati *******
+            // Esami Passati
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                 Text(
@@ -133,7 +142,7 @@ fun ExamsScreen(
             } else {
                 items(state.completedExams, key = { it.id }) { exam ->
                     ExamItem(exam = exam, onClick = {
-                        selectedExam = exam
+                        selectedExamId = exam.id
                         showOptionsDialog = true
                     })
                 }
@@ -144,17 +153,17 @@ fun ExamsScreen(
             }
         }
     }
-    if (showAddorEditDialog) {
+    if (showAddOrEditDialog) {
         AddExamDialog(
-            initialExam = selectedExam, // Passa l'esame (o null)
-            onDismiss = { showAddorEditDialog = false },
+            initialExam = selectedExam,
+            onDismiss = { showAddOrEditDialog = false },
             onConfirm = { id, name, cfu, date, grade ->
                 if (id == null) {
                     actions.addExam(name, cfu, date, grade)
                 } else {
                     actions.updateExam(id, name, cfu, date, grade)
                 }
-                showAddorEditDialog = false
+                showAddOrEditDialog = false
             }
         )
     }
@@ -166,12 +175,11 @@ fun ExamsScreen(
                 Column {
                     Text(stringResource(R.string.chooseOption))
                     Spacer(Modifier.height(16.dp))
-
-                    //modifica
+                    // Modifica
                     TextButton(
                         onClick = {
                             showOptionsDialog = false
-                            showAddorEditDialog = true
+                            showAddOrEditDialog = true
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -181,11 +189,10 @@ fun ExamsScreen(
                             Text(stringResource(R.string.edit))
                         }
                     }
-
-                    //elimina
+                    // Elimina
                     TextButton(
                         onClick = {
-                            actions.deleteExam(selectedExam!!.id)
+                            selectedExamId?.let { actions.deleteExam(it) }
                             showOptionsDialog = false
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -198,8 +205,6 @@ fun ExamsScreen(
                     }
                 }
             },
-
-
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showOptionsDialog = false }) {
