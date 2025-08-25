@@ -3,6 +3,7 @@ package com.example.u_study.data.repositories
 import android.util.Log
 import com.example.u_study.data.database.entities.FavLibrary
 import com.example.u_study.data.database.entities.Library
+import com.example.u_study.data.database.entities.VisitedLibrary
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.serialization.json.buildJsonObject
@@ -12,6 +13,7 @@ class LibraryRepository (private val postgrest: Postgrest, private val auth: Aut
 
     private val libraryTable = postgrest.from("Library")
     private val favLibraryTable = postgrest.from("FavLibrary")
+    private val visitedTable = postgrest.from("VisitedLibrary")
 
 
     suspend fun getLibraries(): List<Library> {
@@ -49,25 +51,16 @@ class LibraryRepository (private val postgrest: Postgrest, private val auth: Aut
 
     suspend fun getLibraryById(id: Int): Library? {
         return try {
-            val libraryResultList = libraryTable.select {
-                filter {
-                    Library::id eq id
-                }
-            }.decodeList<Library>() //recupero dettagli biblio
-            if (libraryResultList.size != 1) {
-                return null
-            } //(controllo errore)
 
-            val library = libraryResultList.first() //questo perché ho usato decodeList e non singleOrNull
+            //dettagli base della biblio
+            val library = libraryTable.select {
+                filter { Library::id eq id }
+            }.decodeList<Library>().firstOrNull() ?: return null
 
-            //controllo se è tra i preferiti dell'utente
             val userId = auth.currentUserOrNull()?.id
+            if (userId == null) return library
 
-            if (userId == null) { //se non c'è utente loggato
-                return library
-            }
-
-            //esiste una riga nella tabella FavLibrary per questo utente e questa libreria?
+            //la biblio è tra i preferiti?
             val favouriteEntry = favLibraryTable.select {
                 filter {
                     FavLibrary::userId eq userId
@@ -75,11 +68,22 @@ class LibraryRepository (private val postgrest: Postgrest, private val auth: Aut
                 }
             }.decodeList<FavLibrary>()
 
-            // favouriteEntry non vuota -> abbiamo corrispondenza
-            library.copy(isFavourite = favouriteEntry.isNotEmpty())
+            //la biblio è stata visitata?
+            val visitedEntry = visitedTable.select {
+                filter {
+                    VisitedLibrary::userId eq userId
+                    VisitedLibrary::libId eq id
+                }
+            }.decodeList<VisitedLibrary>()
+
+
+            library.copy(
+                isFavourite = favouriteEntry.isNotEmpty(),
+                isVisited = visitedEntry.isNotEmpty()
+            )
 
         } catch (e: Exception) {
-            Log.e("LibraryRepository", "Error to get library by id", e)
+            Log.e("LibraryRepository", "Error fetching library by id", e)
             null
         }
     }

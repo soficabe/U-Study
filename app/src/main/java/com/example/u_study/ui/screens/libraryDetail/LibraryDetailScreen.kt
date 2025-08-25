@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -105,7 +106,8 @@ fun LibraryDetailCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Outlined.Book, "Library", modifier = Modifier.size(24.dp))
+                val iconVector = if (library.isVisited) Icons.Filled.CheckCircle else Icons.Outlined.Book
+                Icon(iconVector, "Library", modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(library.name, style = MaterialTheme.typography.titleLarge)
